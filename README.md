@@ -4,6 +4,37 @@
 
 ---
 
+**wo**rd **m**atrix **bat**ches
+
+---
+
+This code was developed as part of my Master's thesis research.
+
+A summary of the methods used and motivation for this code will be 
+published in the conference proceedings at the 
+[2017 HPEC conference](http://www.ieee-hpec.org/).
+I will present this work on September 13, 2017.
+
+The work builds upon ideas presented in [BIDMach](https://github.com/BIDData/BIDMach/)
+and further refined in [Intel's pWord2Vec](https://github.com/IntelLabs/pWord2Vec).
+
+This code supports:
+
+ * Both CPU and GPU matrix-based fast Word2Vec
+ * Both SkipGram and Hierarchical Softmax Word2Vec architectures
+
+This code **does not** support:
+
+ * Distributed computing techniques (see pWord2Vec)
+ * CBOW Word2Vec architectures
+
+
+## Installation
+
+The make file (hackishly) supports g++, CUDA or ICPC.
+
+Different source files are used for different compilers.
+
 To compile, use make:
 
 For g++:
