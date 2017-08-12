@@ -1,6 +1,48 @@
 #include "common.h"
 #include "w2v-functions.h"
 
+// The majority of the following code is taken directly from
+// the original word2vec implementation, with some modifications taken 
+// from Intel's conversion to c++
+// Additional modifications have also been made by me, Trevor Simonton
+
+
+// Original Google copyright
+
+//  Copyright 2013 Google Inc. All Rights Reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
+// Intel copyright
+//
+/*
+ * Copyright 2016 Intel Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * The code is developed based on the original word2vec implementation from Google:
+ * https://code.google.com/archive/p/word2vec/
+ */
+
 int binary = 0, debug_mode = 2;
 int hs = 0, negative = 5, num_threads = 12, iter = 5, window = 5;
 int vocab_max_size = 1000, vocab_size = 0, hidden_size = 100;
