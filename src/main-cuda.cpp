@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "src/console.h"
 #include "src/batch_model.h"
 #include "src/cuda_batch_model.h"

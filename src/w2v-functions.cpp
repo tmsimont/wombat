@@ -1,8 +1,5 @@
-// Copyright 2017 Trevor Simonton
-
-#include "src/common.h"
-#include "src/w2v-functions.h"
-
+//  Copyright 2013 Google Inc. All Rights Reserved.
+//
 // The majority of the following code is taken directly from
 // the original word2vec implementation, with some modifications taken 
 // from Intel's conversion to c++
@@ -44,6 +41,10 @@
  * The code is developed based on the original word2vec implementation from Google:
  * https://code.google.com/archive/p/word2vec/
  */
+
+#include "src/common.h"
+#include "src/w2v-functions.h"
+
 
 int binary = 0, debug_mode = 2;
 int hs = 0, negative = 5, num_threads = 12, iter = 5, window = 5;
