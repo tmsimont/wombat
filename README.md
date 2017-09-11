@@ -18,6 +18,10 @@ I will present this work on September 13, 2017.
 The work builds upon ideas presented in [BIDMach](https://github.com/BIDData/BIDMach/)
 and further refined in [Intel's pWord2Vec](https://github.com/IntelLabs/pWord2Vec).
 
+
+*Note that in its current state it is in a bit of a mess. Substantial clean up is needed.*
+
+
 This code supports:
 
  * Both CPU and GPU matrix-based fast Word2Vec
