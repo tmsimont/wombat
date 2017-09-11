@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "pht_model.h"
 
 #ifdef USE_MKL

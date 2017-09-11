@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef TIMER_H_
 #define TIMER_H_
 

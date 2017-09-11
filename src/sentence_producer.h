@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef SENTENCE_PRODUCER_H_
 #define SENTENCE_PRODUCER_H_
 

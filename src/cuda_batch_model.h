@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef CUDA_BATCH_MODEL_H_
 #define CUDA_BATCH_MODEL_H_
 

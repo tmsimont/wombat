@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef WORKER_MODEL_H_
 #define WORKER_MODEL_H_
 

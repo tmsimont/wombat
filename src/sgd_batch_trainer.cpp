@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "sgd_batch_trainer.h"
 
 SGDBatchTrainer::SGDBatchTrainer(int num_batches, int batch_size) {

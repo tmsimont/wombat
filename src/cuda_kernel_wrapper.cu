@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include <vector>
 #include "cuda_kernel.wombat.cu"
 

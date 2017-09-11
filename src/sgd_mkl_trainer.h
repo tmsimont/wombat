@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef SGD_MKL_TRAINER_H_
 #define SGD_MKL_TRAINER_H_
 

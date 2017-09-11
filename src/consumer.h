@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef WORKERS_CONSUMER_H_
 #define WORKERS_CONSUMER_H_
 

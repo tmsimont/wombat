@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef BATCH_MODEL_H_
 #define BATCH_MODEL_H_
 

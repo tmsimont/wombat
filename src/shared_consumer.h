@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef SHARED_CONSUMER_H_
 #define SHARED_CONSUMER_H_
 

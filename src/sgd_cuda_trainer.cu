@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "sgd_cuda_trainer.h"
 
 float *d_Wih, *d_Woh, *d_expTable;

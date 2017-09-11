@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef BATCH_CONSUMER_H_
 #define BATCH_CONSUMER_H_
 

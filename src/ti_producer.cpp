@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "ti_producer.h"
 
 bool TIProducer::loadSentence(SenBuffer *sen_buffer) {

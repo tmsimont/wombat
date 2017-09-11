@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef WORD_SOURCE_H_
 #define WORD_SOURCE_H_
 

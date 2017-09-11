@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "word_source_file_group.h"
 
 void WordSourceFileGroup::init() {

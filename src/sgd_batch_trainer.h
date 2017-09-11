@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef SGD_BATCH_TRAINER_H_
 #define SGD_BATCH_TRAINER_H_
 

@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 

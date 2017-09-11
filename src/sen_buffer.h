@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef SEN_BUFFER_H_
 #define SEN_BUFFER_H_
 

@@ -1,4 +1,6 @@
-#include "batch_consumer.h"
+// Copyright 2017 Trevor Simonton
+
+#include "src/batch_consumer.h"
 
 BatchConsumer::BatchConsumer(SGDBatchTrainer *trainer) {
   this->trainer = trainer;
@@ -40,9 +42,7 @@ int BatchConsumer::consume() {
                     word_count_actual / (real) (iter * train_words + 1) * 100,
                     word_count_actual / ((now - start) * 1000));
             printTimers();
-            //fflush(stdout);
-          }
-          else {
+          } else {
             double now = omp_get_wtime();
             printf("\rAlpha: %f  Progress: %.2f%%  Words/sec: %.2fk",  alpha,
                     word_count_actual / (real) (iter * train_words + 1) * 100,
@@ -50,7 +50,8 @@ int BatchConsumer::consume() {
             fflush(stdout);
           }
         }
-        alpha = starting_alpha * (1 - word_count_actual / (real) (iter * train_words + 1));
+        alpha = starting_alpha
+          * (1 - word_count_actual / (real) (iter * train_words + 1));
         if (alpha < starting_alpha * 0.0001f)
             alpha = starting_alpha * 0.0001f;
     }

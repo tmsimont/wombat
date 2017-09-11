@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifdef USE_CUDA
 #ifndef CUDA_CONSUMER_H_
 #define CUDA_CONSUMER_H_

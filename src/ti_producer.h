@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef TI_PRODUCER_H_
 #define TI_PRODUCER_H_
 

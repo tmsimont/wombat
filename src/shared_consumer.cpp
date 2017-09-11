@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "shared_consumer.h"
 
 #ifdef USE_MKL

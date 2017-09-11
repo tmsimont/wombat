@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "timer.h"
 
 std::vector<StopWatch> produceTimers;

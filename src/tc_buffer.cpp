@@ -1,4 +1,7 @@
+// Copyright 2017 Trevor Simonton
+
 #include "tc_buffer.h"
+
 
 std::vector<TCBuffer *> tc_buffers;
 

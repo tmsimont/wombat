@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef PHT_MODEL_H_
 #define PHT_MODEL_H_
 

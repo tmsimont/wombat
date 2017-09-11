@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "common.h"
 #include "w2v-functions.h"
 

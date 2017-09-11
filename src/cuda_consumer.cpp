@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifdef USE_CUDA
 #include "cuda_consumer.h"
 

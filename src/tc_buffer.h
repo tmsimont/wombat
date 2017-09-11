@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef TC_BUFFER_H_
 #define TC_BUFFER_H_
 

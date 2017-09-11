@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "consumer.h"
 
 #ifdef USE_MKL

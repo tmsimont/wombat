@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include <cuda_fp16.h>
 
 __global__ void Wombat4x8(

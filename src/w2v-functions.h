@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef W2V_FUNCTIONS_H_
 #define W2V_FUNCTIONS_H_
 

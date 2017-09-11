@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef COMMON_H_
 #define COMMON_H_
 

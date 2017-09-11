@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #ifndef UNLOCKED_BUFFER_READER_
 #define UNLOCKED_BUFFER_READER_
 

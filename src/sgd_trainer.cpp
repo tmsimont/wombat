@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "sgd_trainer.h"
 
 

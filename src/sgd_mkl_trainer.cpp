@@ -1,3 +1,5 @@
+// Copyright 2017 Trevor Simonton
+
 #include "sgd_mkl_trainer.h"
 
 void SGDMKLTrainer::activateHiddenLayer() {
