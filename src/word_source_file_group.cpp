@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "word_source_file_group.h"
+#include "src/word_source_file_group.h"
 
 void WordSourceFileGroup::init() {
   // TODO eliminate global references to vars in w2v-functions.h

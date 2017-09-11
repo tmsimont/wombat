@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "cuda_batch_model.h"
+#include "src/cuda_batch_model.h"
 
 void CUDABatchModel::initWombat() {
   BatchModel::initWombat();

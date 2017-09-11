@@ -3,12 +3,12 @@
 #ifndef SHARED_CONSUMER_H_
 #define SHARED_CONSUMER_H_
 
-#include "common.h"
-#include "w2v-functions.h"
-#include "sgd_trainer.h"
-#include "tc_buffer.h"
+#include "src/common.h"
+#include "src/w2v-functions.h"
+#include "src/sgd_trainer.h"
+#include "src/tc_buffer.h"
 #include <vector>
-#include "timer.h"
+#include "src/timer.h"
 
 class Trainer {
 public:

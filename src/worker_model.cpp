@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "worker_model.h"
+#include "src/worker_model.h"
 
 
 WorkerModel::WorkerModel() {

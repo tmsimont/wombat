@@ -3,10 +3,10 @@
 #ifndef SGD_BATCH_TRAINER_H_
 #define SGD_BATCH_TRAINER_H_
 
-#include "common.h"
-#include "w2v-functions.h"
-#include "tc_buffer.h"
-#include "timer.h"
+#include "src/common.h"
+#include "src/w2v-functions.h"
+#include "src/tc_buffer.h"
+#include "src/timer.h"
 #include <vector>
 
 class SGDBatchTrainer {

@@ -4,11 +4,11 @@
 #define SGD_CUDA_TRAINER_H_
 
 
-#include "common.h"
-#include "w2v-functions.h"
-#include "tc_buffer.h"
-#include "sgd_batch_trainer.h"
-#include "timer.h"
+#include "src/common.h"
+#include "src/w2v-functions.h"
+#include "src/tc_buffer.h"
+#include "src/sgd_batch_trainer.h"
+#include "src/timer.h"
 #include <vector>
 #include <cuda_runtime.h>
 #include <unordered_map>

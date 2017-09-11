@@ -3,18 +3,18 @@
 #ifndef WORKER_MODEL_H_
 #define WORKER_MODEL_H_
 
-#include "w2v-functions.h"
-#include "common.h"
-#include "tc_buffer.h"
-#include "sen_buffer.h"
-#include "ti_producer.h"
-#include "sentence_producer.h"
-#include "word_source.h"
-#include "word_source_group.h"
-#include "word_source_file.h"
-#include "word_source_file_group.h"
+#include "src/w2v-functions.h"
+#include "src/common.h"
+#include "src/tc_buffer.h"
+#include "src/sen_buffer.h"
+#include "src/ti_producer.h"
+#include "src/sentence_producer.h"
+#include "src/word_source.h"
+#include "src/word_source_group.h"
+#include "src/word_source_file.h"
+#include "src/word_source_file_group.h"
 #include <vector>
-#include "timer.h"
+#include "src/timer.h"
 
 class WorkerModel {
 public:

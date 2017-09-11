@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "word_source_file.h"
+#include "src/word_source_file.h"
 
 WordSourceFile::WordSourceFile(int id, int iters, unsigned long long chunkSize, char *train_file) {
   this->id = id;

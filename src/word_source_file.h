@@ -3,8 +3,8 @@
 #ifndef WORD_SOURCE_FILE_
 #define WORD_SOURCE_FILE_
 
-#include "w2v-functions.h"
-#include "word_source.h"
+#include "src/w2v-functions.h"
+#include "src/word_source.h"
 #include "omp.h"
 
 class WordSourceFile : public WordSource {

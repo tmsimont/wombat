@@ -3,7 +3,7 @@
 #ifndef UNLOCKED_BUFFER_READER_
 #define UNLOCKED_BUFFER_READER_
 
-#include "buffer.cpp"
+#include "src/buffer.cpp"
 
 class UnlockedBuffer : public Buffer {
 protected:

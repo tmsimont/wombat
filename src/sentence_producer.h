@@ -3,9 +3,9 @@
 #ifndef SENTENCE_PRODUCER_H_
 #define SENTENCE_PRODUCER_H_
 
-#include "sen_buffer.h"
-#include "w2v-functions.h"
-#include "word_source.h"
+#include "src/sen_buffer.h"
+#include "src/w2v-functions.h"
+#include "src/word_source.h"
 
 class SentenceProducer {
 public:

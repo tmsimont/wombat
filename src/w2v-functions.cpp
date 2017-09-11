@@ -1,7 +1,7 @@
 // Copyright 2017 Trevor Simonton
 
-#include "common.h"
-#include "w2v-functions.h"
+#include "src/common.h"
+#include "src/w2v-functions.h"
 
 // The majority of the following code is taken directly from
 // the original word2vec implementation, with some modifications taken 

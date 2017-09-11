@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "batch_model.h"
+#include "src/batch_model.h"
 
 void BatchModel::initWombat() {
 

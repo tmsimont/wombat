@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "sen_buffer.h"
+#include "src/sen_buffer.h"
 
 std::vector<SenBuffer *> sen_buffers;
 

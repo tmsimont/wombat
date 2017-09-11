@@ -1,9 +1,9 @@
 // Copyright 2017 Trevor Simonton
 
-#include "consumer.h"
+#include "src/consumer.h"
 
 #ifdef USE_MKL
-#include "sgd_mkl_trainer.h"
+#include "src/sgd_mkl_trainer.h"
 Consumer::Consumer() {
   trainer = new SGDMKLTrainer();
   local_item = (int *) calloc(tc_buffer_item_size, sizeof(int));

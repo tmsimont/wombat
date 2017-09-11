@@ -1,7 +1,7 @@
 // Copyright 2017 Trevor Simonton
 
 #ifdef USE_CUDA
-#include "cuda_consumer.h"
+#include "src/cuda_consumer.h"
 
 CUDAConsumer::CUDAConsumer(int num_batches, int batch_size) {
   this->num_batches = num_batches;

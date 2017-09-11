@@ -3,8 +3,8 @@
 #ifndef WORD_SOURCE_GROUP_H_
 #define WORD_SOURCE_GROUP_H_
 
-#include "common.h"
-#include "word_source.h"
+#include "src/common.h"
+#include "src/word_source.h"
 #include <vector>
 #include "omp.h"
 

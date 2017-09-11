@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "pht_nested_model.h"
+#include "src/pht_nested_model.h"
 #include <sched.h>
 
 #ifdef USE_MKL

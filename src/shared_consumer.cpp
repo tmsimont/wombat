@@ -1,9 +1,9 @@
 // Copyright 2017 Trevor Simonton
 
-#include "shared_consumer.h"
+#include "src/shared_consumer.h"
 
 #ifdef USE_MKL
-#include "sgd_mkl_trainer.h"
+#include "src/sgd_mkl_trainer.h"
 #endif
 
 SharedConsumer::SharedConsumer(int numt) {

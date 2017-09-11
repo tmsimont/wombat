@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "sentence_producer.h"
+#include "src/sentence_producer.h"
 
 int SentenceProducer::buildSentence(SenBufferReader *sen_reader) {
   while (1) {

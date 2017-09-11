@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "timer.h"
+#include "src/timer.h"
 
 std::vector<StopWatch> produceTimers;
 std::vector<StopWatch> consumeWaitTime;

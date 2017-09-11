@@ -4,9 +4,9 @@
 #define SEN_BUFFER_H_
 
 
-#include "common.h"
-#include "buffer.cpp"
-#include "unlocked_buffer.cpp"
+#include "src/common.h"
+#include "src/buffer.cpp"
+#include "src/unlocked_buffer.cpp"
 #include <vector>
 
 class SenBuffer;

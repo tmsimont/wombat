@@ -3,12 +3,12 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-#include "common.h"
+#include "src/common.h"
 #include "omp.h"
 #include <vector>
 #include <unistd.h>
 #include <sys/types.h>
-#include "w2v-functions.h"
+#include "src/w2v-functions.h"
 
 extern double start;
 extern int time_events;

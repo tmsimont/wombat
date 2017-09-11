@@ -3,7 +3,7 @@
 #ifndef W2V_FUNCTIONS_H_
 #define W2V_FUNCTIONS_H_
 
-#include "common.h"
+#include "src/common.h"
 
 typedef float real;
 

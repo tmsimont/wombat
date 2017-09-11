@@ -1,7 +1,7 @@
 // Copyright 2017 Trevor Simonton
 
 #include <vector>
-#include "cuda_kernel.wombat.cu"
+#include "src/cuda_kernel.wombat.cu"
 
 void CallKernels(int hs, int wombat_size, int wovbat_size, cudaStream_t* stream, 
     float *d_Wih, 

@@ -3,15 +3,15 @@
 #ifndef PHT_NESTED_MODEL_H_
 #define PHT_NESTED_MODEL_H_
 
-#include "worker_model.h"
-#include "w2v-functions.h"
-#include "common.h"
-#include "shared_consumer.h"
+#include "src/worker_model.h"
+#include "src/w2v-functions.h"
+#include "src/common.h"
+#include "src/shared_consumer.h"
 #include <vector>
-#include "tc_buffer.h"
-#include "sen_buffer.h"
-#include "console.h"
-#include "timer.h"
+#include "src/tc_buffer.h"
+#include "src/sen_buffer.h"
+#include "src/console.h"
+#include "src/timer.h"
 #include "omp.h"
 
 class PHTNestedModel : public WorkerModel {

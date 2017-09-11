@@ -3,7 +3,7 @@
 #ifndef BUFFER_H_
 #define BUFFER_H_
 
-#include "common.h"
+#include "src/common.h"
 
 class BufferReader {
 protected:

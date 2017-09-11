@@ -3,9 +3,9 @@
 #ifndef PHT_MODEL_H_
 #define PHT_MODEL_H_
 
-#include "worker_model.h"
-#include "consumer.h"
-#include "console.h"
+#include "src/worker_model.h"
+#include "src/consumer.h"
+#include "src/console.h"
 #include "omp.h"
 
 class PHTModel : public WorkerModel {

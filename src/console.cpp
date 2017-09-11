@@ -1,31 +1,31 @@
 // Copyright 2017 Trevor Simonton
 
-#include "console.h"
+#include "src/console.h"
 
 
-#include "sen_buffer.h"
+#include "src/sen_buffer.h"
 int sentences_in_buffer = 10;
 int sen_buffer_item_size = 1;
 
-#include "pht_model.h"
+#include "src/pht_model.h"
 int num_phys = 2;
 
 //#ifdef USE_CUDA
-//#include "cuda_model.h"
+//#include "src/cuda_model.h"
 //int cuda_batch_size = 256;
 //int cuda_batches_per_thread = 8;
 //#endif
 
-#include "batch_model.h"
+#include "src/batch_model.h"
 int batch_size = 256;
 int batches_per_thread = 8;
 
-#include "tc_buffer.h"
+#include "src/tc_buffer.h"
 int tc_buffer_item_size;
 int tcbs_per_thread = 1;
 int items_in_tcb = 125;
 
-#include "timer.h"
+#include "src/timer.h"
 int time_events = 0;
 double start = 0;
 
