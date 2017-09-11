@@ -6,6 +6,12 @@
 #include "mkl.h"
 #endif
 
+/**
+ * After word2vec memory structures are initialized,
+ * this worker model sets up a TCBuffer for each
+ * physical core, and a Sentence buffer for each
+ * thread.
+ */
 void PHTModel::initWombat() {
   // data buffers
   for (int i = 0; i < num_phys; ++i) {
@@ -22,6 +28,10 @@ void PHTModel::initWombat() {
 
 }
 
+/**
+ * Each thread uses a PHTWorker to accomplish
+ * its part of the training process.
+ */
 void PHTModel::train() {
   #ifdef USE_MKL
   mkl_set_num_threads(1);
@@ -42,8 +52,9 @@ void PHTModel::train() {
   }
 }
 
-
-
+/**
+ *
+ */
 int PHTWorker::work() {
   int i = id % num_phys;
 

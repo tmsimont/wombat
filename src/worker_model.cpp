@@ -10,6 +10,11 @@ WorkerModel::~WorkerModel() {
   // TODO: free memory
 }
 
+/**
+ * Initialize the standard C word2vec memory structures,
+ * using Google's original word2vec code, with some modifications
+ * by Intel. (see w2v-functions.cpp)
+ */
 void WorkerModel::initW2V() {
   // init w2v structs...
   vocab = (struct vocab_word *) calloc(vocab_max_size, sizeof(struct vocab_word));
@@ -35,21 +40,22 @@ void WorkerModel::initW2V() {
   InitUnigramTable();
 }
 
+/**
+ * Obtain access to a source of training data
+ */
 bool Worker::acquireSource(int idx) {
   if (!model->sources->isActive(idx)) return false;
   WordSource *source = model->sources->at(idx);
   if (source == nullptr) {
     // source is locked
     return false;
-  }
-
-  else if (source->iterationsRemaining() <= 0) {
+  } else if (source->iterationsRemaining() <= 0) {
+    // source has been iterated epoch number of times
     model->sources->setInactive(idx);
     model->sources->release(idx);
     return false;
-  }
-
-  else {
+  } else {
+    // pass the source into the sentence producer
     senpro.setSource(source);
     return true;
   }
