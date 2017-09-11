@@ -5,22 +5,22 @@
 
 class BufferReader {
 protected:
-	int *data;
+  int *data;
 public:
-	int idx;
-	void setData(int *data){ this->data = data; }
-	int* getData() { return data; }
+  int idx;
+  void setData(int *data){ this->data = data; }
+  int* getData() { return data; }
 };
 
 class Buffer {
 public:
-	virtual ~Buffer() {} ;
-	virtual bool isFull() = 0;
-	virtual bool isEmpty() = 0;
-	virtual int itemSize() = 0;
-	virtual int numItems() = 0;
-	virtual int getEmptyItem(BufferReader *reader) = 0;
-	virtual int getReadyItem(BufferReader *reader) = 0;
+  virtual ~Buffer() {} ;
+  virtual bool isFull() = 0;
+  virtual bool isEmpty() = 0;
+  virtual int itemSize() = 0;
+  virtual int numItems() = 0;
+  virtual int getEmptyItem(BufferReader *reader) = 0;
+  virtual int getReadyItem(BufferReader *reader) = 0;
 };
 
 #endif

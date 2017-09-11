@@ -7,13 +7,13 @@
 
 class TIProducer {
 public:
-	void buildTI(TCBufferReader *tc_reader);
-	bool hasSentence();
-	bool loadSentence(SenBuffer *sen_buffer);
+  void buildTI(TCBufferReader *tc_reader);
+  bool hasSentence();
+  bool loadSentence(SenBuffer *sen_buffer);
 protected:
-	bool sentenceLoaded = false;
-	SenBufferReader sen_reader;
-	unsigned long long next_random = 1;
+  bool sentenceLoaded = false;
+  SenBufferReader sen_reader;
+  unsigned long long next_random = 1;
 };
 
 #endif

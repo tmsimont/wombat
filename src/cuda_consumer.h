@@ -14,19 +14,19 @@
 
 class CUDAConsumer {
 public:
-	CUDAConsumer(int num_batches,int batch_size);
-	~CUDAConsumer();
-	int consume();
-	int acquire();
-	void setTCBuffer(TCBuffer *tcb);
-	TCBuffer*  getTCBuffer();
+  CUDAConsumer(int num_batches,int batch_size);
+  ~CUDAConsumer();
+  int consume();
+  int acquire();
+  void setTCBuffer(TCBuffer *tcb);
+  TCBuffer*  getTCBuffer();
 protected:
-	int batch_size;
-	int num_batches;
-	long acquired = 0;
-	unsigned long long word_count = 0, last_word_count = 0;
-	SGDCUDATrainer *trainer;
-	TCBuffer *tc_buffer;
+  int batch_size;
+  int num_batches;
+  long acquired = 0;
+  unsigned long long word_count = 0, last_word_count = 0;
+  SGDCUDATrainer *trainer;
+  TCBuffer *tc_buffer;
 };
 
 

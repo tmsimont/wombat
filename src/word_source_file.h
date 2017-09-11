@@ -7,13 +7,13 @@
 
 class WordSourceFile : public WordSource {
 public:
-	virtual int getWord();
-	virtual int iterationsRemaining();
-	virtual bool rewind();
-	WordSourceFile(int id, int iters, unsigned long long chunkSize, char *train_file);
-	unsigned long long start,
-										 chunkSize;
-	FILE *fi;
+  virtual int getWord();
+  virtual int iterationsRemaining();
+  virtual bool rewind();
+  WordSourceFile(int id, int iters, unsigned long long chunkSize, char *train_file);
+  unsigned long long start,
+                     chunkSize;
+  FILE *fi;
 };
 
 #endif

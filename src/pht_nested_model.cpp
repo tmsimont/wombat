@@ -7,23 +7,23 @@
 
 
 void PHTNestedModel::initWombat() {
-	num_groups = num_phys;
+  num_groups = num_phys;
 
-	// data buffers
-	for (int i = 0; i < num_groups; ++i) {
-		tcbs.push_back(new TCBuffer(items_in_tcb));
-		sbs.push_back(new SenBuffer(sentences_in_buffer));
-	}
+  // data buffers
+  for (int i = 0; i < num_groups; ++i) {
+    tcbs.push_back(new TCBuffer(items_in_tcb));
+    sbs.push_back(new SenBuffer(sentences_in_buffer));
+  }
 
-	// file  i/o
-	sources = new WordSourceFileGroup(num_groups);
-	sources->useLocks(true);
-	sources->init();
+  // file  i/o
+  sources = new WordSourceFileGroup(num_groups);
+  sources->useLocks(true);
+  sources->init();
 
-	for (int i = 0; i < num_groups; ++i) {
-		shared_consumers.push_back(new SharedConsumer(tcbs_per_thread));
-		shared_consumers[i]->id = i;
-	}
+  for (int i = 0; i < num_groups; ++i) {
+    shared_consumers.push_back(new SharedConsumer(tcbs_per_thread));
+    shared_consumers[i]->id = i;
+  }
 }
 
 void PHTNestedModel::train() {
@@ -32,57 +32,57 @@ void PHTNestedModel::train() {
   #endif
 
   #pragma omp parallel
-	{
-		int id = omp_get_thread_num();
-		//#pragma omp parallel num_threads(num_threads/num_groups) 
-		{
-			PHTNestedWorker worker(id, this);
+  {
+    int id = omp_get_thread_num();
+    //#pragma omp parallel num_threads(num_threads/num_groups) 
+    {
+      PHTNestedWorker worker(id, this);
 
-			#pragma omp barrier
-			if (id == 0) {
-				start = omp_get_wtime();
-			}
-			#pragma omp barrier
+      #pragma omp barrier
+      if (id == 0) {
+        start = omp_get_wtime();
+      }
+      #pragma omp barrier
 
-			worker.work();
-		}
-	}
+      worker.work();
+    }
+  }
 }
 
 
 // split producer consumer
 int PHTNestedWorker::work() {
-	c = ((PHTNestedModel *) model)->shared_consumers[id];
+  c = ((PHTNestedModel *) model)->shared_consumers[id];
 
-	// nested thread split
-	#pragma omp parallel 
-	{
-		while (1) {
-			// let one of the splits handle sentence generation
-			#pragma omp single nowait
-			{
-				// id is shared by local nested threads
-				trySourceToSenBuffer(id, model->sbs[id]);
-				trySenBufferToTCBuffer(&tipro, model->sbs[id], model->tcbs[id]);
-			}
+  // nested thread split
+  #pragma omp parallel 
+  {
+    while (1) {
+      // let one of the splits handle sentence generation
+      #pragma omp single nowait
+      {
+        // id is shared by local nested threads
+        trySourceToSenBuffer(id, model->sbs[id]);
+        trySenBufferToTCBuffer(&tipro, model->sbs[id], model->tcbs[id]);
+      }
 
-			int s = 1;
-			c->setTCBuffer(model->tcbs[id]);
-			if (!tipro.hasSentence() && !model->sources->isActive(id) && model->sbs[id]->isEmpty()) {
-				c->release();
-			}
-			while (s) {
-				s = c->consume();
-			}
+      int s = 1;
+      c->setTCBuffer(model->tcbs[id]);
+      if (!tipro.hasSentence() && !model->sources->isActive(id) && model->sbs[id]->isEmpty()) {
+        c->release();
+      }
+      while (s) {
+        s = c->consume();
+      }
 
-			if (!c->working) {
-				finish();
-				c->consume();
-				break;
-			}
-		}
-	}
+      if (!c->working) {
+        finish();
+        c->consume();
+        break;
+      }
+    }
+  }
 
-	return 0;
+  return 0;
 }
 

@@ -16,25 +16,25 @@
 
 class BatchModel : public WorkerModel {
 public:
-	void initWombat();
-	void train();
-	virtual SGDBatchTrainer* getTrainer();
+  void initWombat();
+  void train();
+  virtual SGDBatchTrainer* getTrainer();
 };
 
 
 class BatchWorker : public Worker {
 public:
-	BatchWorker(int id, WorkerModel *m) : Worker(id, m) {}
+  BatchWorker(int id, WorkerModel *m) : Worker(id, m) {}
 
-	int work();
-	bool tryConsumeTCBuffer(TCBuffer *tc_buffer);
+  int work();
+  bool tryConsumeTCBuffer(TCBuffer *tc_buffer);
 
 private:
-	vector<SenBuffer *> local_sbs;
-	vector<TIProducer> tipros;
-	vector<TCBuffer *> local_tcbs;
-	BatchConsumer *c;
-	SenBuffer *sen_buffer;
+  vector<SenBuffer *> local_sbs;
+  vector<TIProducer> tipros;
+  vector<TCBuffer *> local_tcbs;
+  BatchConsumer *c;
+  SenBuffer *sen_buffer;
 };
 
 extern int batch_size;

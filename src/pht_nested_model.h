@@ -14,23 +14,23 @@
 
 class PHTNestedModel : public WorkerModel {
 public:
-	vector<SharedConsumer *> shared_consumers;
-	int num_groups;
+  vector<SharedConsumer *> shared_consumers;
+  int num_groups;
 
-	void initWombat();
-	void train();
+  void initWombat();
+  void train();
 };
 
 
 class PHTNestedWorker : public Worker {
 public:
 
-	PHTNestedWorker(int id, WorkerModel *m) : Worker(id, m) {}
+  PHTNestedWorker(int id, WorkerModel *m) : Worker(id, m) {}
 
-	int work();
+  int work();
 
 private:
-	SharedConsumer *c;
+  SharedConsumer *c;
 };
 
 extern int num_phys;

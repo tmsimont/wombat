@@ -12,17 +12,17 @@
 
 class BatchConsumer {
 public:
-	BatchConsumer(SGDBatchTrainer *trainer);
-	~BatchConsumer();
-	int consume();
-	int acquire();
-	void setTCBuffer(TCBuffer *tcb);
-	TCBuffer*  getTCBuffer();
+  BatchConsumer(SGDBatchTrainer *trainer);
+  ~BatchConsumer();
+  int consume();
+  int acquire();
+  void setTCBuffer(TCBuffer *tcb);
+  TCBuffer*  getTCBuffer();
 protected:
-	long acquired = 0;
-	unsigned long long word_count = 0, last_word_count = 0;
-	SGDBatchTrainer *trainer;
-	TCBuffer *tc_buffer;
+  long acquired = 0;
+  unsigned long long word_count = 0, last_word_count = 0;
+  SGDBatchTrainer *trainer;
+  TCBuffer *tc_buffer;
 };
 
 

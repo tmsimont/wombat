@@ -7,14 +7,14 @@
 
 class SentenceProducer {
 public:
-	int buildSentence(SenBufferReader *sen_reader);
-	void setSource(WordSource *s) {
-		source = s;
-	}
+  int buildSentence(SenBufferReader *sen_reader);
+  void setSource(WordSource *s) {
+    source = s;
+  }
 protected:
-	WordSource *source;
-	bool shouldDiscardWord(int word);	
-	unsigned long long next_random = 1;
+  WordSource *source;
+  bool shouldDiscardWord(int word); 
+  unsigned long long next_random = 1;
 };
 
 

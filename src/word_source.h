@@ -3,11 +3,11 @@
 
 class WordSource {
 public:
-	int id, 
-			iters;
-	virtual int getWord() = 0;
-	virtual int iterationsRemaining() = 0;
-	virtual bool rewind() = 0;
+  int id, 
+      iters;
+  virtual int getWord() = 0;
+  virtual int iterationsRemaining() = 0;
+  virtual bool rewind() = 0;
 };
 
 #endif

@@ -13,33 +13,33 @@ extern int time_events;
 
 class StopWatch {
 public:
-	double last, stopped = 0;
-	double accumulated = 0;
-	StopWatch() {
-		last = 0;
-	}
-	void record() {
-		if (last == 0) last = omp_get_wtime();
-	}
-	void pause() {
-		if (last == 0) return;
-		accumulated += omp_get_wtime() - last;
-		last = 0;
-	}
-	double timed() {
-		return accumulated;
-	}
-	double running() {
-		return stopped - start;
-	}
-	void stop() {
-		stopped = omp_get_wtime();
-	}
-	float pctRecorded() {
-		if (stopped)
-			return (float) timed() * 100 / (running() + 1);
-		return (float) timed() * 100 / ((omp_get_wtime() - start)+ 1);
-	}
+  double last, stopped = 0;
+  double accumulated = 0;
+  StopWatch() {
+    last = 0;
+  }
+  void record() {
+    if (last == 0) last = omp_get_wtime();
+  }
+  void pause() {
+    if (last == 0) return;
+    accumulated += omp_get_wtime() - last;
+    last = 0;
+  }
+  double timed() {
+    return accumulated;
+  }
+  double running() {
+    return stopped - start;
+  }
+  void stop() {
+    stopped = omp_get_wtime();
+  }
+  float pctRecorded() {
+    if (stopped)
+      return (float) timed() * 100 / (running() + 1);
+    return (float) timed() * 100 / ((omp_get_wtime() - start)+ 1);
+  }
 };
 
 extern std::vector<StopWatch> produceTimers;

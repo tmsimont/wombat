@@ -8,19 +8,19 @@
 
 class PHTModel : public WorkerModel {
 public:
-	void initWombat();
-	void train();
+  void initWombat();
+  void train();
 };
 
 
 class PHTWorker : public Worker {
 public:
-	PHTWorker(int id, WorkerModel *m) : Worker(id, m) {}
+  PHTWorker(int id, WorkerModel *m) : Worker(id, m) {}
 
-	int work();
+  int work();
 
 private:
-	Consumer c;
+  Consumer c;
 };
 
 extern int num_phys;

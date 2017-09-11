@@ -6,9 +6,9 @@
 typedef float real;
 
 struct vocab_word {
-	unsigned long long cn;
-	int *point;
-	char *word, *code, codelen;
+  unsigned long long cn;
+  int *point;
+  char *word, *code, codelen;
 };
 
 extern int binary, debug_mode;

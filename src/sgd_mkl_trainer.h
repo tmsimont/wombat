@@ -10,10 +10,10 @@
 
 class SGDMKLTrainer : public SGDTrainer {
 public:
-	virtual void activateHiddenLayer();
-	virtual void calculateError();
-	virtual void calculateCWordsUpdate();
-	virtual void calculateTWordsUpdate();
+  virtual void activateHiddenLayer();
+  virtual void calculateError();
+  virtual void calculateCWordsUpdate();
+  virtual void calculateTWordsUpdate();
 };
 
 #endif

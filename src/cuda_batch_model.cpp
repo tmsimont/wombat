@@ -1,32 +1,32 @@
 #include "cuda_batch_model.h"
 
 void CUDABatchModel::initWombat() {
-	BatchModel::initWombat();
-	cudaSetDevice(0);
-	InitNetCUDA(&Wih, &Woh);
-	InitExpCUDA();
+  BatchModel::initWombat();
+  cudaSetDevice(0);
+  InitNetCUDA(&Wih, &Woh);
+  InitExpCUDA();
 }
 void CUDABatchModel::train() {
   #pragma omp parallel num_threads(num_threads)
-	{
-		int id = omp_get_thread_num();
-		BatchWorker worker(id, this);
+  {
+    int id = omp_get_thread_num();
+    BatchWorker worker(id, this);
 
-		cudaSetDevice(0);
+    cudaSetDevice(0);
 
-		#pragma omp barrier
-		if (id == 0) {
-		 	start = omp_get_wtime();
-		}
-		#pragma omp barrier
+    #pragma omp barrier
+    if (id == 0) {
+      start = omp_get_wtime();
+    }
+    #pragma omp barrier
 
-		worker.work();
-	}
-	cudaDeviceSynchronize();
-	WiToHost(&Wih);
+    worker.work();
+  }
+  cudaDeviceSynchronize();
+  WiToHost(&Wih);
 }
 
 SGDBatchTrainer* CUDABatchModel::getTrainer() {
-	return new SGDCUDATrainer(batches_per_thread, batch_size);
+  return new SGDCUDATrainer(batches_per_thread, batch_size);
 }
 

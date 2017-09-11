@@ -18,9 +18,9 @@
 
 class CUDABatchModel : public BatchModel {
 public:
-	void initWombat();
-	SGDBatchTrainer* getTrainer();
-	void train();
+  void initWombat();
+  SGDBatchTrainer* getTrainer();
+  void train();
 };
 
 #endif

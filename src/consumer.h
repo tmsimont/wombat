@@ -10,19 +10,19 @@
 
 class Consumer {
 public:
-	int id;
-	Consumer();
-	~Consumer();
-	virtual int consume();
-	virtual int acquire();
-	void setTCBuffer(TCBuffer *tcb);
-	TCBuffer*  getTCBuffer();
+  int id;
+  Consumer();
+  ~Consumer();
+  virtual int consume();
+  virtual int acquire();
+  void setTCBuffer(TCBuffer *tcb);
+  TCBuffer*  getTCBuffer();
 protected:
-	int has_item = 0;
-	int *local_item;
-	TCBuffer *tc_buffer;
-	SGDTrainer *trainer;
-	unsigned long long word_count = 0, last_word_count = 0;
+  int has_item = 0;
+  int *local_item;
+  TCBuffer *tc_buffer;
+  SGDTrainer *trainer;
+  unsigned long long word_count = 0, last_word_count = 0;
 };
 
 

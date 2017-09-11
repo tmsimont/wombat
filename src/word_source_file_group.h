@@ -7,8 +7,8 @@
 
 class WordSourceFileGroup : public WordSourceGroup {
 public:
-	WordSourceFileGroup(int num_sources) : WordSourceGroup(num_sources) {}
-	virtual void init();
+  WordSourceFileGroup(int num_sources) : WordSourceGroup(num_sources) {}
+  virtual void init();
 };
 
 #endif
