@@ -6,20 +6,21 @@
 #include "src/buffer.cpp"
 
 class UnlockedBuffer : public Buffer {
-protected:
+ protected:
   int *data;
   int num_items;
   int item_size;
 
-private:
+ private:
   int i_empty = 0, i_empty_wrap = 0;
   int i_ready = 0, i_ready_wrap = 0;
 
-public:
+ public:
   UnlockedBuffer(int item_size, int num_items) {
     this->item_size = item_size;
     this->num_items = num_items;
-    posix_memalign((void **)&data, 64, item_size * num_items * sizeof(int));
+    posix_memalign(reinterpret_cast<void **>(&data),
+        64, item_size * num_items * sizeof(int));
   }
 
   ~UnlockedBuffer() {
@@ -67,7 +68,6 @@ public:
     }
     return 1;
   }
-
 };
 
 #endif

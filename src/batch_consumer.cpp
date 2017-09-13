@@ -31,29 +31,22 @@ int BatchConsumer::consume() {
     trainer->clear();
     acquired = 0;
     if (word_count - last_word_count > 10000) {
-        #pragma omp atomic
-        word_count_actual += word_count - last_word_count;
+      #pragma omp atomic
+      word_count_actual += word_count - last_word_count;
 
-        last_word_count = word_count;
-        if (debug_mode > 1) {
-          if (time_events) {
-            double now = omp_get_wtime();
-            printf("Alpha: %f  Progress: %.2f%%  Words/sec: %.2fk\n",  alpha,
-                    word_count_actual / (real) (iter * train_words + 1) * 100,
-                    word_count_actual / ((now - start) * 1000));
-            printTimers();
-          } else {
-            double now = omp_get_wtime();
-            printf("\rAlpha: %f  Progress: %.2f%%  Words/sec: %.2fk",  alpha,
-                    word_count_actual / (real) (iter * train_words + 1) * 100,
-                    word_count_actual / ((now - start) * 1000));
-            fflush(stdout);
-          }
-        }
-        alpha = starting_alpha
-          * (1 - word_count_actual / (real) (iter * train_words + 1));
-        if (alpha < starting_alpha * 0.0001f)
-            alpha = starting_alpha * 0.0001f;
+      last_word_count = word_count;
+      if (debug_mode > 1) {
+        double now = omp_get_wtime();
+        printf("\rAlpha: %f  Progress: %.2f%%  Words/sec: %.2fk",  alpha,
+                word_count_actual / (real) (iter * train_words + 1) * 100,
+                word_count_actual / ((now - start) * 1000));
+        fflush(stdout);
+      }
+      alpha = starting_alpha
+        * (1 - word_count_actual / (real) (iter * train_words + 1));
+      if (alpha < starting_alpha * 0.0001f) {
+        alpha = starting_alpha * 0.0001f;
+      }
     }
     return 1;
   }

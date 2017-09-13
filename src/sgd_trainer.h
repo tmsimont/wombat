@@ -6,36 +6,33 @@
 #include "src/common.h"
 #include "src/w2v-functions.h"
 #include "src/tc_buffer.h"
-#include "src/timer.h"
 
 class SGDTargets {
-public:
-    int *twords;
-    int *meta;
-    int *labels;
-    int *cwords;
-    int length;
-    int numcwords;
+ public:
+  int *twords;
+  int *meta;
+  int *labels;
+  int *cwords;
+  int length;
+  int numcwords;
 
-    SGDTargets(int len, int numcw) {
-        length = len;
-        numcwords = numcw;
-        twords = (int *) malloc(length * sizeof(int));
-        //meta = (int *) malloc(length * sizeof(int));
-        labels = (int *) malloc(length * sizeof(int));
-        cwords = (int *) malloc(numcw * sizeof(int));
-    }
+  SGDTargets(int len, int numcw) {
+    length = len;
+    numcwords = numcw;
+    twords = reinterpret_cast<int *>(malloc(length * sizeof(int)));
+    labels = reinterpret_cast<int *>(malloc(length * sizeof(int)));
+    cwords = reinterpret_cast<int *>(malloc(numcw * sizeof(int)));
+  }
 
-    ~SGDTargets() {
-        free(twords);
-        //free(meta);
-        free(labels);
-        free(cwords);
-    }
+  ~SGDTargets() {
+    free(twords);
+    free(labels);
+    free(cwords);
+  }
 };
 
 class SGDTrainer {
-public:
+ public:
   int randomness = 1;
 
   int indices_loaded = 0;
@@ -56,7 +53,6 @@ public:
   void train();
   void clear();
 
-//protected:
   int *local_tcb_item;
 
   real *cwordsM;
@@ -76,7 +72,6 @@ public:
   int matrix_size;
   int num_twords, num_cwords;
   unsigned long long word_count = 0, last_word_count = 0, next_random = 1;
-
 };
 
 #endif

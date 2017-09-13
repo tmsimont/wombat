@@ -8,14 +8,14 @@
 #include "src/word_source.h"
 
 class SentenceProducer {
-public:
+ public:
   int buildSentence(SenBufferReader *sen_reader);
   void setSource(WordSource *s) {
     source = s;
   }
-protected:
+ protected:
   WordSource *source;
-  bool shouldDiscardWord(int word); 
+  bool shouldDiscardWord(int word);
   unsigned long long next_random = 1;
 };
 

@@ -8,7 +8,7 @@
 #include "src/word_source_file.h"
 
 class WordSourceFileGroup : public WordSourceGroup {
-public:
+ public:
   WordSourceFileGroup(int num_sources) : WordSourceGroup(num_sources) {}
   virtual void init();
 };

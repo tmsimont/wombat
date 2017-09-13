@@ -3,21 +3,22 @@
 #ifndef BATCH_MODEL_H_
 #define BATCH_MODEL_H_
 
+#include <omp.h>
+
+#include <vector>
+
 #include "src/worker_model.h"
 #include "src/w2v-functions.h"
 #include "src/common.h"
 #include "src/consumer.h"
-#include <vector>
 #include "src/tc_buffer.h"
 #include "src/sen_buffer.h"
 #include "src/console.h"
-#include "src/timer.h"
-#include "omp.h"
 #include "src/sgd_batch_trainer.h"
 #include "src/batch_consumer.h"
 
 class BatchModel : public WorkerModel {
-public:
+ public:
   void initWombat();
   void train();
   virtual SGDBatchTrainer* getTrainer();
@@ -25,13 +26,13 @@ public:
 
 
 class BatchWorker : public Worker {
-public:
+ public:
   BatchWorker(int id, WorkerModel *m) : Worker(id, m) {}
 
   int work();
   bool tryConsumeTCBuffer(TCBuffer *tc_buffer);
 
-private:
+ private:
   vector<SenBuffer *> local_sbs;
   vector<TIProducer> tipros;
   vector<TCBuffer *> local_tcbs;

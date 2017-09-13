@@ -8,5 +8,4 @@ void WordSourceFileGroup::init() {
   for (int i = 0; i < num_sources; ++i) {
     sources.push_back(new WordSourceFile(i, iter, chunkSize, train_file));
   }
-
 }

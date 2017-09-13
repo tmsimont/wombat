@@ -8,34 +8,42 @@ SGDCUDATrainer::SGDCUDATrainer(int num_batches, int batch_size) {
   this->batch_size = batch_size;
   this->num_batches = num_batches;
 
-
-  if (hs)
-      twords_batch_size = MAX_CODE_LENGTH;
-  else
-      twords_batch_size = negative + 1;
+  if (hs) {
+    twords_batch_size = MAX_CODE_LENGTH;
+  } else {
+    twords_batch_size = negative + 1;
+  }
+  labels_batch_size = twords_batch_size;
 
   cwords_batch_size = (2 * window + 1);
 
-  labels_batch_size = twords_batch_size;
-
   int data_batch_size = cwords_batch_size * twords_batch_size;
 
-  cwords_bytes      = (long)num_batches * (long)batch_size * (long)data_batch_size * sizeof(int); 
-  twords_bytes      = (long)num_batches * (long)batch_size * (long)data_batch_size * sizeof(int); 
-  labels_bytes      = (long)num_batches * (long)batch_size * (long)data_batch_size * sizeof(int); 
+  const long bytes_needed =
+    (long)num_batches
+    * (long)batch_size
+    * (long)data_batch_size
+    * sizeof(int);
 
-  checkCuda( cudaMallocHost((void**)&cwords,cwords_bytes) ); 
-  checkCuda( cudaMallocHost((void**)&twords,twords_bytes) ); 
-  checkCuda( cudaMallocHost((void**)&labels,labels_bytes) ); 
+  twords_bytes = bytes_needed;
+  labels_bytes = bytes_needed;
+  cwords_bytes = bytes_needed;
 
-  cudaMalloc((void**)&d_cwords, cwords_bytes);
-  cudaMalloc((void**)&d_twords, twords_bytes);
-  cudaMalloc((void**)&d_labels, labels_bytes);
+  checkCuda(cudaMallocHost(reinterpret_cast<void **>(&cwords), cwords_bytes));
+  checkCuda(cudaMallocHost(reinterpret_cast<void **>(&twords), twords_bytes));
+  checkCuda(cudaMallocHost(reinterpret_cast<void **>(&labels), labels_bytes));
+
+  cudaMalloc(reinterpret_cast<void **>(&d_cwords), cwords_bytes);
+  cudaMalloc(reinterpret_cast<void **>(&d_twords), twords_bytes);
+  cudaMalloc(reinterpret_cast<void **>(&d_labels), labels_bytes);
 
   num_streams = num_batches;
 
-  streams = (cudaStream_t *)malloc(num_streams * sizeof(cudaStream_t));
-  memoutEvents = (cudaEvent_t *)malloc(num_streams * sizeof(cudaEvent_t));
+  streams = reinterpret_cast<cudaStream_t *>(
+      malloc(num_streams * sizeof(cudaStream_t)));
+  memoutEvents = reinterpret_cast<cudaEvent_t *>(
+      malloc(num_streams * sizeof(cudaEvent_t)));
+
   for (int i = 0; i < num_streams; i++) {
     cudaStreamCreate(&(streams[i]));
     cudaEventCreate(&(memoutEvents[i]));
@@ -93,14 +101,16 @@ void SGDCUDATrainer::memtoCUDA() {
 }
 
 void SGDCUDATrainer::train() {
-  if (loaded_sets < (batch_size * num_batches)) return;
+  if (loaded_sets < (batch_size * num_batches)) {
+    return;
+  }
 
   memtoCUDA();
 
-  CallKernels(hs, wombat.size(), wovbat.size(), streams + 0, 
-    d_Wih, 
-    d_Woh, 
-    d_cwords, 
+  CallKernels(hs, wombat.size(), wovbat.size(), streams + 0,
+    d_Wih,
+    d_Woh,
+    d_cwords,
     0,
     d_twords,
     0,
@@ -109,7 +119,6 @@ void SGDCUDATrainer::train() {
     hidden_size,
     alpha,
     MAX_EXP);
-
 }
 
 void SGDCUDATrainer::clear() {
@@ -138,14 +147,12 @@ void SGDCUDATrainer::loadSet(TCBufferReader *tc_reader) {
           labels[targets_to_load] = vocab[target].code[k];
           targets_to_load++;
     }
-  }
-  else {
+  } else {
     for (int i = 0; i < twords_batch_size; ++i) {
       if (i == 0) {
         target_indices[i] = tc_reader->targetWord();
         labels[i] = 1;
-      }
-      else {
+      } else {
         int sample = 0;
         next_random = next_random * (unsigned long long) 25214903917 + 11;
         sample = table[(next_random >> 16) % table_size];
@@ -173,8 +180,7 @@ void SGDCUDATrainer::loadSet(TCBufferReader *tc_reader) {
           m->addTWord(target_indices[twi+i], labels[twi+i]);
         }
         wombat.push_back(m);
-      }
-      else {
+      } else {
         for (int i = 0; twi+i < targets_to_load && i < 4; i++) {
           VOP v(
               target_indices[twi+i],
@@ -190,28 +196,47 @@ void SGDCUDATrainer::loadSet(TCBufferReader *tc_reader) {
   }
 
   loaded_sets++;
-
 }
 
 void InitNetCUDA(real **Wih, real **Woh) {
-  checkCuda(cudaMalloc((void **)&d_Woh, (long long)vocab_size * hidden_size * sizeof(float)));
-  checkCuda(cudaMemcpy(d_Woh, *Woh, (long long)vocab_size * hidden_size * sizeof(float), cudaMemcpyHostToDevice));
-  checkCuda(cudaMalloc((void **)&d_Wih, (long long)vocab_size * hidden_size * sizeof(float)));
-  checkCuda(cudaMemcpy(d_Wih, *Wih, (long long)vocab_size * hidden_size * sizeof(float), cudaMemcpyHostToDevice));
-
+  checkCuda(
+      cudaMalloc(reinterpret_cast<void **>(&d_Woh),
+        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float)));
+  checkCuda(
+      cudaMemcpy(d_Woh, *Woh,
+        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+        cudaMemcpyHostToDevice));
+  checkCuda(
+      cudaMalloc(reinterpret_cast<void **>(&d_Wih),
+        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float));
+  checkCuda(
+      cudaMemcpy(d_Wih, *Wih,
+        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+        cudaMemcpyHostToDevice));
 }
 
 void InitExpCUDA() {
-  checkCuda(cudaMalloc((void **)&d_expTable, (EXP_TABLE_SIZE + 1) * sizeof(float)));
-  checkCuda(cudaMemcpy(d_expTable, expTable, (EXP_TABLE_SIZE + 1) * sizeof(float), cudaMemcpyHostToDevice));
+  checkCuda(
+      cudaMalloc(reinterpret_cast<void **>(&d_expTable),
+        (EXP_TABLE_SIZE + 1) * sizeof(float)));
+  checkCuda(
+      cudaMemcpy(d_expTable, expTable,
+        (EXP_TABLE_SIZE + 1) * sizeof(float),
+        cudaMemcpyHostToDevice));
 }
 
 void WiToHost(real **Wih) {
   cudaDeviceSynchronize();
-  checkCuda(cudaMemcpy(*Wih, d_Wih, (long long)vocab_size * hidden_size * sizeof(float), cudaMemcpyDeviceToHost));
+  checkCuda(
+      cudaMemcpy(*Wih, d_Wih,
+        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+        cudaMemcpyDeviceToHost));
 }
 
 void WoToHost(real **Woh) {
   cudaDeviceSynchronize();
-  checkCuda(cudaMemcpy(*Woh, d_Woh, (long long)vocab_size * hidden_size * sizeof(float), cudaMemcpyDeviceToHost));
+  checkCuda(
+      cudaMemcpy(*Woh, d_Woh,
+        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+        cudaMemcpyDeviceToHost));
 }

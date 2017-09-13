@@ -3,24 +3,24 @@
 #ifndef BATCH_CONSUMER_H_
 #define BATCH_CONSUMER_H_
 
+#include <vector>
+
 #include "src/common.h"
 #include "src/w2v-functions.h"
 #include "src/sgd_batch_trainer.h"
 #include "src/sgd_trainer.h"
 #include "src/tc_buffer.h"
-#include <vector>
-#include "src/timer.h"
 #include "src/consumer.h"
 
 class BatchConsumer {
-public:
-  BatchConsumer(SGDBatchTrainer *trainer);
+ public:
+  explicit BatchConsumer(SGDBatchTrainer *trainer);
   ~BatchConsumer();
   int consume();
   int acquire();
   void setTCBuffer(TCBuffer *tcb);
   TCBuffer*  getTCBuffer();
-protected:
+ protected:
   long acquired = 0;
   unsigned long long word_count = 0, last_word_count = 0;
   SGDBatchTrainer *trainer;

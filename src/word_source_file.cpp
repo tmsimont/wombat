@@ -2,7 +2,10 @@
 
 #include "src/word_source_file.h"
 
-WordSourceFile::WordSourceFile(int id, int iters, unsigned long long chunkSize, char *train_file) {
+WordSourceFile::WordSourceFile(int id,
+    int iters,
+    unsigned long long chunkSize,
+    char *train_file) {
   this->id = id;
   this->iters = iters;
   this->chunkSize = chunkSize;

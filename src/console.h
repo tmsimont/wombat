@@ -6,7 +6,6 @@
 #include "src/common.h"
 #include "src/w2v-functions.h"
 #include "src/worker_model.h"
-#include "src/timer.h"
 
 int readConsoleArgs(int argc, char **argv);
 

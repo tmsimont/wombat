@@ -10,12 +10,6 @@ int sen_buffer_item_size = 1;
 #include "src/pht_model.h"
 int num_phys = 2;
 
-//#ifdef USE_CUDA
-//#include "src/cuda_model.h"
-//int cuda_batch_size = 256;
-//int cuda_batches_per_thread = 8;
-//#endif
-
 #include "src/batch_model.h"
 int batch_size = 256;
 int batches_per_thread = 8;
@@ -25,18 +19,11 @@ int tc_buffer_item_size;
 int tcbs_per_thread = 1;
 int items_in_tcb = 125;
 
-#include "src/timer.h"
-int time_events = 0;
-double start = 0;
-
+double start;
 
 int ArgPos(char *str, int argc, char **argv) {
   for (int a = 1; a < argc; a++)
     if (!strcmp(str, argv[a])) {
-      //if (a == argc - 1) {
-      //    printf("Argument missing for %s\n", str);
-      //    exit(1);
-      //}
       return a;
     }
   return -1;
@@ -56,28 +43,38 @@ int readConsoleArgs(int argc, char **argv) {
     printf("\t-window <int>\n");
     printf("\t\tSet max skip length between words; default is 5\n");
     printf("\t-sample <float>\n");
-    printf("\t\tSet threshold for occurrence of words. Those that appear with higher frequency in the training data\n");
-    printf("\t\twill be randomly down-sampled; default is 1e-3, useful range is (0, 1e-5)\n");
+    printf("\t\tSet threshold for occurrence of words. Those that\n");
+    printf("\t\tappear with higher frequency in the training data\n");
+    printf("\t\twill be randomly down-sampled; default is 1e-3,\n");
+    printf("\t\tuseful range is (0, 1e-5)\n");
     printf("\t-negative <int>\n");
-    printf("\t\tNumber of negative examples; default is 5, common values are 3 - 10 (0 = not used)\n");
+    printf("\t\tNumber of negative examples; default is 5, common\n");
+    printf("\t\tvalues are 3 - 10 (0 = not used)\n");
     printf("\t-iter <int>\n");
     printf("\t\tNumber of training iterations (default 5)\n");
     printf("\t-min-count <int>\n");
-    printf("\t\tThis will discard words that appear less than <int> times; default is 5\n");
+    printf("\t\tThis will discard words that appear less than <int>\n");
+    printf("\t\ttimes; default is 5\n");
     printf("\t-alpha <float>\n");
     printf("\t\tSet the starting learning rate; default is 0.025\n");
     printf("\t-debug <int>\n");
-    printf("\t\tSet the debug mode (default = 2 = more info during training)\n");
+    printf("\t\tSet the debug mode (default = 2 = more info\n");
+    printf("\t\tduring training)\n");
     printf("\t-binary <int>\n");
-    printf("\t\tSave the resulting vectors in binary moded; default is 0 (off)\n");
+    printf("\t\tSave the resulting vectors in binary moded;\n");
+    printf("\t\tdefault is 0 (off)\n");
     printf("\t-save-vocab <file>\n");
     printf("\t\tThe vocabulary will be saved to <file>\n");
     printf("\t-read-vocab <file>\n");
-    printf("\t\tThe vocabulary will be read from <file>, not constructed from the training data\n");
+    printf("\t\tThe vocabulary will be read from <file>, not\n");
+    printf("\t\tconstructed from the training data\n");
     printf("\t-batch-size <int>\n");
-    printf("\t\tThe batch size used for mini-batch training; default is 11 (i.e., 2 * window + 1)\n");
+    printf("\t\tThe batch size used for mini-batch training;\n");
+    printf("\t\tdefault is 11 (i.e., 2 * window + 1)\n");
     printf("\nExamples:\n");
-    printf("./word2vec -train data.txt -output vec.txt -size 200 -window 5 -sample 1e-4 -negative 5 -binary 0 -iter 3\n\n");
+    printf("./word2vec -train data.txt -output vec.txt\n");
+    printf("\t\t-size 200 -window 5 -sample 1e-4 -negative 5\n");
+    printf("\t\t-binary 0 -iter 3\n\n");
     return -1;
   }
 
@@ -126,14 +123,6 @@ int readConsoleArgs(int argc, char **argv) {
     items_in_tcb  = atoi(argv[i + 1]);
   if ((i = ArgPos((char *) "-num-phys", argc, argv)) > 0)
     num_phys  = atoi(argv[i + 1]);
-  if ((i = ArgPos((char *) "-time-events", argc, argv)) > 0)
-    time_events  = atoi(argv[i + 1]);
-//#ifdef USE_CUDA
-  //if ((i = ArgPos((char *) "-cuda-batch-size", argc, argv)) > 0)
-    //cuda_batch_size  = atoi(argv[i + 1]);
-  //if ((i = ArgPos((char *) "-cuda-batches-per-thread", argc, argv)) > 0)
-    //cuda_batches_per_thread  = atoi(argv[i + 1]);
-//#endif
   if ((i = ArgPos((char *) "-batch-size", argc, argv)) > 0)
     batch_size  = atoi(argv[i + 1]);
   if ((i = ArgPos((char *) "-batches-per-thread", argc, argv)) > 0)

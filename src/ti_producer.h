@@ -8,11 +8,11 @@
 #include "src/w2v-functions.h"
 
 class TIProducer {
-public:
+ public:
   void buildTI(TCBufferReader *tc_reader);
   bool hasSentence();
   bool loadSentence(SenBuffer *sen_buffer);
-protected:
+ protected:
   bool sentenceLoaded = false;
   SenBufferReader sen_reader;
   unsigned long long next_random = 1;

@@ -3,15 +3,15 @@
 #ifndef WORKERS_CONSUMER_H_
 #define WORKERS_CONSUMER_H_
 
+#include <vector>
+
 #include "src/common.h"
 #include "src/w2v-functions.h"
 #include "src/sgd_trainer.h"
 #include "src/tc_buffer.h"
-#include <vector>
-#include "src/timer.h"
 
 class Consumer {
-public:
+ public:
   int id;
   Consumer();
   ~Consumer();
@@ -19,7 +19,7 @@ public:
   virtual int acquire();
   void setTCBuffer(TCBuffer *tcb);
   TCBuffer*  getTCBuffer();
-protected:
+ protected:
   int has_item = 0;
   int *local_item;
   TCBuffer *tc_buffer;

@@ -3,7 +3,7 @@
 #include "src/pht_model.h"
 
 #ifdef USE_MKL
-#include "mkl.h"
+#include <mkl.h>
 #endif
 
 /**
@@ -25,7 +25,6 @@ void PHTModel::initWombat() {
   sources = new WordSourceFileGroup(num_phys);
   sources->useLocks(true);
   sources->init();
-
 }
 
 /**
@@ -37,7 +36,7 @@ void PHTModel::train() {
   mkl_set_num_threads(1);
   #endif
 
-  #pragma omp parallel num_threads(num_threads) 
+  #pragma omp parallel num_threads(num_threads)
   {
     int id = omp_get_thread_num();
     PHTWorker worker(id, this);
@@ -71,7 +70,9 @@ int PHTWorker::work() {
       if (s) s = c.consume();
     }
 
-    if (!tipro.hasSentence() && !model->sources->isActive(i) && model->sbs[id]->isEmpty()) {
+    if (!tipro.hasSentence()
+        && !model->sources->isActive(i)
+        && model->sbs[id]->isEmpty()) {
       finished = 1;
       return 1;
     }

@@ -3,9 +3,9 @@
 #include <cuda_fp16.h>
 
 __global__ void Wombat4x8(
-    float *Wb, 
-    float *Wa, 
-    int *bwords, 
+    float *Wb,
+    float *Wa,
+    int *bwords,
     int bwords_start_idx,
     int *awords,
     int awords_start_idx,
@@ -31,11 +31,13 @@ __global__ void Wombat4x8(
   // load in local sets of word vectors into As and Bs
   for (int i = 0; i < hidden_size; i += b) {
     if ((i+col) < hidden_size)
-      As[(hidden_size*row) + (i+col)] = Wa[(hidden_size * awords[awords_index + row]) + (i+col)];
+      As[(hidden_size*row) + (i+col)] =
+        Wa[(hidden_size * awords[awords_index + row]) + (i+col)];
   }
   for (int i = 0; i < hidden_size; i += a) {
     if ((i+row) < hidden_size)
-      Bs[(hidden_size*col) + (i+row)] = Wb[(hidden_size * bwords[bwords_index + col]) + (i+row)];
+      Bs[(hidden_size*col) + (i+row)] =
+        Wb[(hidden_size * bwords[bwords_index + col]) + (i+row)];
   }
 
   __syncthreads();
@@ -46,22 +48,21 @@ __global__ void Wombat4x8(
     f += As[(hidden_size*row) + i] * Bs[col*hidden_size + i];
   }
   if (hs == 1) {
-    if (f >= max_exp)
+    if (f >= max_exp) {
       f = 0;
-    else if (f <= -max_exp)
+    } else if (f <= -max_exp) {
       f = 0;
-    else {
+    } else {
       f = exp(f);
       f = f / (1.0f + f);
       f = (1.0f - labels[labels_index + row] - f) * alpha;
     }
-  }
-  else {
-    if (f > max_exp)
+  } else {
+    if (f > max_exp) {
       f = (labels[labels_index + row] - 1) * alpha;
-    else if (f < -max_exp)
+    } else if (f < -max_exp) {
       f = labels[labels_index + row] * alpha;
-    else {
+    } else {
       f = exp(f);
       f = f / (1.0f + f);
       f = (labels[labels_index + row] - f) * alpha;
@@ -95,9 +96,9 @@ __global__ void Wombat4x8(
 }
 
 __global__ void VectorTrain(
-    float *Wb, 
-    float *Wa, 
-    int *bwords, 
+    float *Wb,
+    float *Wa,
+    int *bwords,
     int bwords_start_idx,
     int *awords,
     int awords_start_idx,
@@ -119,54 +120,58 @@ __global__ void VectorTrain(
 
   float f = 0;
   for (int i = 0; i < hidden_size / 32; i++) {
-    A1s[i+threadIdx.x*hidden_size/32] = Wa[(hidden_size * awords[awords_index]) + i + threadIdx.x*hidden_size/32];
-    Bs[i+threadIdx.x*hidden_size/32] = Wb[(hidden_size * bwords[bwords_index]) + i + threadIdx.x*hidden_size/32];
+    A1s[i+threadIdx.x*hidden_size/32] =
+      Wa[(hidden_size * awords[awords_index]) + i + threadIdx.x*hidden_size/32];
+    Bs[i+threadIdx.x*hidden_size/32] =
+      Wb[(hidden_size * bwords[bwords_index]) + i + threadIdx.x*hidden_size/32];
   }
 
   __syncthreads();
 
   for (int i = 0; i < hidden_size / 32; i++) {
-    f += A1s[i + threadIdx.x*hidden_size/32] * Bs[i + threadIdx.x*hidden_size/32];
+    f += A1s[i + threadIdx.x*hidden_size/32]
+      * Bs[i + threadIdx.x*hidden_size/32];
   }
   #pragma unroll
   for (int i = 16; i > 0; i /= 2) {
     f += __shfl_down(f, i);
-  }  
+  }
   if (threadIdx.x == 0) {
     if (hs == 1) {
-      if (f >= max_exp)
+      if (f >= max_exp) {
         f = 0;
-      else if (f <= -max_exp)
+      } else if (f <= -max_exp) {
         f = 0;
-      else {
+      } else {
         f = exp(f);
         f = f / (1.0f + f);
         f = (1.0f - labels[labels_index] - f) * alpha;
       }
-    }
-    else {
-      if (f > max_exp)
+    } else {
+      if (f > max_exp) {
         f = (labels[labels_index] - 1) * alpha;
-      else if (f < -max_exp)
+      } else if (f < -max_exp) {
         f = labels[labels_index] * alpha;
-      else {
+      } else {
         f = exp(f);
         f = f / (1.0f + f);
         f = (labels[labels_index] - f) * alpha;
       }
     }
   }
+
   f = __shfl(f, 0);
 
 
   // Calculate and apply updates
   for (int i = 0; i < hidden_size/32; i++) {
     atomicAdd(
-        Wa + (hidden_size * awords[awords_index]) + i+threadIdx.x*hidden_size/32,
+        Wa + (hidden_size * awords[awords_index])
+          + i+threadIdx.x*hidden_size/32,
         f * Bs[i+threadIdx.x*hidden_size/32]);
     atomicAdd(
-        Wb + (hidden_size * bwords[bwords_index]) + i+threadIdx.x*hidden_size/32,
+        Wb + (hidden_size * bwords[bwords_index])
+          + i+threadIdx.x*hidden_size/32,
         f * A1s[i+threadIdx.x*hidden_size/32]);
   }
-
 }

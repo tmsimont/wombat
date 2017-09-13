@@ -3,16 +3,16 @@
 #ifndef SEN_BUFFER_H_
 #define SEN_BUFFER_H_
 
+#include <vector>
 
 #include "src/common.h"
 #include "src/buffer.cpp"
 #include "src/unlocked_buffer.cpp"
-#include <vector>
 
 class SenBuffer;
 
 class SenBufferReader : public BufferReader {
-public:
+ public:
   SenBuffer *buffer;
   int idx;
 
@@ -33,10 +33,10 @@ public:
 };
 
 class SenBuffer : public Buffer {
-private:
+ private:
   UnlockedBuffer *buffer;
-public:
-  SenBuffer(int num_items);
+ public:
+  explicit SenBuffer(int num_items);
   ~SenBuffer();
   int getEmptyItem(BufferReader *reader);
   int getReadyItem(BufferReader *reader);

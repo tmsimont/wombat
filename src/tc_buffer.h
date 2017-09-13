@@ -3,21 +3,23 @@
 #ifndef TC_BUFFER_H_
 #define TC_BUFFER_H_
 
+#include <omp.h>
+
+#include <vector>
+
 #include "src/common.h"
 #include "src/buffer.cpp"
 #include "src/unlocked_buffer.cpp"
-#include <vector>
-#include "omp.h"
 
 class TCBuffer;
 
 class TCBufferReader : public BufferReader {
-public:
+ public:
   TCBuffer *buffer;
   int idx;
 
   TCBufferReader();
-  TCBufferReader (int *data);
+  explicit TCBufferReader(int *data);
   ~TCBufferReader();
   int status();
   int targetWord();
@@ -33,12 +35,12 @@ public:
 };
 
 class TCBuffer : public Buffer {
-private:
+ private:
   UnlockedBuffer *buffer;
   omp_lock_t *lock;
   std::vector<omp_lock_t *> itemLocks;
-public:
-  TCBuffer(int num_items);
+ public:
+  explicit TCBuffer(int num_items);
   ~TCBuffer();
   int getEmptyItem(BufferReader *reader);
   int getReadyItem(BufferReader *reader);
@@ -58,7 +60,5 @@ extern int items_in_tcb;
 extern std::vector<TCBuffer *> tc_buffers;
 
 void InitTCBuffers(int window, int num_buffers, int num_items);
-void printTCBuffers();
-
 
 #endif

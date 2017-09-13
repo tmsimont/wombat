@@ -4,8 +4,8 @@
 #define WORD_SOURCE_H_
 
 class WordSource {
-public:
-  int id, 
+ public:
+  int id,
       iters;
   virtual int getWord() = 0;
   virtual int iterationsRemaining() = 0;

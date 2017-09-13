@@ -2,19 +2,26 @@
 
 #include "src/sgd_trainer.h"
 
-
 SGDTrainer::SGDTrainer() {
-  if (hs)
-      matrix_size = MAX_CODE_LENGTH;
-  else
-      matrix_size = negative + 1;
+  if (hs) {
+    matrix_size = MAX_CODE_LENGTH;
+  } else {
+    matrix_size = negative + 1;
+  }
+
   int max_cwords = (2 * window + 1);
 
-  posix_memalign((void **)&cwordsM, 64, max_cwords * hidden_size * sizeof(real));
-  posix_memalign((void **)&twordsM, 64, matrix_size * hidden_size * sizeof(real));
-  posix_memalign((void **)&twordsUpdate, 64, matrix_size * hidden_size * sizeof(real));
-  posix_memalign((void **)&cwordsUpdate, 64, max_cwords * hidden_size * sizeof(real));
-  posix_memalign((void **)&corrM, 64, matrix_size * max_cwords * sizeof(real));
+  posix_memalign(reinterpret_cast<void **>(&cwordsM),
+      64, max_cwords * hidden_size * sizeof(real));
+  posix_memalign(reinterpret_cast<void **>(&twordsM),
+      64, matrix_size * hidden_size * sizeof(real));
+  posix_memalign(reinterpret_cast<void **>(&twordsUpdate),
+      64, matrix_size * hidden_size * sizeof(real));
+  posix_memalign(reinterpret_cast<void **>(&cwordsUpdate),
+      64, max_cwords * hidden_size * sizeof(real));
+  posix_memalign(reinterpret_cast<void **>(&corrM),
+      64, matrix_size * max_cwords * sizeof(real));
+
   batch_indices = new SGDTargets(matrix_size, max_cwords);
 
   indices_loaded = 0;
@@ -29,8 +36,9 @@ SGDTrainer::~SGDTrainer() {
 }
 
 void SGDTrainer::train() {
-
-  if (num_twords == 0 || num_cwords == 0) return;
+  if (num_twords == 0 || num_cwords == 0) {
+    return;
+  }
 
   activateHiddenLayer();
   calculateError();
@@ -38,11 +46,9 @@ void SGDTrainer::train() {
   calculateTWordsUpdate();
   applyCWordsUpdate();
   applyTWordsUpdate();
-
 }
 
 void SGDTrainer::loadIndices(TCBufferReader *tc_reader) {
-
   int offset = 0;
   if (hs) {
     int target = tc_reader->targetWord();
@@ -51,13 +57,10 @@ void SGDTrainer::loadIndices(TCBufferReader *tc_reader) {
         batch_indices->labels[offset] = vocab[target].code[k];
         offset++;
     }
-  }
-  else {
+  } else {
     int target = tc_reader->targetWord();
-    //int tidx = offset;
     batch_indices->twords[offset] = target;
     batch_indices->labels[offset] = 1;
-    //batch_indices->meta[offset] = 1;
     offset++;
 
     // generate negative samples for output layer
@@ -66,25 +69,17 @@ void SGDTrainer::loadIndices(TCBufferReader *tc_reader) {
       if (randomness)  {
         next_random = next_random * (unsigned long long) 25214903917 + 11;
         sample = table[(next_random >> 16) % table_size];
-        if (!sample)
+        if (!sample) {
           sample = next_random % (vocab_size - 1) + 1;
-      }
-      else {
+        }
+      } else {
         next_random = (next_random + 20) % vocab_size;
         sample = next_random;
       }
-      //int* p = find(batch_indices->twords, batch_indices->twords + offset, sample);
-      //if (p == batch_indices->twords + offset) {
-        batch_indices->twords[offset] = sample;
-        batch_indices->labels[offset] = 0;
-        //batch_indices->meta[offset] = 1;
-        offset++;
-      //} else {
-        //int idx = p - batch_indices->twords;
-        //batch_indices->meta[idx]++;
-      //}
+      batch_indices->twords[offset] = sample;
+      batch_indices->labels[offset] = 0;
+      offset++;
     }
-    //batch_indices->meta[tidx] = 1;
   }
   num_twords = batch_indices->length = offset;
 
@@ -99,12 +94,16 @@ void SGDTrainer::loadIndices(TCBufferReader *tc_reader) {
 
 void SGDTrainer::loadCWords() {
   for (int i = 0; i < num_cwords; i++) {
-    memcpy(cwordsM + i * hidden_size, Wih + batch_indices->cwords[i] * hidden_size, hidden_size * sizeof(real));
+    memcpy(cwordsM + i * hidden_size,
+        Wih + batch_indices->cwords[i] * hidden_size,
+        hidden_size * sizeof(real));
   }
 }
 void SGDTrainer::loadTWords() {
   for (int i = 0; i < num_twords; i++) {
-    memcpy(twordsM + i * hidden_size, Woh + batch_indices->twords[i] * hidden_size, hidden_size * sizeof(real));
+    memcpy(twordsM + i * hidden_size,
+        Woh + batch_indices->twords[i] * hidden_size,
+        hidden_size * sizeof(real));
   }
 }
 
@@ -131,21 +130,20 @@ void SGDTrainer::activateHiddenLayer() {
         for (int k = 0; k < hidden_size; k++) {
           f += twordsM[i * hidden_size + k] * cwordsM[j * hidden_size + k];
         }
-        if (f >= MAX_EXP)
+        if (f >= MAX_EXP) {
           g = 0;
-        else if (f <= -MAX_EXP)
+        } else if (f <= -MAX_EXP) {
           g = 0;
-        else {
-          f = expTable[(int)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))];
+        } else {
+          f = expTable[static_cast<int>(
+              (f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))];
           g = (1 - batch_indices->labels[i] - f) * alpha;
         }
         corrM[i * num_cwords + j] = g;
       }
     }
-  }
-  else {
+  } else {
     for (int i = 0; i < num_twords; i++) {
-      //int c = batch_indices->meta[i];
       for (int j = 0; j < num_cwords; j++) {
         real f = 0.f, g;
         #pragma simd
@@ -153,12 +151,14 @@ void SGDTrainer::activateHiddenLayer() {
             f += twordsM[i * hidden_size + k] * cwordsM[j * hidden_size + k];
         }
         int label = (i ? 0 : 1);
-        if (f > MAX_EXP)
+        if (f > MAX_EXP) {
           g = (label - 1) * alpha;
-        else if (f < -MAX_EXP)
+        } else if (f < -MAX_EXP) {
           g = label * alpha;
-        else 
-          g = (label - expTable[(int) ((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))]) * alpha;
+        } else {
+          g = (label - expTable[static_cast<int>(
+                (f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))]) * alpha;
+        }
         corrM[i * num_cwords + j] = g;
       }
     }
@@ -178,13 +178,13 @@ void SGDTrainer::calculateCWordsUpdate() {
         f += corrM[k * num_cwords + i] * twordsM[k * hidden_size + j];
       }
       cwordsUpdate[i * hidden_size + j] = f;
-      //cwordsM[i * hidden_size + j] = f;
     }
   }
 }
 
 void SGDTrainer::calculateTWordsUpdate() {
-  // Apply error-based adjustment to context words to yield update for target words in Woh
+  // Apply error-based adjustment to context
+  // words to yield update for target words in Woh
   for (int i = 0; i < num_twords; i++) {
     for (int j = 0; j < hidden_size; j++) {
       real f = 0.f;
@@ -205,7 +205,6 @@ void SGDTrainer::applyCWordsUpdate() {
     #pragma simd
     for (int k = 0; k < hidden_size; k++) {
       Wih[des + k] += cwordsUpdate[src + k];
-      //Wih[des + k] += .01;
     }
   }
 }
@@ -218,7 +217,6 @@ void SGDTrainer::applyTWordsUpdate() {
     #pragma simd
     for (int j = 0; j < hidden_size; j++) {
       Woh[des + j] += twordsUpdate[src + j];
-      //Woh[des + j] += .01;
     }
   }
 }

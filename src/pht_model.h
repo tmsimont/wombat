@@ -3,10 +3,11 @@
 #ifndef PHT_MODEL_H_
 #define PHT_MODEL_H_
 
+#include <omp.h>
+
 #include "src/worker_model.h"
 #include "src/consumer.h"
 #include "src/console.h"
-#include "omp.h"
 
 /**
  * The Paired-Hyperthread model extends the
@@ -17,17 +18,17 @@
  * both threads hitting the same cache lines.
  */
 class PHTModel : public WorkerModel {
-public:
+ public:
   void initWombat();
   void train();
 };
 
 
 class PHTWorker : public Worker {
-public:
+ public:
   PHTWorker(int id, WorkerModel *m) : Worker(id, m) {}
   int work();
-private:
+ private:
   Consumer c;
 };
 

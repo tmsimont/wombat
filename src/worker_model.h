@@ -14,7 +14,6 @@
 #include "src/word_source_file.h"
 #include "src/word_source_file_group.h"
 #include <vector>
-#include "src/timer.h"
 
 class WorkerModel {
 public:

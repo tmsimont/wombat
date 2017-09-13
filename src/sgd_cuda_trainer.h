@@ -3,16 +3,15 @@
 #ifndef SGD_CUDA_TRAINER_H_
 #define SGD_CUDA_TRAINER_H_
 
+#include <cuda_runtime.h>
+
+#include <vector>
+#include <unordered_map>
 
 #include "src/common.h"
 #include "src/w2v-functions.h"
 #include "src/tc_buffer.h"
 #include "src/sgd_batch_trainer.h"
-#include "src/timer.h"
-#include <vector>
-#include <cuda_runtime.h>
-#include <unordered_map>
-
 
 #define checkCuda(err) {\
   cudaError_t cet = err;\
@@ -23,7 +22,7 @@
 }
 
 class MOP {
-public:
+ public:
   void addTWord(int idx, int label) {
     if (ntw == max_tw) return;
     twords[ntw] = idx;
@@ -53,20 +52,21 @@ public:
     for (int i = 0; i < max_cw; ++i)
       dest[i] = cwords[i];
   }
-protected:
+
+ protected:
   int ntw = 0, ncw = 0;
   int max_tw, max_cw;
   int *twords, *cwords, *labels;
 };
 
 class MOP4x8 : public MOP {
-public:
+ public:
   MOP4x8() {
     max_tw = 4;
     max_cw = 8;
-    twords = (int *)malloc(max_tw * sizeof(int));
-    labels = (int *)malloc(max_tw * sizeof(int));
-    cwords = (int *)malloc(max_cw * sizeof(int));
+    twords = reinterpret_cast<int *>(malloc(max_tw * sizeof(int)));
+    labels = reinterpret_cast<int *>(malloc(max_tw * sizeof(int)));
+    cwords = reinterpret_cast<int *>(malloc(max_cw * sizeof(int)));
   }
   ~MOP4x8() {
     free(twords);
@@ -76,13 +76,13 @@ public:
 };
 
 class VOP {
-public:
+ public:
   int tword, cword, label;
   VOP(int tw, int cw, int lbl) : tword(tw), cword(cw), label(lbl) {}
 };
 
 class SGDCUDATrainer : public SGDBatchTrainer {
-public:
+ public:
   SGDCUDATrainer(int num_batches, int batch_size);
   ~SGDCUDATrainer();
   void loadSet(TCBufferReader *buffer_item);
@@ -104,7 +104,6 @@ public:
         *d_labels;
   float *d_corrWo,
         *d_gradients;
-
 };
 
 void InitNetCUDA(real **Wih, real **Woh);
@@ -112,10 +111,10 @@ void InitExpCUDA();
 void WiToHost(real **Wih);
 void WoToHost(real **Woh);
 
-void CallKernels(int hs, int wombat_size, int wovbat_size, cudaStream_t* stream, 
-    float *d_Wih, 
-    float *d_Woh, 
-    int *d_cwords, 
+void CallKernels(int hs, int wombat_size, int wovbat_size, cudaStream_t* stream,
+    float *d_Wih,
+    float *d_Woh,
+    int *d_cwords,
     int bwords_start_idx,
     int *d_twords,
     int awords_start_idx,

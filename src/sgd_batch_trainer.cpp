@@ -5,32 +5,59 @@
 SGDBatchTrainer::SGDBatchTrainer(int num_batches, int batch_size) {
   this->batch_size = batch_size;
   this->num_batches = num_batches;
-  if (hs)
-      twords_batch_size = MAX_CODE_LENGTH;
-  else
-      twords_batch_size = negative + 1;
-  cwords_batch_size = (2 * window + 1);
 
-  // round off batch sizes to match block sizes
-  //while (twords_batch_size % BLOCK_SIZE != 0) twords_batch_size++;
-  //while (cwords_batch_size % BLOCK_SIZE != 0) cwords_batch_size++;
+  if (hs) {
+    twords_batch_size = MAX_CODE_LENGTH;
+  } else {
+    twords_batch_size = negative + 1;
+  }
+
+  cwords_batch_size = (2 * window + 1);
   labels_batch_size = twords_batch_size * cwords_batch_size;
 
-  cwords_bytes      = (long)num_batches * (long)batch_size * (long)cwords_batch_size * sizeof(int); 
-  num_cwords_bytes  = (long)num_batches * (long)batch_size * sizeof(int); 
-  twords_bytes      = (long)num_batches * (long)batch_size * (long)twords_batch_size * sizeof(int); 
-  num_twords_bytes  = (long)num_batches * (long)batch_size * sizeof(int); 
-  labels_bytes      = (long)num_batches * (long)batch_size * (long)labels_batch_size * sizeof(int); 
-  corrWo_bytes      = (long)num_batches * (long)batch_size * (long)twords_batch_size * hidden_size * sizeof(float); 
-  gradients_bytes   = (long)num_batches * (long)batch_size * (long)labels_batch_size * sizeof(float); 
+  const long size = (long)num_batches * (long)batch_size;
 
-  posix_memalign((void**)&cwords,64,cwords_bytes); 
-  posix_memalign((void**)&num_cwords,64,num_cwords_bytes); 
-  posix_memalign((void**)&twords,64,twords_bytes); 
-  posix_memalign((void**)&num_twords,64,num_twords_bytes); 
-  posix_memalign((void**)&labels,64,labels_bytes); 
-  posix_memalign((void**)&corrWo,64,corrWo_bytes); 
-  posix_memalign((void**)&gradients,64,gradients_bytes); 
+  cwords_bytes = size
+    * (long)cwords_batch_size
+    * sizeof(int);
+
+  num_cwords_bytes = size
+    * sizeof(int);
+
+  twords_bytes = size
+    * (long)twords_batch_size
+    * sizeof(int);
+
+  num_twords_bytes = size
+    * sizeof(int);
+
+  labels_bytes = size
+    * (long)labels_batch_size
+    * sizeof(int);
+
+  corrWo_bytes = size
+    * (long)twords_batch_size
+    * hidden_size
+    * sizeof(float);
+
+  gradients_bytes = size
+    * (long)labels_batch_size
+    * sizeof(float);
+
+  posix_memalign(reinterpret_cast<void**>(&cwords),
+      64, cwords_bytes);
+  posix_memalign(reinterpret_cast<void**>(&num_cwords),
+      64, num_cwords_bytes);
+  posix_memalign(reinterpret_cast<void**>(&twords),
+      64, twords_bytes);
+  posix_memalign(reinterpret_cast<void**>(&num_twords),
+      64, num_twords_bytes);
+  posix_memalign(reinterpret_cast<void**>(&labels),
+      64, labels_bytes);
+  posix_memalign(reinterpret_cast<void**>(&corrWo),
+      64, corrWo_bytes);
+  posix_memalign(reinterpret_cast<void**>(&gradients),
+      64, gradients_bytes);
 }
 
 SGDBatchTrainer::~SGDBatchTrainer() {
@@ -44,11 +71,13 @@ SGDBatchTrainer::~SGDBatchTrainer() {
 }
 
 void SGDBatchTrainer::train() {
-  if (loaded_sets < (batch_size * num_batches)) return;
+  if (loaded_sets < (batch_size * num_batches)) {
+    return;
+  }
 }
 
 void SGDBatchTrainer::clear() {
-  loaded_sets   = 0;
+  loaded_sets = 0;
 }
 
 void SGDBatchTrainer::loadSet(TCBufferReader *tc_reader) {
@@ -61,25 +90,29 @@ void SGDBatchTrainer::loadSet(TCBufferReader *tc_reader) {
   if (hs) {
     int target = tc_reader->targetWord();
     for (int k = 0; k < vocab[target].codelen; k++) {
-        twords[loaded_sets*twords_batch_size + loaded_twords] = vocab[target].point[k];
+        twords[loaded_sets*twords_batch_size + loaded_twords] =
+          vocab[target].point[k];
         for (int i = 0; i < cwords_batch_size; ++i) {
           if (i < tc_reader->numCWords())
-            labels[loaded_sets*labels_batch_size + loaded_twords*cwords_batch_size + i] = vocab[target].code[k];
+            labels[loaded_sets*labels_batch_size
+              + loaded_twords*cwords_batch_size + i] =
+              vocab[target].code[k];
           else
-            labels[loaded_sets*labels_batch_size + loaded_twords*cwords_batch_size + i] = 0;
+            labels[loaded_sets*labels_batch_size
+              + loaded_twords*cwords_batch_size + i] = 0;
         }
         loaded_twords++;
     }
-  }
-  else {
+  } else {
     int target = tc_reader->targetWord();
-    //int tidx = loaded_twords;
     twords[loaded_sets*twords_batch_size + loaded_twords] = target;
     for (int i = 0; i < cwords_batch_size; ++i) {
       if (i < tc_reader->numCWords())
-        labels[loaded_sets*labels_batch_size + loaded_twords*cwords_batch_size + i] = 1;
+        labels[loaded_sets*labels_batch_size
+          + loaded_twords*cwords_batch_size + i] = 1;
       else
-        labels[loaded_sets*labels_batch_size + loaded_twords*cwords_batch_size + i] = 0;
+        labels[loaded_sets*labels_batch_size
+          + loaded_twords*cwords_batch_size + i] = 0;
     }
     loaded_twords++;
 
@@ -91,14 +124,14 @@ void SGDBatchTrainer::loadSet(TCBufferReader *tc_reader) {
         sample = table[(next_random >> 16) % table_size];
         if (!sample)
           sample = next_random % (vocab_size - 1) + 1;
-      }
-      else {
+      } else {
         next_random = (next_random + 20) % vocab_size;
         sample = next_random;
       }
       twords[loaded_sets*twords_batch_size + loaded_twords] = sample;
       for (int i = 0; i < cwords_batch_size; ++i) {
-        labels[loaded_sets*labels_batch_size + loaded_twords*cwords_batch_size + i] = 0;
+        labels[loaded_sets*labels_batch_size
+          + loaded_twords*cwords_batch_size + i] = 0;
       }
       loaded_twords++;
     }
@@ -106,7 +139,8 @@ void SGDBatchTrainer::loadSet(TCBufferReader *tc_reader) {
 
   // Load in the context words
   for (int i = 0; i < tc_reader->numCWords(); i++) {
-    cwords[loaded_sets*cwords_batch_size + loaded_cwords] = *(tc_reader->cwords() + i);
+    cwords[loaded_sets*cwords_batch_size + loaded_cwords] =
+      *(tc_reader->cwords() + i);
     loaded_cwords++;
   }
 
@@ -117,7 +151,8 @@ void SGDBatchTrainer::loadSet(TCBufferReader *tc_reader) {
   while (loaded_twords < twords_batch_size) {
     twords[loaded_sets*twords_batch_size + loaded_twords] = 0;
     for (int i = 0; i < cwords_batch_size; ++i) {
-      labels[loaded_sets*labels_batch_size + loaded_twords*cwords_batch_size + i] = 0;
+      labels[loaded_sets*labels_batch_size
+        + loaded_twords*cwords_batch_size + i] = 0;
     }
     loaded_twords++;
   }

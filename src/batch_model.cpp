@@ -3,7 +3,6 @@
 #include "src/batch_model.h"
 
 void BatchModel::initWombat() {
-
   // file  i/o
   sources = new WordSourceFileGroup(num_threads);
   sources->useLocks(true);
@@ -12,7 +11,6 @@ void BatchModel::initWombat() {
   for (int i = 0; i < batch_size; ++i) {
     tcbs.push_back(new TCBuffer(items_in_tcb));
   }
-
 }
 
 void BatchModel::train() {
@@ -36,7 +34,7 @@ SGDBatchTrainer* BatchModel::getTrainer() {
 }
 
 int BatchWorker::work() {
-  c = new BatchConsumer(((BatchModel *)model)->getTrainer());
+  c = new BatchConsumer(reinterpret_cast<BatchModel *>(model)->getTrainer());
   for (int i = 0; i < batch_size; ++i) {
     local_sbs.push_back(new SenBuffer(1));
     TIProducer t;
@@ -47,7 +45,6 @@ int BatchWorker::work() {
   int i = 0;
   int si = id;
   while (1) {
-
     // fill sen_buffers with different sentences
     if (model->sources->hasActiveSource()) {
       for (i = 0; i < batch_size; ++i) {
@@ -63,7 +60,6 @@ int BatchWorker::work() {
     // load tipros and tcb's with sentences
     for (i = 0; i < batch_size; ++i) {
       trySenBufferToTCBuffer(&tipros[i], local_sbs[i], local_tcbs[i]);
-      //trySenBufferToTCBuffer(&tipros[i], local_sbs[i], model->tcbs[i]);
     }
 
     i = 0;
@@ -72,7 +68,6 @@ int BatchWorker::work() {
     int dead_tcbs = 0;
     while (empty_tcbs == 0) {
       c->setTCBuffer(local_tcbs[i]);
-      //c->setTCBuffer(model->tcbs[i]);
       c->getTCBuffer()->setLock();
       s = c->acquire();
       c->getTCBuffer()->unsetLock();
@@ -88,23 +83,24 @@ int BatchWorker::work() {
         case 0:
           // tcb is empty
           empty_tcbs++;
-          if (local_sbs[i]->isEmpty() && !tipros[i].hasSentence() && !model->sources->hasActiveSource())
+          if (local_sbs[i]->isEmpty()
+              && !tipros[i].hasSentence()
+              && !model->sources->hasActiveSource())
             dead_tcbs++;
           i++;
           break;
       }
       i = i % batch_size;
     }
+
     // try to consume what we have (might do nothing if not full)
     c->consume();
-
 
     // quit if unable to get more sentences and we have at least 1 empty tcb
     if (dead_tcbs > 0) {
       finished = 1;
       return 1;
     }
-
   }
 
   return 0;

@@ -6,17 +6,17 @@
 #include "src/common.h"
 
 class BufferReader {
-protected:
+ protected:
   int *data;
-public:
+ public:
   int idx;
-  void setData(int *data){ this->data = data; }
+  void setData(int *data) { this->data = data; }
   int* getData() { return data; }
 };
 
 class Buffer {
-public:
-  virtual ~Buffer() {} ;
+ public:
+  virtual ~Buffer() {}
   virtual bool isFull() = 0;
   virtual bool isEmpty() = 0;
   virtual int itemSize() = 0;
