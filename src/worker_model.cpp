@@ -17,23 +17,31 @@ WorkerModel::~WorkerModel() {
  */
 void WorkerModel::initW2V() {
   // init w2v structs...
-  vocab = (struct vocab_word *) calloc(vocab_max_size, sizeof(struct vocab_word));
-  vocab_hash = (int *)calloc(vocab_hash_size, sizeof(int));
+  vocab = reinterpret_cast<struct vocab_word *>(
+      calloc(vocab_max_size, sizeof(struct vocab_word)));
 
-  expTable = (real *)malloc((EXP_TABLE_SIZE + 1) * sizeof(real));
+  vocab_hash = reinterpret_cast<int *>(
+      calloc(vocab_hash_size, sizeof(int)));
+
+  expTable = reinterpret_cast<real *>(
+      malloc((EXP_TABLE_SIZE + 1) * sizeof(real)));
+
+  // Precompute the exp() table and f(x) = x / (x + 1)
   for (int i = 0; i < EXP_TABLE_SIZE + 1; i++) {
-    expTable[i] = exp((i / (real) EXP_TABLE_SIZE * 2 - 1) * MAX_EXP); // Precompute the exp() table
-    expTable[i] = expTable[i] / (expTable[i] + 1);                    // Precompute f(x) = x / (x + 1)
+    expTable[i] = exp((i / (real) EXP_TABLE_SIZE * 2 - 1) * MAX_EXP);
+    expTable[i] = expTable[i] / (expTable[i] + 1);
   }
 
   // w2v-style input
   if (read_vocab_file[0] != 0) {
     ReadVocab();
-  }
-  else {
+  } else {
     LearnVocabFromTrainFile();
   }
-  if (save_vocab_file[0] != 0) SaveVocab();
+
+  if (save_vocab_file[0] != 0) {
+    SaveVocab();
+  }
 
   // w2v-style initializations for nets and sample table
   InitNet();
@@ -69,13 +77,12 @@ bool Worker::trySourceToSenBuffer(int sourceIdx, SenBuffer *sen_buffer) {
       if (sen_buffer->getEmptyItem(&sen_reader)) {
         if (senpro.buildSentence(&sen_reader)) {
           success = true;
-        }
-        else {
+        } else {
           // word source iterations exhausted
           model->sources->setInactive(sourceIdx);
 
-          // TODO: deal with the fact that sen_reader is a 
-          // reserved slot in sen_buffer and now isn't going to 
+          // TODO: deal with the fact that sen_reader is a
+          // reserved slot in sen_buffer and now isn't going to
           // populate its data...
           sen_reader.markEmpty();
         }
@@ -86,7 +93,9 @@ bool Worker::trySourceToSenBuffer(int sourceIdx, SenBuffer *sen_buffer) {
   return success;
 }
 
-bool Worker::trySenBufferToTCBuffer(TIProducer *tipro, SenBuffer *sen_buffer, TCBuffer *tc_buffer) {
+bool Worker::trySenBufferToTCBuffer(TIProducer *tipro,
+    SenBuffer *sen_buffer,
+    TCBuffer *tc_buffer) {
   bool success = false;
 
   // get sentence from sen buffer
@@ -105,8 +114,7 @@ bool Worker::trySenBufferToTCBuffer(TIProducer *tipro, SenBuffer *sen_buffer, TC
       if (tc_buffer->getEmptyItem(&tc_reader)) {
         tipro->buildTI(&tc_reader);
         success = true;
-      }
-      else {
+      } else {
         // ran out of room in tcbuffer
         success = false;
       }
