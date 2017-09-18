@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/sgd_mkl_trainer.h"
+#include "src/sgd_trainers/sgd_mkl_trainer.h"
 
 void SGDMKLTrainer::activateHiddenLayer() {
   // cwordsM x (twordsM)T

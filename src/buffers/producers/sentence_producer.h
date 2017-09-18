@@ -5,7 +5,7 @@
 
 #include "src/buffers/readers/sen_buffer.h"
 #include "src/w2v-functions.h"
-#include "src/word_source.h"
+#include "src/data_source/word_source.h"
 
 /**
  * Helper to read from a WordSource

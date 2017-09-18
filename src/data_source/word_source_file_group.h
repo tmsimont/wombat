@@ -4,8 +4,8 @@
 #define WORD_SOURCE_FILE_GROUP_H_
 
 #include "src/w2v-functions.h"
-#include "src/word_source_group.h"
-#include "src/word_source_file.h"
+#include "src/data_source/word_source_group.h"
+#include "src/data_source/word_source_file.h"
 
 class WordSourceFileGroup : public WordSourceGroup {
  public:

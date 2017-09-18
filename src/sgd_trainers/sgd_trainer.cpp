@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/sgd_trainer.h"
+#include "src/sgd_trainers/sgd_trainer.h"
 
 SGDTrainer::SGDTrainer() {
   if (hs) {

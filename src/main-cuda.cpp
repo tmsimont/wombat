@@ -14,7 +14,6 @@ int main(int argc, char **argv) {
     printf("\nFinal: Alpha: %f  Progress: %.2f%%  Words/sec: %.2fk\n",  alpha,
             word_count_actual / (real) (iter * train_words + 1) * 100,
             word_count_actual / ((now - start) * 1000));
-    if (time_events) printFinalTimers();
 
     saveModel();
   }

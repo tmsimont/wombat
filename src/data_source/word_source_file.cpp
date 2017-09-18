@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/word_source_file.h"
+#include "src/data_source/word_source_file.h"
 
 WordSourceFile::WordSourceFile(int id,
     int iters,

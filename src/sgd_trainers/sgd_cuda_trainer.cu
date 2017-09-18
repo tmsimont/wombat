@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/sgd_cuda_trainer.h"
+#include "src/sgd_trainers/sgd_cuda_trainer.h"
 
 float *d_Wih, *d_Woh, *d_expTable;
 
@@ -199,44 +199,36 @@ void SGDCUDATrainer::loadSet(TCBufferReader *tc_reader) {
 }
 
 void InitNetCUDA(real **Wih, real **Woh) {
-  checkCuda(
-      cudaMalloc(reinterpret_cast<void **>(&d_Woh),
-        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float)));
-  checkCuda(
-      cudaMemcpy(d_Woh, *Woh,
-        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+  checkCuda(cudaMalloc((void **)&d_Woh,
+        (long long)vocab_size * hidden_size * sizeof(float)));
+  checkCuda(cudaMemcpy(d_Woh, *Woh,
+        (long long)vocab_size * hidden_size * sizeof(float),
         cudaMemcpyHostToDevice));
-  checkCuda(
-      cudaMalloc(reinterpret_cast<void **>(&d_Wih),
-        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float));
-  checkCuda(
-      cudaMemcpy(d_Wih, *Wih,
-        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+  checkCuda(cudaMalloc((void **)&d_Wih,
+        (long long)vocab_size * hidden_size * sizeof(float)));
+  checkCuda(cudaMemcpy(d_Wih, *Wih,
+        (long long)vocab_size * hidden_size * sizeof(float),
         cudaMemcpyHostToDevice));
 }
 
 void InitExpCUDA() {
-  checkCuda(
-      cudaMalloc(reinterpret_cast<void **>(&d_expTable),
+  checkCuda(cudaMalloc(reinterpret_cast<void **>(&d_expTable),
         (EXP_TABLE_SIZE + 1) * sizeof(float)));
-  checkCuda(
-      cudaMemcpy(d_expTable, expTable,
+  checkCuda(cudaMemcpy(d_expTable, expTable,
         (EXP_TABLE_SIZE + 1) * sizeof(float),
         cudaMemcpyHostToDevice));
 }
 
 void WiToHost(real **Wih) {
   cudaDeviceSynchronize();
-  checkCuda(
-      cudaMemcpy(*Wih, d_Wih,
-        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+  checkCuda(cudaMemcpy(*Wih, d_Wih,
+        (long long)vocab_size * hidden_size * sizeof(float),
         cudaMemcpyDeviceToHost));
 }
 
 void WoToHost(real **Woh) {
   cudaDeviceSynchronize();
-  checkCuda(
-      cudaMemcpy(*Woh, d_Woh,
-        reinterpret_cast<long long>(vocab_size) * hidden_size * sizeof(float),
+  checkCuda(cudaMemcpy(*Woh, d_Woh,
+        (long long)vocab_size * hidden_size * sizeof(float),
         cudaMemcpyDeviceToHost));
 }

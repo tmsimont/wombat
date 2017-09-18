@@ -3,7 +3,7 @@
 #include "src/consumer.h"
 
 #ifdef USE_MKL
-#include "src/sgd_mkl_trainer.h"
+#include "src/sgd_trainers/sgd_mkl_trainer.h"
 Consumer::Consumer() {
   trainer = new SGDMKLTrainer();
   local_item = reinterpret_cast<int *>(

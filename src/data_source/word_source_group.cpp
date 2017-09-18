@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/word_source_group.h"
+#include "src/data_source/word_source_group.h"
 
 WordSourceGroup::WordSourceGroup(int num_sources) {
   this->num_sources = num_sources;

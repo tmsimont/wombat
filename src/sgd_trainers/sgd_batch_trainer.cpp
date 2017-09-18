@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/sgd_batch_trainer.h"
+#include "src/sgd_trainers/sgd_batch_trainer.h"
 
 SGDBatchTrainer::SGDBatchTrainer(int num_batches, int batch_size) {
   this->batch_size = batch_size;

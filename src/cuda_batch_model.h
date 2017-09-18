@@ -14,8 +14,8 @@
 #include "src/buffers/tc_buffer.h"
 #include "src/buffers/sen_buffer.h"
 #include "src/console.h"
-#include "src/sgd_batch_trainer.h"
-#include "src/sgd_cuda_trainer.h"
+#include "src/sgd_trainers/sgd_batch_trainer.h"
+#include "src/sgd_trainers/sgd_cuda_trainer.h"
 #include "src/batch_consumer.h"
 #include "src/batch_model.h"
 

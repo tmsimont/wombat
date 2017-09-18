@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "src/common.h"
-#include "src/word_source.h"
+#include "src/data_source/word_source.h"
 
 class WordSourceGroup {
  public:

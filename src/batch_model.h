@@ -14,7 +14,7 @@
 #include "src/buffers/tc_buffer.h"
 #include "src/buffers/sen_buffer.h"
 #include "src/console.h"
-#include "src/sgd_batch_trainer.h"
+#include "src/sgd_trainers/sgd_batch_trainer.h"
 #include "src/batch_consumer.h"
 
 class BatchModel : public WorkerModel {

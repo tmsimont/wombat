@@ -11,10 +11,10 @@
 #include "src/buffers/sen_buffer.h"
 #include "src/buffers/producers/ti_producer.h"
 #include "src/buffers/producers/sentence_producer.h"
-#include "src/word_source.h"
-#include "src/word_source_group.h"
-#include "src/word_source_file.h"
-#include "src/word_source_file_group.h"
+#include "src/data_source/word_source.h"
+#include "src/data_source/word_source_group.h"
+#include "src/data_source/word_source_file.h"
+#include "src/data_source/word_source_file_group.h"
 
 /**
  * Basic approach to working through the word2vec
