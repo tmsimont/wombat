@@ -5,14 +5,7 @@
 
 #include "src/common.h"
 
-class BufferReader {
- protected:
-  int *data;
- public:
-  int idx;
-  void setData(int *data) { this->data = data; }
-  int* getData() { return data; }
-};
+class BufferReader;
 
 class Buffer {
  public:

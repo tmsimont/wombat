@@ -11,7 +11,7 @@
 #include "src/sgd_cuda_trainer.h"
 #include "src/sgd_cuda_htrainer.h"
 #include "src/sgd_trainer.h"
-#include "src/tc_buffer.h"
+#include "src/buffers/tc_buffer.h"
 #include "src/consumer.h"
 
 class CUDAConsumer {

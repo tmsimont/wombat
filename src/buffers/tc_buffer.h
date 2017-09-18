@@ -8,32 +8,16 @@
 #include <vector>
 
 #include "src/common.h"
-#include "src/buffer.cpp"
-#include "src/unlocked_buffer.cpp"
+#include "src/buffers/buffer.h"
+#include "src/buffers/readers/buffer.h"
+#include "src/buffers/readers/tc_buffer.h"
+#include "src/buffers/unlocked_buffer.h"
 
-class TCBuffer;
-
-class TCBufferReader : public BufferReader {
- public:
-  TCBuffer *buffer;
-  int idx;
-
-  TCBufferReader();
-  explicit TCBufferReader(int *data);
-  ~TCBufferReader();
-  int status();
-  int targetWord();
-  int numCWords();
-  int* cwords();
-  int droppedWords();
-  void setStatus(int value);
-  void setTargetWord(int value);
-  void setDroppedWords(int value);
-  void setNumCWords(int value);
-  void incNumCWords();
-  void decNumCWords();
-};
-
+/**
+ * The TCBuffer is a Target/Context word set buffer
+ * that holds sets of training word integer tokens 
+ * in a contiguous buffer of memory
+ */
 class TCBuffer : public Buffer {
  private:
   UnlockedBuffer *buffer;

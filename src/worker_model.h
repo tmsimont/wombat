@@ -7,15 +7,23 @@
 
 #include "src/w2v-functions.h"
 #include "src/common.h"
-#include "src/tc_buffer.h"
-#include "src/sen_buffer.h"
-#include "src/ti_producer.h"
-#include "src/sentence_producer.h"
+#include "src/buffers/tc_buffer.h"
+#include "src/buffers/sen_buffer.h"
+#include "src/buffers/producers/ti_producer.h"
+#include "src/buffers/producers/sentence_producer.h"
 #include "src/word_source.h"
 #include "src/word_source_group.h"
 #include "src/word_source_file.h"
 #include "src/word_source_file_group.h"
 
+/**
+ * Basic approach to working through the word2vec
+ * training process is initialization
+ * followed by training. A worker model
+ * uses a vector of sentence buffers,
+ * TCBuffers and a set of training data to train
+ * the word2vec network.
+ */
 class WorkerModel {
  public:
   vector<SenBuffer *> sbs;
@@ -39,11 +47,19 @@ class WorkerModel {
   virtual void train() = 0;
 };
 
+/**
+ * A worker is a helper to split the worker
+ * model tasks into thread-specific
+ * encapsulations of data.
+ * Each worker will acquire a sentence
+ * buffer and a tc buffer, along with a source
+ * of training data and load the buffers
+ * with data from the training data source.
+ */
 class Worker {
  public:
-  int  id, finished = 0;
-
-  SentenceProducer senpro;
+  int id, finished = 0;
+  SentenceProducer sentenceProducer;
   TIProducer tipro;
 
   Worker(int id, WorkerModel *m) : id(id), model(m) {}
@@ -55,11 +71,7 @@ class Worker {
       SenBuffer *sb,
       TCBuffer *tcb);
   virtual void finish();
-
   virtual int work() = 0;
 };
-
-
-void Train();
 
 #endif

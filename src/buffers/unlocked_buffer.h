@@ -1,9 +1,10 @@
 // Copyright 2017 Trevor Simonton
 
-#ifndef UNLOCKED_BUFFER_READER_
-#define UNLOCKED_BUFFER_READER_
+#ifndef UNLOCKED_BUFFER_H
+#define UNLOCKED_BUFFER_H
 
-#include "src/buffer.cpp"
+#include "src/buffers/buffer.h"
+#include "src/buffers/readers/buffer.h"
 
 class UnlockedBuffer : public Buffer {
  protected:

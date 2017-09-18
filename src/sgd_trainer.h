@@ -5,7 +5,8 @@
 
 #include "src/common.h"
 #include "src/w2v-functions.h"
-#include "src/tc_buffer.h"
+#include "src/buffers/tc_buffer.h"
+#include "src/buffers/readers/tc_buffer.h"
 
 class SGDTargets {
  public:

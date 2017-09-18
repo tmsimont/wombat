@@ -10,7 +10,7 @@
 
 #include "src/common.h"
 #include "src/w2v-functions.h"
-#include "src/tc_buffer.h"
+#include "src/buffers/tc_buffer.h"
 #include "src/sgd_batch_trainer.h"
 
 #define checkCuda(err) {\

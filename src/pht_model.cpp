@@ -56,7 +56,6 @@ void PHTModel::train() {
  */
 int PHTWorker::work() {
   int i = id % num_phys;
-
   while (1) {
     trySourceToSenBuffer(i, model->sbs[id]);
     trySenBufferToTCBuffer(&tipro, model->sbs[id], model->tcbs[i]);
@@ -77,7 +76,6 @@ int PHTWorker::work() {
       return 1;
     }
   }
-
   return 0;
 }
 

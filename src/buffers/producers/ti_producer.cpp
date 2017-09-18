@@ -1,6 +1,6 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/ti_producer.h"
+#include "src/buffers/producers/ti_producer.h"
 
 bool TIProducer::loadSentence(SenBuffer *sen_buffer) {
   if (!sen_buffer->isEmpty()) {
@@ -18,7 +18,7 @@ bool TIProducer::hasSentence() {
   return false;
 }
 
-void TIProducer::buildTI(TCBufferReader *tc_reader) {
+void TIProducer::produce(TCBufferReader *tc_reader) {
   tc_reader->setNumCWords(0);
 
   // randomly get sample of context words around the target

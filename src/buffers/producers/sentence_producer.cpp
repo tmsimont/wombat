@@ -1,7 +1,12 @@
 // Copyright 2017 Trevor Simonton
 
-#include "src/sentence_producer.h"
+#include "src/buffers/producers/sentence_producer.h"
 
+/**
+ * Use the producer's data source to build a tokenized
+ * sentence to the sentence buffer held by this
+ * sentence buffer reader.
+ */
 int SentenceProducer::buildSentence(SenBufferReader *sen_reader) {
   while (1) {
     if (source->iterationsRemaining() == 0) {

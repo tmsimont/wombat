@@ -3,7 +3,7 @@
 #include "src/console.h"
 
 
-#include "src/sen_buffer.h"
+#include "src/buffers/sen_buffer.h"
 int sentences_in_buffer = 10;
 int sen_buffer_item_size = 1;
 
@@ -14,7 +14,7 @@ int num_phys = 2;
 int batch_size = 256;
 int batches_per_thread = 8;
 
-#include "src/tc_buffer.h"
+#include "src/buffers/tc_buffer.h"
 int tc_buffer_item_size;
 int tcbs_per_thread = 1;
 int items_in_tcb = 125;
