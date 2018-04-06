@@ -1,6 +1,5 @@
-<p align="center">
-	<img src="https://raw.githubusercontent.com/tmsimont/wombat/master/wombat.png" />
-</p>
+
+<img align=left width=150 src="https://raw.githubusercontent.com/tmsimont/wombat/master/wombat.png" />
 
 ---
 
@@ -8,18 +7,18 @@
 
 ---
 
+<br clear="left" />
+
 This code was developed as part of my Master's thesis research.
 
-A summary of the methods used and motivation for this code will be 
-published in the conference proceedings at the 
-[2017 HPEC conference](http://www.ieee-hpec.org/).
-I will present this work on September 13, 2017.
+A paper is available that describes the methods in this package on IEEE:  
+[Efficient and accurate Word2Vec implementations in GPU and shared-memory multicore architectures](http://ieeexplore.ieee.org/document/8091076/)
 
 The work builds upon ideas presented in [BIDMach](https://github.com/BIDData/BIDMach/)
 and further refined in [Intel's pWord2Vec](https://github.com/IntelLabs/pWord2Vec).
 
 
-*Note that in its current state it is in a bit of a mess. Substantial clean up is needed.*
+*Note that in its current state the code is in a bit of a mess. A lot of remnants of some related expiriments are left in the code... Substantial refactoring is needed.*
 
 
 This code supports:
