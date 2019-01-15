@@ -1,0 +1,47 @@
+neuralnet.network                      -- holds data structures for NN layers, wi and wo
+neuralnet.weights                      -- representation of layer weights
+
+vocabulary.dictionary                  -- data structure for index -> word map
+vocabulary.parser                      -- hash strategy for char* word to dictionary index
+vocabulary.producer.file               -- produces words from file input
+
+word2vec                               -- map of words to vectors in nn
+word2vec.projection.skipgram           -- handles wi to wo
+word2vec.projection.cbow               -- ?? handles wi to wo
+word2vec.reduction.negatives           -- handles selection of wi groups to wo
+word2vec.reduction.hsmax               -- handles selection of wi groups to wo
+
+arguments
+
+contiguous_buffer
+contiguous_buffer.entry
+
+wordbatching.targetToContextBuffer
+wordbatching.targetToContextProducer
+wordbatching.sentenceBuffer
+wordbatching.sentenceProducer
+
+training.batch_sgd                     -- index-based row/col selection matrix training
+training.batch_sgd.wordMatrixStrategy  -- ?? maybe?
+
+
+dictionary:
+  * start by creating initial word to index map for whole vocab
+  * keep in-memory map of word to index 
+
+neuralnet:
+  * init 2 weight matrices in network
+  * caller will size net to vocab size
+
+word2vec
+  * use vocab
+  * use neuralnet
+  * map vocab to vectors in neural net
+
+wordbatching:
+  * reads sentences as word indices
+  * batches training steps as target word / context word sets
+
+training:
+  * batch_sgd for training subset of nn weights
+  * word matrix strategy for cuda vs. mkl, etc?
