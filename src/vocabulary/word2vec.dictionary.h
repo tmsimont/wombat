@@ -33,7 +33,7 @@ namespace wombat {
       int32_t get(const std::string& word);
     private:
       // Maximum 30 * 0.7 = 21M words in the vocabulary.
-      static const int vocab_hash_size = 30000000;
+      static const int VOCAB_HASH_SIZE = 30000000;
 
       // Words greater than 100 characters not supported.
       static const int MAX_STRING = 100;

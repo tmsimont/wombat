@@ -5,48 +5,53 @@ namespace wombat {
   Word2VecDictionary::Word2VecDictionary() {
     vocab_max_size = 1000;
     vocab_size = 0;
+    vocab = reinterpret_cast<struct vocab_word *>(
+        calloc(vocab_max_size, sizeof(struct vocab_word)));
+    vocab_hash = reinterpret_cast<int *>(
+        calloc(VOCAB_HASH_SIZE, sizeof(int)));
+    memset(vocab_hash, -1, VOCAB_HASH_SIZE * sizeof(int));
+    AddWordToVocab((char *) "</s>");
   }
 
+  /**
+   * Adds a word to the dictionary. If it is already present,
+   * it will increment a counter of how many times add() has been called
+   * for this particular word.
+   */
   void Word2VecDictionary::add(const std::string& word) {
+    // TODO: avoid extra memory use here
+    char c_word[MAX_STRING];
+    strcpy(c_word, word.c_str());
+
+    int i = SearchVocab(c_word);
+    if (i == -1) {
+      int a = AddWordToVocab(c_word);
+      vocab[a].cn = 1;
+    } else
+      vocab[i].cn++;
+
+    // TODO: figure out how to manage this in API and tests
+    if (vocab_size > VOCAB_HASH_SIZE * 0.7)
+      ReduceVocab();
     return;
   }
 
   int32_t Word2VecDictionary::get(const std::string& word) {
-    return 0;
+    // TODO: avoid extra memory use here
+    char c_word[MAX_STRING];
+    strcpy(c_word, word.c_str());
+
+    int i = SearchVocab(c_word);
+    return i;
   }
 
-  // Reads a single word from a file, assuming space + tab + EOL to be word boundaries
-  void Word2VecDictionary::ReadWord(char *word, FILE *fin) {
-    int a = 0, ch;
-    while (!feof(fin)) {
-      ch = fgetc(fin);
-      if (ch == 13)
-        continue;
-      if ((ch == ' ') || (ch == '\t') || (ch == '\n')) {
-        if (a > 0) {
-          if (ch == '\n')
-            ungetc(ch, fin);
-          break;
-        }
-        if (ch == '\n') {
-          strcpy(word, (char *) "</s>");
-          return;
-        } else
-          continue;
-      }
-      word[a] = ch;
-      a++;
-      if (a >= MAX_STRING - 1)
-        a--;   // Truncate too long words
-    }
-    word[a] = 0;
-  }
+  // TODO: figure out an API for getting count of word occurrences
 
   // Returns hash value of a word
   int Word2VecDictionary::GetWordHash(char *word) {
     unsigned long long a, hash = 0;
     for (a = 0; a < strlen(word); a++) hash = hash * 257 + word[a];
-    hash = hash % vocab_hash_size;
+    hash = hash % VOCAB_HASH_SIZE;
     return hash;
   }
 
@@ -58,20 +63,11 @@ namespace wombat {
         return -1;
       if (!strcmp(word, vocab[vocab_hash[hash]].word))
         return vocab_hash[hash];
-      hash = (hash + 1) % vocab_hash_size;
+      hash = (hash + 1) % VOCAB_HASH_SIZE;
     }
     return -1;
   }
   
-  // Reads a word and returns its index in the vocabulary
-  int Word2VecDictionary::ReadWordIndex(FILE *fin) {
-    char word[MAX_STRING];
-    ReadWord(word, fin);
-    if (feof(fin))
-      return -1;
-    return SearchVocab(word);
-  }
-
   // Adds a word to the vocabulary
   int Word2VecDictionary::AddWordToVocab(char *word) {
     int hash, length = strlen(word) + 1;
@@ -88,7 +84,7 @@ namespace wombat {
     }
     hash = GetWordHash(word);
     while (vocab_hash[hash] != -1)
-      hash = (hash + 1) % vocab_hash_size;
+      hash = (hash + 1) % VOCAB_HASH_SIZE;
     vocab_hash[hash] = vocab_size - 1;
     return vocab_size - 1;
   }
@@ -102,7 +98,7 @@ namespace wombat {
   void Word2VecDictionary::SortVocab() {
     // Sort the vocabulary and keep </s> at the first position
     qsort(&vocab[1], vocab_size - 1, sizeof(struct vocab_word), VocabCompare);
-    memset(vocab_hash, -1, vocab_hash_size * sizeof(int));
+    memset(vocab_hash, -1, VOCAB_HASH_SIZE * sizeof(int));
 
     int size = vocab_size;
     train_words = 0;
@@ -115,7 +111,7 @@ namespace wombat {
         // Hash will be re-computed, as after the sorting it is not actual
         int hash = GetWordHash(vocab[i].word);
         while (vocab_hash[hash] != -1)
-          hash = (hash + 1) % vocab_hash_size;
+          hash = (hash + 1) % VOCAB_HASH_SIZE;
         vocab_hash[hash] = i;
         train_words += vocab[i].cn;
       }
@@ -141,13 +137,13 @@ namespace wombat {
       }
     }
     vocab_size = count;
-    memset(vocab_hash, -1, vocab_hash_size * sizeof(int));
+    memset(vocab_hash, -1, VOCAB_HASH_SIZE * sizeof(int));
 
     for (int i = 0; i < vocab_size; i++) {
       // Hash will be re-computed, as it is not actual
       int hash = GetWordHash(vocab[i].word);
       while (vocab_hash[hash] != -1)
-        hash = (hash + 1) % vocab_hash_size;
+        hash = (hash + 1) % VOCAB_HASH_SIZE;
       vocab_hash[hash] = i;
     }
     min_reduce++;
