@@ -57,10 +57,8 @@ namespace wombat {
       // How many words will be used for training (vocab_size + number of times each word appears)
       unsigned long long train_words;
 
-      void ReadWord(char *word, FILE *fin);
       int GetWordHash(char *word);
       int SearchVocab(char *word);
-      int ReadWordIndex(FILE *fin);
       int AddWordToVocab(char *word);
       static int VocabCompare(const void *a, const void *b);
       void SortVocab();
