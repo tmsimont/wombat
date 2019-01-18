@@ -29,8 +29,12 @@ namespace wombat {
   class Word2VecDictionary : public Dictionary {
     public:
       Word2VecDictionary();
+      ~Word2VecDictionary();
       void add(const std::string& word);
-      int32_t get(const std::string& word);
+      int32_t getWordIndex(const std::string& word);
+      int32_t getWordFrequency(const std::string& word);
+      uint64_t sortAndSumFrequency(int32_t infrequentThreshold);
+      int32_t getSize();
     private:
       // Maximum 30 * 0.7 = 21M words in the vocabulary.
       static const int VOCAB_HASH_SIZE = 30000000;
@@ -54,14 +58,10 @@ namespace wombat {
       // TODO: figure out why both this and min_count are used in original implementation.
       unsigned long long min_reduce;
 
-      // How many words will be used for training (vocab_size + number of times each word appears)
-      unsigned long long train_words;
-
       int GetWordHash(char *word);
       int SearchVocab(char *word);
       int AddWordToVocab(char *word);
       static int VocabCompare(const void *a, const void *b);
-      void SortVocab();
       void ReduceVocab();
   };
 }

@@ -11,7 +11,10 @@ namespace wombat {
     public:
       Dictionary();
       virtual void add(const std::string& word) = 0;
-      virtual int32_t get(const std::string& word) = 0;
+      virtual int32_t getWordIndex(const std::string& word) = 0;
+      virtual int32_t getWordFrequency(const std::string& word) = 0;
+      virtual uint64_t sortAndSumFrequency(int32_t infrequentThreshold) = 0;
+      virtual int32_t getSize() = 0;
   };
 }
 
