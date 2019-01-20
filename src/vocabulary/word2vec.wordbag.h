@@ -6,6 +6,8 @@
 
 namespace wombat {
 
+  class Word2VecWordBagBuilder;
+
   /** 
    * word2vec helper struct from original word2vec code.
    */
@@ -27,15 +29,21 @@ namespace wombat {
    * from Google to maintain a lookup table of vocabulary words.
    */
   class Word2VecWordBag : public WordBag {
+    friend class Word2VecWordBagBuilder;
+
     public:
       Word2VecWordBag();
       ~Word2VecWordBag();
-      void add(const std::string& word);
       int32_t getWordIndex(const std::string& word);
       int32_t getWordFrequency(const std::string& word);
-      uint64_t sortAndSumFrequency(int32_t infrequentThreshold);
       int32_t getSize();
+      uint64_t getCardinality();
     private:
+      void add(const std::string& word);
+      uint64_t sortAndSumFrequency(int32_t infrequentThreshold);
+      
+      uint64_t _cardinality;
+
       // Maximum 30 * 0.7 = 21M words in the vocabulary.
       static const int VOCAB_HASH_SIZE = 30000000;
 

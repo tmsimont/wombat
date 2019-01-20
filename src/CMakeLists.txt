@@ -10,7 +10,7 @@ set(SOURCES
   arguments.cxx
   neuralnet/network.cxx
   neuralnet/weights.cxx
-  vocabulary/wordbag.cxx
+  vocabulary/word2vec.wordbag.builder.cxx
   vocabulary/word2vec.wordbag.cxx
   main.cxx
   )

@@ -16,10 +16,12 @@ arguments
 contiguous_buffer
 contiguous_buffer.entry
 
-wordbatching.targetToContextBuffer
-wordbatching.targetToContextProducer
-wordbatching.sentenceBuffer
-wordbatching.sentenceProducer
+training.wordbatching.targetToContextBuffer
+training.wordbatching.targetToContextBufferEntry
+training.wordbatching.targetToContextProducer
+training.wordbatching.sentenceBuffer
+training.wordbatching.sentenceBufferEntry
+training.wordbatching.sentenceProducer
 
 training.batch_sgd                     -- index-based row/col selection matrix training
 training.batch_sgd.wordMatrixStrategy  -- ?? maybe?

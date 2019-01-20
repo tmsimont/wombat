@@ -21,6 +21,8 @@ namespace wombat {
 
     // Start with a special character in the vocab.
     AddWordToVocab((char *) "</s>");
+
+    _cardinality = 0;
   }
 
   Word2VecWordBag::~Word2VecWordBag() {
@@ -104,7 +106,6 @@ namespace wombat {
 
     // Recompute hash after sort.
     memset(vocab_hash, -1, VOCAB_HASH_SIZE * sizeof(int));
-    uint64_t sum_frequency = 0;
     int size = vocab_size;
     for (int i = 0; i < size; i++) {
       // If given threshold is greater than 0, discard words occuring less than the given value.
@@ -116,7 +117,7 @@ namespace wombat {
         while (vocab_hash[hash] != -1)
           hash = (hash + 1) % VOCAB_HASH_SIZE;
         vocab_hash[hash] = i;
-        sum_frequency += vocab[i].cn;
+        _cardinality += vocab[i].cn;
       }
     }
     vocab = (struct vocab_word *) realloc(vocab, vocab_size * sizeof(struct vocab_word));
@@ -127,11 +128,15 @@ namespace wombat {
       vocab[a].point = (int *)calloc(MAX_CODE_LENGTH, sizeof(int));
     }
 
-    return sum_frequency;
+    return _cardinality;
   }
 
   int32_t Word2VecWordBag::getSize() {
     return vocab_size;
+  }
+
+  uint64_t Word2VecWordBag::getCardinality() {
+    return _cardinality;
   }
 
   /**
