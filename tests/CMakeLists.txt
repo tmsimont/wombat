@@ -8,7 +8,7 @@ find_package(GMock REQUIRED)
 include_directories(${GMOCK_INCLUDE_DIRS})
 
 set(TESTS
-  word2vec.dictionary.cxx
+  word2vec.wordbag.cxx
   )
 
 add_executable(test ${TESTS})

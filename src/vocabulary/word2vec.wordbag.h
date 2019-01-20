@@ -1,7 +1,7 @@
-#ifndef VOCABULARY_WORD2VEC_DICTIONARY_H_
-#define VOCABULARY_WORD2VEC_DICTIONARY_H_
+#ifndef VOCABULARY_WORD2VEC_WORDBAG_H_
+#define VOCABULARY_WORD2VEC_WORDBAG_H_
 
-#include "vocabulary/dictionary.h"
+#include "vocabulary/wordbag.h"
 
 
 namespace wombat {
@@ -23,13 +23,13 @@ namespace wombat {
   };
 
   /**
-   * This implementation of Dictionary uses the original C word2vec functions
+   * This implementation of WordBag uses the original C word2vec functions
    * from Google to maintain a lookup table of vocabulary words.
    */
-  class Word2VecDictionary : public Dictionary {
+  class Word2VecWordBag : public WordBag {
     public:
-      Word2VecDictionary();
-      ~Word2VecDictionary();
+      Word2VecWordBag();
+      ~Word2VecWordBag();
       void add(const std::string& word);
       int32_t getWordIndex(const std::string& word);
       int32_t getWordFrequency(const std::string& word);

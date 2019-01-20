@@ -2,16 +2,16 @@ set(HEADERS
   arguments.h
   neuralnet/network.h
   neuralnet/weights.h
-  vocabulary/dictionary.h
-  vocabulary/word2vec.dictionary.h
+  vocabulary/wordbag.h
+  vocabulary/word2vec.wordbag.h
   )
 
 set(SOURCES
   arguments.cxx
   neuralnet/network.cxx
   neuralnet/weights.cxx
-  vocabulary/dictionary.cxx
-  vocabulary/word2vec.dictionary.cxx
+  vocabulary/wordbag.cxx
+  vocabulary/word2vec.wordbag.cxx
   main.cxx
   )
 

@@ -1,5 +1,5 @@
-#include "vocabulary/dictionary.h"
-#include "vocabulary/word2vec.dictionary.h"
+#include "vocabulary/wordbag.h"
+#include "vocabulary/word2vec.wordbag.h"
 
 namespace wombat {
 
@@ -10,7 +10,7 @@ namespace wombat {
    *
    * The first entry in the vocab will be "</s>"
    */
-  Word2VecDictionary::Word2VecDictionary() {
+  Word2VecWordBag::Word2VecWordBag() {
     vocab_max_size = 1000;
     vocab_size = 0;
     vocab = reinterpret_cast<struct vocab_word *>(
@@ -23,22 +23,22 @@ namespace wombat {
     AddWordToVocab((char *) "</s>");
   }
 
-  Word2VecDictionary::~Word2VecDictionary() {
+  Word2VecWordBag::~Word2VecWordBag() {
     // TODO: clean up memory used.
   }
 
   /**
-   * Adds a word to the dictionary. If it is already present,
+   * Adds a word to the wordbag. If it is already present,
    * it will increment a counter of how many times add() has been called
    * for this particular word.
    */
-  void Word2VecDictionary::add(const std::string& word) {
+  void Word2VecWordBag::add(const std::string& word) {
     // TODO: avoid extra memory use here
     // Copy the word to a c string that we can use in the old Google C word2vec API.
     char c_word[MAX_STRING];
     strcpy(c_word, word.c_str());
 
-    // Determine if the word is already in the dictionary.
+    // Determine if the word is already in the wordbag.
     int i = SearchVocab(c_word);
 
     // Add the word if it's missing, else increment its count.
@@ -57,11 +57,11 @@ namespace wombat {
   }
 
   /**
-   * Get the index of a word in the dictionary.
+   * Get the index of a word in the wordbag.
    *
    * @return the position of a word in the vocabulary or -1 if the word is not found
    */
-  int32_t Word2VecDictionary::getWordIndex(const std::string& word) {
+  int32_t Word2VecWordBag::getWordIndex(const std::string& word) {
     // TODO: avoid extra memory use here
     // Copy the word to a c string that we can use in the old Google C word2vec API.
     char c_word[MAX_STRING];
@@ -71,11 +71,11 @@ namespace wombat {
   }
 
   /**
-   * Get the frequency of a word in the dictionary.
+   * Get the frequency of a word in the wordbag.
    *
-   * @return the number of times the given word appears in the dictionary.
+   * @return the number of times the given word appears in the wordbag.
    */
-  int32_t Word2VecDictionary::getWordFrequency(const std::string& word) {
+  int32_t Word2VecWordBag::getWordFrequency(const std::string& word) {
     // TODO: avoid extra memory use here
     // Copy the word to a c string that we can use in the old Google C word2vec API.
     char c_word[MAX_STRING];
@@ -98,7 +98,7 @@ namespace wombat {
    *  appear less often than the threshold.
    * @return sum of all individual word frequencies.
    */
-  uint64_t Word2VecDictionary::sortAndSumFrequency(int32_t infrequentThreshold) {
+  uint64_t Word2VecWordBag::sortAndSumFrequency(int32_t infrequentThreshold) {
     // Sort the vocabulary and keep </s> at the first position
     qsort(&vocab[1], vocab_size - 1, sizeof(struct vocab_word), VocabCompare);
 
@@ -130,14 +130,14 @@ namespace wombat {
     return sum_frequency;
   }
 
-  int32_t Word2VecDictionary::getSize() {
+  int32_t Word2VecWordBag::getSize() {
     return vocab_size;
   }
 
   /**
    * Returns hash value of a word.
    */
-  int Word2VecDictionary::GetWordHash(char *word) {
+  int Word2VecWordBag::GetWordHash(char *word) {
     unsigned long long a, hash = 0;
     for (a = 0; a < strlen(word); a++) hash = hash * 257 + word[a];
     hash = hash % VOCAB_HASH_SIZE;
@@ -149,7 +149,7 @@ namespace wombat {
    *
    * @return the position of a word in the vocabulary or -1 if the word is not found
    */
-  int Word2VecDictionary::SearchVocab(char *word) {
+  int Word2VecWordBag::SearchVocab(char *word) {
     int hash = GetWordHash(word);
     while (1) {
       if (vocab_hash[hash] == -1)
@@ -171,7 +171,7 @@ namespace wombat {
    * 
    * @return The updated size of the vocabulary.
    */
-  int Word2VecDictionary::AddWordToVocab(char *word) {
+  int Word2VecWordBag::AddWordToVocab(char *word) {
     int hash, length = strlen(word) + 1;
     if (length > MAX_STRING)
       length = MAX_STRING;
@@ -196,14 +196,14 @@ namespace wombat {
   /**
    * Used for sorting by word counts.
    */
-  int Word2VecDictionary::VocabCompare(const void *a, const void *b) {
+  int Word2VecWordBag::VocabCompare(const void *a, const void *b) {
     return ((struct vocab_word *) b)->cn - ((struct vocab_word *) a)->cn;
   }
 
   /**
    * Reduces the vocabulary by removing infrequent tokens.
    */
-  void Word2VecDictionary::ReduceVocab() {
+  void Word2VecWordBag::ReduceVocab() {
     int count = 0;
     for (int i = 0; i < vocab_size; i++) {
       if (vocab[i].cn > min_reduce) {
