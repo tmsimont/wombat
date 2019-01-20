@@ -6,7 +6,7 @@
 
 namespace wombat {
   Word2VecWordBagBuilder::Word2VecWordBagBuilder() {
-    _wordbag = std::make_unique<Word2VecWordBag>(Word2VecWordBag());
+    _wordbag = std::make_unique<Word2VecWordBag>();
     _threshold = 0;
   }
 

@@ -13,10 +13,8 @@ namespace wombat {
   Word2VecWordBag::Word2VecWordBag() {
     vocab_max_size = 1000;
     vocab_size = 0;
-    vocab = reinterpret_cast<struct vocab_word *>(
-        calloc(vocab_max_size, sizeof(struct vocab_word)));
-    vocab_hash = reinterpret_cast<int *>(
-        calloc(VOCAB_HASH_SIZE, sizeof(int)));
+    vocab = static_cast<vocab_word*>(calloc(vocab_max_size, sizeof(struct vocab_word)));
+    vocab_hash = static_cast<int*>(calloc(VOCAB_HASH_SIZE, sizeof(int)));
     memset(vocab_hash, -1, VOCAB_HASH_SIZE * sizeof(int));
 
     // Start with a special character in the vocab.
@@ -26,7 +24,13 @@ namespace wombat {
   }
 
   Word2VecWordBag::~Word2VecWordBag() {
-    // TODO: clean up memory used.
+    for (int i = 0; i < vocab_size; i++) {
+      free(vocab[i].word);
+      free(vocab[i].point);
+      free(vocab[i].code);
+    }
+    free(vocab);
+    free(vocab_hash);
   }
 
   /**
@@ -120,12 +124,12 @@ namespace wombat {
         _cardinality += vocab[i].cn;
       }
     }
-    vocab = (struct vocab_word *) realloc(vocab, vocab_size * sizeof(struct vocab_word));
+    vocab = static_cast<vocab_word*>(realloc(vocab, vocab_size * sizeof(struct vocab_word)));
 
     // Allocate memory for the binary tree construction
     for (int a = 0; a < vocab_size; a++) {
-      vocab[a].code = (char *)calloc(MAX_CODE_LENGTH, sizeof(char));
-      vocab[a].point = (int *)calloc(MAX_CODE_LENGTH, sizeof(int));
+      vocab[a].code = static_cast<char*>(calloc(MAX_CODE_LENGTH, sizeof(char)));
+      vocab[a].point = static_cast<int*>(calloc(MAX_CODE_LENGTH, sizeof(int)));
     }
 
     return _cardinality;
@@ -189,7 +193,7 @@ namespace wombat {
     // when searching over hash collisions, which is likely why this is `+ 2`
     if (vocab_size + 2 >= vocab_max_size) {
       vocab_max_size += 1000;
-      vocab = (struct vocab_word *) realloc(vocab, vocab_max_size * sizeof(struct vocab_word));
+      vocab = static_cast<vocab_word*>(realloc(vocab, vocab_max_size * sizeof(struct vocab_word)));
     }
     hash = GetWordHash(word);
     while (vocab_hash[hash] != -1)
