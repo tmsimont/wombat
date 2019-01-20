@@ -4,6 +4,7 @@ set(HEADERS
   neuralnet/weights.h
   vocabulary/wordbag.h
   vocabulary/word2vec.wordbag.h
+  training/data/stdVector.sentence.h
   )
 
 set(SOURCES
@@ -12,6 +13,7 @@ set(SOURCES
   neuralnet/weights.cxx
   vocabulary/word2vec.wordbag.builder.cxx
   vocabulary/word2vec.wordbag.cxx
+  training/data/stdVector.sentence.cxx
   main.cxx
   )
 

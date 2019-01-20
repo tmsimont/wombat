@@ -1,6 +1,7 @@
 #ifndef VOCABULARY_WORDBAG_H_
 #define VOCABULARY_WORDBAG_H_
 
+#include <stdint.h>
 #include <string>
 
 /**

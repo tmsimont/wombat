@@ -3,7 +3,6 @@
 
 #include "vocabulary/wordbag.h"
 
-
 namespace wombat {
 
   class Word2VecWordBagBuilder;

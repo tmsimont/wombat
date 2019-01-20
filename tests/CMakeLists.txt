@@ -9,6 +9,7 @@ include_directories(${GMOCK_INCLUDE_DIRS})
 
 set(TESTS
   word2vec.wordbag.cxx
+  training/data/stdVector.sentence.cxx
   )
 
 add_executable(test ${TESTS})
