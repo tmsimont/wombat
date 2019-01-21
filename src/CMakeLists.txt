@@ -1,4 +1,5 @@
 set(HEADERS
+  contiguous_buffer/int32_ring_buffer.hpp
   arguments.h
   neuralnet/network.h
   neuralnet/weights.h

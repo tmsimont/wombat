@@ -8,6 +8,7 @@ find_package(GMock REQUIRED)
 include_directories(${GMOCK_INCLUDE_DIRS})
 
 set(TESTS
+  contiguous_buffer/int32_ring_buffer.cxx
   word2vec.wordbag.cxx
   training/data/stdVector.sentence.cxx
   )
