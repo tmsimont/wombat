@@ -9,7 +9,7 @@
 using wombat::StdVectorSentence;
 using wombat::SentenceVisitor;
 
-class TestVisitor : public SentenceVisitor {
+class SentenceTestVisitor : public SentenceVisitor {
   public:
     std::vector<int32_t> v;
 
@@ -24,7 +24,7 @@ TEST(StdVectorSenteceTest, VisitInOrder) {
   sentence.addWord(2);
   sentence.addWord(3);
 
-  TestVisitor visitor;
+  SentenceTestVisitor visitor;
   sentence.acceptWordVisitor(visitor);
 
   EXPECT_EQ(visitor.v[0], 42);

@@ -6,6 +6,8 @@ set(HEADERS
   vocabulary/wordbag.h
   vocabulary/word2vec.wordbag.h
   training/data/stdVector.sentence.h
+  training/data/contiguous_buffer_backed.word_with_context.hpp
+  training/data/contiguous_word_with_context_buffer.hpp
   )
 
 set(SOURCES

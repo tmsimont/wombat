@@ -13,9 +13,9 @@ namespace wombat {
    * Entries in the buffer are stored as sub-arrays of the contiguous integer block.
    * Entries should have some semantic meaning behind the sub-array.
    * Each entry is the same length sub-array.
-   * The template param S is the per-item size in number of integers.
+   * The template param ENTRY_SIZE is the per-item size in number of integers.
    */
-  template <int S>
+  template <int ENTRY_SIZE>
   class Int32RingBuffer {
     public:
       Int32RingBuffer(int32_t num_items) {
@@ -23,7 +23,7 @@ namespace wombat {
         posix_memalign(
             reinterpret_cast<void **>(&_data),
             64,
-            S * _num_items * sizeof(int32_t));
+            ENTRY_SIZE * _num_items * sizeof(int32_t));
       }
 
       ~Int32RingBuffer() {
@@ -39,7 +39,7 @@ namespace wombat {
       }
 
       int32_t itemSize() {
-        return S;
+        return ENTRY_SIZE;
       }
 
       int32_t numItems() {
@@ -47,12 +47,14 @@ namespace wombat {
       }
 
       /**
-       * User passes in a array of ints that backs the entry, and it will be copied
-       * into the buffer. The input array is discarded/destroyed.
+       * User passes in shared pointer to an array of ints that backs the entry.
+       * It will be de-referenced and copied into the buffer, or ignored if the buffer
+       * is full.
+       * @return 0 on full buffer or 1 on successful insertion.
        */
-      int32_t push(std::unique_ptr<std::array<int, S>> data) {
+      int32_t push(std::shared_ptr<std::array<int, ENTRY_SIZE>> data) {
         if (isFull()) return 0;
-        std::copy(data->begin(), data->end(), _data + S * i_empty);
+        std::copy(data->begin(), data->end(), _data + ENTRY_SIZE * i_empty);
         i_empty++;
         if (i_empty == _num_items) {
           i_empty = 0;
@@ -68,14 +70,11 @@ namespace wombat {
        * out. The entry in the buffer is free for future use since the data has been
        * copied.
        */
-      std::unique_ptr<std::array<int, S>> pop() {
+      std::unique_ptr<std::array<int, ENTRY_SIZE>> pop() {
         if (isEmpty()) return nullptr;
-        std::unique_ptr<std::array<int, S>> item = 
-          std::make_unique<std::array<int, S>>(std::array<int, S>());
-        int32_t *ptr = _data + i_ready * S;
-        for (int i = 0; i < S; ++i) {
-          (*item)[i] = *ptr++;
-        }
+        std::unique_ptr<std::array<int, ENTRY_SIZE>> item = 
+          std::make_unique<std::array<int, ENTRY_SIZE>>(std::array<int, ENTRY_SIZE>());
+        std::copy(_data + i_ready * ENTRY_SIZE, _data + (i_ready + 1) * ENTRY_SIZE, item->begin());
         i_ready++;
         if (i_ready == _num_items) {
           i_ready = 0;
