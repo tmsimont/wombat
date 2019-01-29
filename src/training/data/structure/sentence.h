@@ -1,7 +1,7 @@
-#ifndef TRAINING_DATA_SENTENCE_H_
-#define TRAINING_DATA_SENTENCE_H_
+#ifndef TRAINING_DATA_STRUCTURE_SENTENCE_H_
+#define TRAINING_DATA_STRUCTURE_SENTENCE_H_
 
-#include "training/data/sentence.visitor.h"
+#include "training/data/structure/sentence.visitor.h"
 
 #include <stdint.h>
 

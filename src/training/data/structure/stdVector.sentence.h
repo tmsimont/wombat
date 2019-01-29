@@ -1,7 +1,7 @@
-#ifndef TRAINING_DATA_STD_VECTOR_SENTENCE_H_
-#define TRAINING_DATA_STD_VECTOR_SENTENCE_H_
+#ifndef TRAINING_DATA_STRUCTURE_STD_VECTOR_SENTENCE_H_
+#define TRAINING_DATA_STRUCTURE_STD_VECTOR_SENTENCE_H_
 
-#include "training/data/sentence.h"
+#include "training/data/structure/sentence.h"
 
 #include <vector>
 

@@ -1,7 +1,7 @@
-#ifndef TRAINING_DATA_WORD_WITH_CONTEXT_H_
-#define TRAINING_DATA_WORD_WITH_CONTEXT_H_
+#ifndef TRAINING_DATA_STRUCTURE_WORD_WITH_CONTEXT_H_
+#define TRAINING_DATA_STRUCTURE_WORD_WITH_CONTEXT_H_
 
-#include "training/data/word_with_context.visitor.h"
+#include "training/data/structure/word_with_context.visitor.h"
 
 #include <stdint.h>
 

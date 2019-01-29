@@ -1,5 +1,5 @@
-#include "training/data/stdVector.sentence.h"
-#include "training/data/sentence.visitor.h"
+#include "training/data/structure/stdVector.sentence.h"
+#include "training/data/structure/sentence.visitor.h"
 
 #include <vector>
 

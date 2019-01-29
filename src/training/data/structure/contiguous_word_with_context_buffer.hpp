@@ -1,7 +1,7 @@
-#ifndef TRAINING_DATA_CONTIGUOUS_WORD_WITH_CONTEXT_BUFFER_H_
-#define TRAINING_DATA_CONTIGUOUS_WORD_WITH_CONTEXT_BUFFER_H_
+#ifndef TRAINING_DATA_STRUCTURE_CONTIGUOUS_WORD_WITH_CONTEXT_BUFFER_H_
+#define TRAINING_DATA_STRUCTURE_CONTIGUOUS_WORD_WITH_CONTEXT_BUFFER_H_
 
-#include "training/data/contiguous_buffer_backed.word_with_context.hpp"
+#include "training/data/structure/contiguous_buffer_backed.word_with_context.hpp"
 #include "contiguous_buffer/int32_ring_buffer.hpp"
 
 #include <stdint.h>

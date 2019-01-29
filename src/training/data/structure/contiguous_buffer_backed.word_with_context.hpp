@@ -1,8 +1,8 @@
-#ifndef TRAINING_DATA_CONTIGUOUS_BUFFER_BACKED_WORD_WITH_CONTEXT_H_
-#define TRAINING_DATA_CONTIGUOUS_BUFFER_BACKED_WORD_WITH_CONTEXT_H_
+#ifndef TRAINING_DATA_STRUCTURE_CONTIGUOUS_BUFFER_BACKED_WORD_WITH_CONTEXT_H_
+#define TRAINING_DATA_STRUCTURE_CONTIGUOUS_BUFFER_BACKED_WORD_WITH_CONTEXT_H_
 
-#include "training/data/word_with_context.h"
-#include "training/data/word_with_context.visitor.h"
+#include "training/data/structure/word_with_context.h"
+#include "training/data/structure/word_with_context.visitor.h"
 
 #include <stdint.h>
 

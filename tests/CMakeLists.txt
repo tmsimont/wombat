@@ -10,8 +10,8 @@ include_directories(${GMOCK_INCLUDE_DIRS})
 set(TESTS
   contiguous_buffer/int32_ring_buffer.cxx
   word2vec.wordbag.cxx
-  training/data/stdVector.sentence.cxx
-  training/data/contiguous_word_with_context_buffer.cxx
+  training/data/structure/stdVector.sentence.cxx
+  training/data/structure/contiguous_word_with_context_buffer.cxx
   )
 
 add_executable(test ${TESTS})

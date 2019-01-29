@@ -8,8 +8,8 @@
 #include <memory>
 #include <stdexcept>
 
-#include "training/data/contiguous_buffer_backed.word_with_context.hpp"
-#include "training/data/contiguous_word_with_context_buffer.hpp"
+#include "training/data/structure/contiguous_buffer_backed.word_with_context.hpp"
+#include "training/data/structure/contiguous_word_with_context_buffer.hpp"
 
 using wombat::WordWithContextVisitor;
 using wombat::ContiguousWordWithContextBuffer;

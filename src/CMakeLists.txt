@@ -5,9 +5,9 @@ set(HEADERS
   neuralnet/weights.h
   vocabulary/wordbag.h
   vocabulary/word2vec.wordbag.h
-  training/data/stdVector.sentence.h
-  training/data/contiguous_buffer_backed.word_with_context.hpp
-  training/data/contiguous_word_with_context_buffer.hpp
+  training/data/structure/stdVector.sentence.h
+  training/data/structure/contiguous_buffer_backed.word_with_context.hpp
+  training/data/structure/contiguous_word_with_context_buffer.hpp
   )
 
 set(SOURCES
@@ -16,7 +16,7 @@ set(SOURCES
   neuralnet/weights.cxx
   vocabulary/word2vec.wordbag.builder.cxx
   vocabulary/word2vec.wordbag.cxx
-  training/data/stdVector.sentence.cxx
+  training/data/structure/stdVector.sentence.cxx
   main.cxx
   )
 
