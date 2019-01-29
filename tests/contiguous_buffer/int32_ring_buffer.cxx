@@ -54,8 +54,12 @@ TEST(Int32RingBufferTest, FullBuffer) {
   (*data3)[1] = 9;
   int r3 = buffer.push(std::move(data));
 
-  // Original data should be destroyed.
   EXPECT_EQ(r1, 1);
   EXPECT_EQ(r2, 0);
   EXPECT_NE(r3, 1);
 }
+
+// TODO: test is_empty() is_full, etc
+
+// TODO: test more complicated usage?
+

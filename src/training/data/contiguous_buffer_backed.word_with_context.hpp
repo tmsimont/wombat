@@ -43,24 +43,43 @@ namespace wombat {
         }
       }
 
+      /**
+       * Return the target word that has context words around it.
+       */
       int32_t getTargetWord() {
         return (*data)[TARGET_WORD_INDEX];
       }
 
+      /**
+       * During collection of training data we might drop context words around a target.
+       * We keep track of how many times we drop context words. This tells us how many
+       * context words were dropped from around the target word when collecting this 
+       * WordWithContext.
+       */
       int32_t getNumberOfDroppedContextWordSamples() {
         return (*data)[DROPPED_WORDS_INDEX];
       }
 
+      /**
+       * Return the number of context words have we sampled for this training target word.
+       */
       int32_t getNumberOfContextWords() {
         return (*data)[NUMBER_OF_CONTEXT_WORDS_INDEX];
       }
 
+      /**
+       * Accept a visitor that will visit all of the context words in order.
+       * TODO: an iterator would probably be more appropriate here.
+       */
       void acceptContextWordVisitor(WordWithContextVisitor& visitor) {
         for (int i = 0; i < getNumberOfContextWords(); ++i) {
           visitor.visitContextWord((*data)[CONTEXT_WORDS_START_INDEX + i]);
         }
       }
 
+      /**
+       * Builder for construction of instances of this WordWithContext type.
+       */
       static ContiguousBufferBackedWordWithContextBuilder<ENTRY_SIZE> builder() {
         return ContiguousBufferBackedWordWithContextBuilder<ENTRY_SIZE>();
       }

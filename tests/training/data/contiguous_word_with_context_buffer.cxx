@@ -15,6 +15,9 @@ using wombat::WordWithContextVisitor;
 using wombat::ContiguousWordWithContextBuffer;
 using wombat::ContiguousBufferBackedWordWithContext;
 
+/**
+ * Helper WordWithContext visitor that just builds a std::vector out of the context words.
+ */
 class ContiguousBufferTestVisitor : public WordWithContextVisitor {
   public:
     std::vector<int32_t> v;
@@ -28,6 +31,11 @@ const int S = 8;
 const int targetIndex = 1;
 const int droppedCount = 2;
 
+/**
+ * Build a WordWithContext.
+ * Push it into the buffer.
+ * Pop it out and make sure the popped target word matches what was input.
+ */
 TEST(ContiguousWordWithContextBuffer, TargetWord) {
   ContiguousWordWithContextBuffer<S> buffer(1);
 
@@ -40,6 +48,11 @@ TEST(ContiguousWordWithContextBuffer, TargetWord) {
   EXPECT_EQ(popped->getTargetWord(), targetIndex);
 }
 
+/**
+ * Build a WordWithContext.
+ * Push it into the buffer.
+ * Pop it out and make sure the popped dropped count matches what was input.
+ */
 TEST(ContiguousWordWithContextBuffer, DroppedCount) {
   ContiguousWordWithContextBuffer<S> buffer(1);
 
@@ -52,6 +65,11 @@ TEST(ContiguousWordWithContextBuffer, DroppedCount) {
   EXPECT_EQ(popped->getNumberOfDroppedContextWordSamples(), droppedCount);
 }
 
+/**
+ * Build a WordWithContext.
+ * Push it into the buffer.
+ * Pop it out and make sure the popped context word count matches what was input.
+ */
 TEST(ContiguousWordWithContextBuffer, ContextWordsCount) {
   ContiguousWordWithContextBuffer<S> buffer(1);
 
@@ -66,6 +84,11 @@ TEST(ContiguousWordWithContextBuffer, ContextWordsCount) {
   EXPECT_EQ(popped->getNumberOfContextWords(), 3);
 }
 
+/**
+ * Build a WordWithContext.
+ * Push it into the buffer.
+ * Pop it out and make sure the popped context word set matches what was input.
+ */
 TEST(ContiguousWordWithContextBuffer, ContextWordsVisitor) {
   ContiguousWordWithContextBuffer<S> buffer(1);
 
@@ -85,6 +108,9 @@ TEST(ContiguousWordWithContextBuffer, ContextWordsVisitor) {
   EXPECT_EQ(visitor.v[2], 7);
 }
 
+/**
+ * Simple test of empty buffer behavior.
+ */
 TEST(ContiguousWordWithContextBuffer, EmptyBuffer) {
   const int S = 8;
   ContiguousWordWithContextBuffer<S> buffer(1);
@@ -93,6 +119,9 @@ TEST(ContiguousWordWithContextBuffer, EmptyBuffer) {
   EXPECT_EQ(popped, nullptr);
 }
 
+/**
+ * Simple test of full buffer behavior.
+ */
 TEST(ContiguousWordWithContextBuffer, FullBuffer) {
   const int S = 8;
   const int targetIndex = 1;
@@ -112,3 +141,5 @@ TEST(ContiguousWordWithContextBuffer, FullBuffer) {
   EXPECT_EQ(r1, 1);
   EXPECT_EQ(r2, 0);
 }
+
+// TODO: more complicated usage... multiple push/pop's, order checking?

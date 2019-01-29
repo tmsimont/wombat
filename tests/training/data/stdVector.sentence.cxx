@@ -9,6 +9,9 @@
 using wombat::StdVectorSentence;
 using wombat::SentenceVisitor;
 
+/**
+ * Helper Sentence visitor that builds an std::vector out of word indices in Sentence.
+ */
 class SentenceTestVisitor : public SentenceVisitor {
   public:
     std::vector<int32_t> v;
