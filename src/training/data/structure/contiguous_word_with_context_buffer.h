@@ -1,7 +1,7 @@
 #ifndef TRAINING_DATA_STRUCTURE_CONTIGUOUS_WORD_WITH_CONTEXT_BUFFER_H_
 #define TRAINING_DATA_STRUCTURE_CONTIGUOUS_WORD_WITH_CONTEXT_BUFFER_H_
 
-#include "training/data/structure/contiguous_buffer_backed.word_with_context.hpp"
+#include "training/data/structure/contiguous_buffer_backed.word_with_context.h"
 #include "contiguous_buffer/int32_ring_buffer.hpp"
 
 #include <stdint.h>
@@ -16,14 +16,23 @@ namespace wombat {
    * A buffer of WordsWithContext. The memory that backs this buffer will be contiguous, 
    * which makes it easy/possible to ship to GPU.
    */
-  template <int ENTRY_SIZE>
   class ContiguousWordWithContextBuffer {
     public:
       /**
        * Constructor will create a buffer for the given number of items.
-       * @param num_items How many items should this buffer hold at once.
+       *
+       * @param numberOfWordsWithContext 
+       *  This buffer will hold this many WordsWithContext instances.
+       * @param maxNumberOfContextWords
+       *  At maximum, each WordsWithContext instance can have only this many context words.
        */
-      ContiguousWordWithContextBuffer(int32_t num_items):_buffer(num_items) {
+      ContiguousWordWithContextBuffer(
+          int32_t numberOfWordsWithContext,
+          int32_t maxNumberOfContextWords)
+        : _buffer(
+            numberOfWordsWithContext,
+            // use the max number of context words + the overhead of the wrapper
+            maxNumberOfContextWords + ContiguousBufferBackedWordWithContext::DATA_SIZE) {
       }
 
       /**
@@ -32,9 +41,7 @@ namespace wombat {
        * is full.
        * @return 0 on full buffer or 1 on successful insertion.
        */
-      int32_t push(std::shared_ptr<ContiguousBufferBackedWordWithContext<ENTRY_SIZE>> item) {
-        return _buffer.push(item->data);
-      }
+      int32_t push(std::shared_ptr<ContiguousBufferBackedWordWithContext> item);
 
       /**
        * Pop an item out of the buffer.
@@ -42,18 +49,10 @@ namespace wombat {
        * was in the contiguous buffer.
        * nullptr is returned if the buffer is empty.
        */
-      std::unique_ptr<ContiguousBufferBackedWordWithContext<ENTRY_SIZE>> pop() {
-        std::unique_ptr<ContiguousBufferBackedWordWithContext<ENTRY_SIZE>> item = 
-          std::make_unique<ContiguousBufferBackedWordWithContext<ENTRY_SIZE>>(_buffer.pop());
-        // data will be nullptr if the buffer is empty
-        if (item->data == nullptr) {
-          return nullptr;
-        }
-        return item;
-      }
+      std::unique_ptr<ContiguousBufferBackedWordWithContext> pop();
 
     private:
-      Int32RingBuffer<ENTRY_SIZE> _buffer;
+      Int32RingBuffer _buffer;
   };
 }
 

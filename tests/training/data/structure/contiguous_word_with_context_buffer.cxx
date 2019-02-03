@@ -4,12 +4,12 @@
 #include <stdint.h>
 #include <iostream>
 
-#include <array>
 #include <memory>
 #include <stdexcept>
+#include <iostream>
 
-#include "training/data/structure/contiguous_buffer_backed.word_with_context.hpp"
-#include "training/data/structure/contiguous_word_with_context_buffer.hpp"
+#include "training/data/structure/contiguous_buffer_backed.word_with_context.h"
+#include "training/data/structure/contiguous_word_with_context_buffer.h"
 
 using wombat::WordWithContextVisitor;
 using wombat::ContiguousWordWithContextBuffer;
@@ -37,14 +37,13 @@ const int droppedCount = 2;
  * Pop it out and make sure the popped target word matches what was input.
  */
 TEST(ContiguousWordWithContextBuffer, TargetWord) {
-  ContiguousWordWithContextBuffer<S> buffer(1);
+  ContiguousWordWithContextBuffer buffer(1, S);
 
-  buffer.push(ContiguousBufferBackedWordWithContext<S>::builder()
+  buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withTargetWord(targetIndex)
     .build());
 
-  std::unique_ptr<ContiguousBufferBackedWordWithContext<S>> popped = 
-    buffer.pop();
+  auto popped = buffer.pop();
   EXPECT_EQ(popped->getTargetWord(), targetIndex);
 }
 
@@ -54,14 +53,13 @@ TEST(ContiguousWordWithContextBuffer, TargetWord) {
  * Pop it out and make sure the popped dropped count matches what was input.
  */
 TEST(ContiguousWordWithContextBuffer, DroppedCount) {
-  ContiguousWordWithContextBuffer<S> buffer(1);
+  ContiguousWordWithContextBuffer buffer(1, S);
 
-  buffer.push(ContiguousBufferBackedWordWithContext<S>::builder()
+  buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withDroppedWordCount(droppedCount)
     .build());
 
-  std::unique_ptr<ContiguousBufferBackedWordWithContext<S>> popped = 
-    buffer.pop();
+  auto popped = buffer.pop();
   EXPECT_EQ(popped->getNumberOfDroppedContextWordSamples(), droppedCount);
 }
 
@@ -71,16 +69,15 @@ TEST(ContiguousWordWithContextBuffer, DroppedCount) {
  * Pop it out and make sure the popped context word count matches what was input.
  */
 TEST(ContiguousWordWithContextBuffer, ContextWordsCount) {
-  ContiguousWordWithContextBuffer<S> buffer(1);
+  ContiguousWordWithContextBuffer buffer(1, S);
 
-  buffer.push(ContiguousBufferBackedWordWithContext<S>::builder()
+  buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withContextWord(5)
     .withContextWord(6)
     .withContextWord(7)
     .build());
 
-  std::unique_ptr<ContiguousBufferBackedWordWithContext<S>> popped = 
-    buffer.pop();
+  auto popped = buffer.pop();
   EXPECT_EQ(popped->getNumberOfContextWords(), 3);
 }
 
@@ -90,16 +87,15 @@ TEST(ContiguousWordWithContextBuffer, ContextWordsCount) {
  * Pop it out and make sure the popped context word set matches what was input.
  */
 TEST(ContiguousWordWithContextBuffer, ContextWordsVisitor) {
-  ContiguousWordWithContextBuffer<S> buffer(1);
+  ContiguousWordWithContextBuffer buffer(1, S);
 
-  buffer.push(ContiguousBufferBackedWordWithContext<S>::builder()
+  buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withContextWord(5)
     .withContextWord(6)
     .withContextWord(7)
     .build());
 
-  std::unique_ptr<ContiguousBufferBackedWordWithContext<S>> popped = 
-    buffer.pop();
+  auto popped = buffer.pop();
 
   ContiguousBufferTestVisitor visitor;
   popped->acceptContextWordVisitor(visitor);
@@ -112,10 +108,8 @@ TEST(ContiguousWordWithContextBuffer, ContextWordsVisitor) {
  * Simple test of empty buffer behavior.
  */
 TEST(ContiguousWordWithContextBuffer, EmptyBuffer) {
-  const int S = 8;
-  ContiguousWordWithContextBuffer<S> buffer(1);
-  std::unique_ptr<ContiguousBufferBackedWordWithContext<S>> popped = 
-    buffer.pop();
+  ContiguousWordWithContextBuffer buffer(1, S);
+  auto popped = buffer.pop();
   EXPECT_EQ(popped, nullptr);
 }
 
@@ -126,14 +120,14 @@ TEST(ContiguousWordWithContextBuffer, FullBuffer) {
   const int S = 8;
   const int targetIndex = 1;
   const int droppedCount = 2;
-  ContiguousWordWithContextBuffer<S> buffer(1);
+  ContiguousWordWithContextBuffer buffer(1, S);
 
-  int r1 = buffer.push(ContiguousBufferBackedWordWithContext<S>::builder()
+  int r1 = buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withTargetWord(targetIndex)
     .withDroppedWordCount(droppedCount)
     .build());
 
-  int r2 = buffer.push(ContiguousBufferBackedWordWithContext<S>::builder()
+  int r2 = buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withTargetWord(targetIndex)
     .withDroppedWordCount(droppedCount)
     .build());
@@ -142,4 +136,4 @@ TEST(ContiguousWordWithContextBuffer, FullBuffer) {
   EXPECT_EQ(r2, 0);
 }
 
-// TODO: more complicated usage... multiple push/pop's, order checking?
+// TODO: more complicated usage... multiple push/pop's, order checking, bad size..

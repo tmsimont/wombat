@@ -7,13 +7,12 @@ using wombat::Int32RingBuffer;
 
 TEST(Int32RingBufferTest, ValidHappyCase) {
   static const int S = 2;
-  Int32RingBuffer<S> buffer(2);
-  std::unique_ptr<std::array<int, S>> data =
-    std::make_unique<std::array<int, S>>(std::array<int, S>());
+  Int32RingBuffer buffer(2, S);
+  auto data = std::make_unique<std::vector<int>>(S);
   (*data)[0] = 8;
   (*data)[1] = 9;
   buffer.push(std::move(data));
-  std::unique_ptr<std::array<int, S>> item = buffer.pop();
+  auto item = buffer.pop();
 
   // Original data should be destroyed.
   EXPECT_EQ(data, nullptr);
@@ -28,28 +27,25 @@ TEST(Int32RingBufferTest, ValidHappyCase) {
 
 TEST(Int32RingBufferTest, EmptyBuffer) {
   static const int size = 2;
-  Int32RingBuffer<size> buffer(2);
-  std::unique_ptr<std::array<int, size>> item = buffer.pop();
+  Int32RingBuffer buffer(2, size);
+  auto item = buffer.pop();
   EXPECT_EQ(item, nullptr);
 }
 
 TEST(Int32RingBufferTest, FullBuffer) {
   static const int S = 2;
-  Int32RingBuffer<S> buffer(1);
-  std::unique_ptr<std::array<int, S>> data =
-    std::make_unique<std::array<int, S>>(std::array<int, S>());
+  Int32RingBuffer buffer(1, S);
+  auto data = std::make_unique<std::vector<int>>(S);
   (*data)[0] = 8;
   (*data)[1] = 9;
   int r1 = buffer.push(std::move(data));
 
-  std::unique_ptr<std::array<int, S>> data2 =
-    std::make_unique<std::array<int, S>>(std::array<int, S>());
+  auto data2 = std::make_unique<std::vector<int>>(S);
   (*data2)[0] = 8;
   (*data2)[1] = 9;
   int r2 = buffer.push(std::move(data));
 
-  std::unique_ptr<std::array<int, S>> data3 =
-    std::make_unique<std::array<int, S>>(std::array<int, S>());
+  auto data3 = std::make_unique<std::vector<int>>(S);
   (*data3)[0] = 8;
   (*data3)[1] = 9;
   int r3 = buffer.push(std::move(data));
