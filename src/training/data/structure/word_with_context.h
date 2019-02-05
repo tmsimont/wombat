@@ -15,7 +15,7 @@ namespace wombat {
     public:
       virtual int32_t getTargetWord() const = 0;
       // TODO: would probably be better to use an iterator. 
-      // visitor pattern is less code than iterator
+      // visitor pattern is less code than iterator, but makes for bad patterns
       virtual void acceptContextWordVisitor(WordWithContextVisitor& visitor) const = 0;
   };
 

@@ -29,7 +29,6 @@ class ContiguousBufferTestVisitor : public WordWithContextVisitor {
 
 const int S = 8;
 const int targetIndex = 1;
-const int droppedCount = 2;
 
 /**
  * Build a WordWithContext.
@@ -45,22 +44,6 @@ TEST(ContiguousWordWithContextBuffer, TargetWord) {
 
   auto popped = buffer.pop();
   EXPECT_EQ(popped->getTargetWord(), targetIndex);
-}
-
-/**
- * Build a WordWithContext.
- * Push it into the buffer.
- * Pop it out and make sure the popped dropped count matches what was input.
- */
-TEST(ContiguousWordWithContextBuffer, DroppedCount) {
-  ContiguousWordWithContextBuffer buffer(1, S);
-
-  buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
-    .withDroppedWordCount(droppedCount)
-    .build());
-
-  auto popped = buffer.pop();
-  EXPECT_EQ(popped->getNumberOfDroppedContextWordSamples(), droppedCount);
 }
 
 /**
@@ -119,17 +102,14 @@ TEST(ContiguousWordWithContextBuffer, EmptyBuffer) {
 TEST(ContiguousWordWithContextBuffer, FullBuffer) {
   const int S = 8;
   const int targetIndex = 1;
-  const int droppedCount = 2;
   ContiguousWordWithContextBuffer buffer(1, S);
 
   int r1 = buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withTargetWord(targetIndex)
-    .withDroppedWordCount(droppedCount)
     .build());
 
   int r2 = buffer.push(ContiguousBufferBackedWordWithContext::builder(S)
     .withTargetWord(targetIndex)
-    .withDroppedWordCount(droppedCount)
     .build());
 
   EXPECT_EQ(r1, 1);

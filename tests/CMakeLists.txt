@@ -11,6 +11,7 @@ set(TESTS
   contiguous_buffer/int32_ring_buffer.cxx
   word2vec.wordbag.cxx
   training/data/structure/stdVector.sentence.cxx
+  training/data/parsing/sentence_parser.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
   )
 

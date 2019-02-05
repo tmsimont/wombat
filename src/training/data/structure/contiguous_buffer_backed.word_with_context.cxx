@@ -5,10 +5,6 @@ namespace wombat {
     return (*data)[TARGET_WORD_INDEX];
   }
 
-  int32_t ContiguousBufferBackedWordWithContext::getNumberOfDroppedContextWordSamples() const {
-    return (*data)[DROPPED_WORDS_INDEX];
-  }
-
   int32_t ContiguousBufferBackedWordWithContext::getNumberOfContextWords() const {
     return (*data)[NUMBER_OF_CONTEXT_WORDS_INDEX];
   }
@@ -33,19 +29,12 @@ namespace wombat {
 
   ContiguousBufferBackedWordWithContextBuilder& 
     ContiguousBufferBackedWordWithContextBuilder::withContextWord(int32_t wordIndex) {
-      if (_numberOfContextWords + 3 < _entrySize) {
+      if (_numberOfContextWords + ContiguousBufferBackedWordWithContext::DATA_SIZE < _entrySize) {
         (*_data)[ContiguousBufferBackedWordWithContext
           ::CONTEXT_WORDS_START_INDEX + _numberOfContextWords++] = wordIndex;
       } else {
         // TODO: provide feedback to indicate extra words are ignored.
-        // maybe increment _droppedCount?
       }
-      return *this;
-    }
-
-  ContiguousBufferBackedWordWithContextBuilder& 
-    ContiguousBufferBackedWordWithContextBuilder::withDroppedWordCount(int32_t count) {
-      _droppedCount = count;
       return *this;
     }
 
@@ -54,8 +43,6 @@ namespace wombat {
     // Assign values to the vector.
     (*_data)[ContiguousBufferBackedWordWithContext
       ::TARGET_WORD_INDEX] = _target;
-    (*_data)[ContiguousBufferBackedWordWithContext
-      ::DROPPED_WORDS_INDEX] = _droppedCount;
     (*_data)[ContiguousBufferBackedWordWithContext
       ::NUMBER_OF_CONTEXT_WORDS_INDEX] = _numberOfContextWords;
 

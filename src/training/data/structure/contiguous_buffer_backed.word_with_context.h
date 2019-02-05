@@ -43,13 +43,6 @@ namespace wombat {
        */
       int32_t getTargetWord() const;
 
-      /**
-       * During collection of training data we might drop context words around a target.
-       * We keep track of how many times we drop context words. This tells us how many
-       * context words were dropped from around the target word when collecting this 
-       * WordWithContext.
-       */
-      int32_t getNumberOfDroppedContextWordSamples() const;
 
       /**
        * Return the number of context words have we sampled for this training target word.
@@ -73,7 +66,7 @@ namespace wombat {
       /**
        * This is the number of integers we store in addition to #maxNumberOfContextWords.
        */
-      static const int32_t DATA_SIZE = 3;
+      static const int32_t DATA_SIZE = 2;
 
       /**
        * Index in backing integer array structure for our target word index.
@@ -81,19 +74,14 @@ namespace wombat {
       static const int32_t TARGET_WORD_INDEX = 0;
 
       /**
-       * Index in backing integer array structure for our number of dropped words..
-       */
-      static const int32_t DROPPED_WORDS_INDEX = 1;
-
-      /**
        * Index in backing integer array structure for our number of context words.
        */
-      static const int32_t NUMBER_OF_CONTEXT_WORDS_INDEX = 2;
+      static const int32_t NUMBER_OF_CONTEXT_WORDS_INDEX = 1;
 
       /**
        * Index in backing integer array structure for the index at which context words start.
        */
-      static const int32_t CONTEXT_WORDS_START_INDEX = 3;
+      static const int32_t CONTEXT_WORDS_START_INDEX = 2;
 
       /**
        * This is shared with the ContiguousWordWithContextBuffer.
@@ -121,8 +109,6 @@ namespace wombat {
 
       ContiguousBufferBackedWordWithContextBuilder& withContextWord(int32_t wordIndex);
 
-      ContiguousBufferBackedWordWithContextBuilder& withDroppedWordCount(int32_t count);
-
       /**
        * Return a unique pointer to a new instance of the word with context.
        */
@@ -132,7 +118,6 @@ namespace wombat {
       const int32_t _entrySize;
       std::unique_ptr<std::vector<int32_t>> _data;
       int32_t _target;
-      int32_t _droppedCount;
       int32_t _numberOfContextWords = 0;
   };
 }
