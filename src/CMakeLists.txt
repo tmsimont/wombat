@@ -6,6 +6,8 @@ set(HEADERS
   vocabulary/wordbag.h
   vocabulary/word2vec.wordbag.h
   training/data/parsing/sentence_parser.h
+  training/data/source/sentence_producer.h
+  training/data/source/file_backed.sentence_producer.h
   training/data/structure/stdVector.sentence.h
   training/data/structure/contiguous_buffer_backed.word_with_context.h
   training/data/structure/contiguous_word_with_context_buffer.h
@@ -18,6 +20,7 @@ set(SOURCES
   vocabulary/word2vec.wordbag.builder.cxx
   vocabulary/word2vec.wordbag.cxx
   training/data/parsing/sentence_parser.cxx
+  training/data/source/file_backed.sentence_producer.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/structure/contiguous_buffer_backed.word_with_context.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
