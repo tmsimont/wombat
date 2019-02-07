@@ -14,6 +14,7 @@ namespace wombat {
 
     while (true) {
       ReadWord(word);
+      if (word[0] == 0) break;
       wordIndex = _wordBag->getWordIndex(word);
       if (wordIndex == -1) continue;
       if (wordIndex == 0) break;
@@ -21,15 +22,24 @@ namespace wombat {
       if (_fileStream.eof()) break;
     }
 
+    // nullptr returned if parsing didn't yield anything
+    if (sentence->getNumberOfWordsInput() == 0) {
+      return nullptr;
+    }
+
     return sentence;
   }
 
   bool FileBackedSentenceProducer::rewind() {
-    // TODO: seek back to the start of the stream
+    // seek back to the start of the stream
+    _fileStream.seekg(0);
     return false;
   }
 
   int32_t FileBackedSentenceProducer::setFile(const std::string& fileName) {
+    if (_fileStream.is_open()) {
+      _fileStream.close();
+    }
     _fileStream.open(fileName, std::ios::out);
     if (_fileStream.is_open()) {
       return 1;
@@ -38,13 +48,12 @@ namespace wombat {
   }
 
   bool FileBackedSentenceProducer::hasNext() {
-    return _fileStream.eof();
-    // TODO: support starting mid-file
-    // || (ftell(fi) - start) > chunkSize);
+    return !_fileStream.eof();
   }
 
   /**
    * Original word2vec read word implementation (modified to work with ifstream).
+   * TODO: clean this up for a more modern stream-y std lib approach
    */
   void FileBackedSentenceProducer::ReadWord(char *word) {
     int32_t a = 0;
@@ -54,7 +63,7 @@ namespace wombat {
         continue;
       if ((ch == ' ') || (ch == '\t') || (ch == '\n')) {
         if (a > 0) {
-          if (ch == '\n')
+          if (ch == '\n' && !_fileStream.eof())
             _fileStream.putback(ch);
           break;
         }

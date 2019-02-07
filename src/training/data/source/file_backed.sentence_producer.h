@@ -8,6 +8,7 @@
 #include <fstream>
 #include <memory>
 #include <string>
+#include <stdexcept>
 
 namespace wombat {
 
@@ -18,13 +19,12 @@ namespace wombat {
        * in the given word bag.
        *
        * @param WordBag that built from the vocabulary of test data.
-       * @param chunkSize The size in bytes that this stream will span. TODO: support this?
        */
-      FileBackedSentenceProducer(
-          const std::shared_ptr<WordBag> wordBag,
-          uint64_t chunkSize)
-        : _wordBag(wordBag),
-          _chunkSize(chunkSize) {
+      FileBackedSentenceProducer(const std::shared_ptr<WordBag> wordBag)
+        : _wordBag(wordBag) {
+            if (_wordBag->getSize() == 1) {
+              throw std::invalid_argument("Cannot use an empty bag");
+            }
       }
 
       /**
@@ -50,7 +50,7 @@ namespace wombat {
     private:
       static const int MAX_STRING = 64;
       const std::shared_ptr<WordBag> _wordBag;
-      const uint64_t _chunkSize;
+      // TODO: use istream? pass in unique_ptr to stream so its more generic
       std::ifstream _fileStream;
 
       /**
