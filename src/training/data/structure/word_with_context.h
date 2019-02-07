@@ -13,6 +13,8 @@ namespace wombat {
    */
   class WordWithContext {
     public:
+      virtual ~WordWithContext() {}
+
       virtual int32_t getTargetWord() const = 0;
       // TODO: would probably be better to use an iterator. 
       // visitor pattern is less code than iterator, but makes for bad patterns

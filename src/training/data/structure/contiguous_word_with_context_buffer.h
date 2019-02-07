@@ -36,6 +36,11 @@ namespace wombat {
       }
 
       /**
+       * Implement virtual destructor.
+       */
+      ~ContiguousWordWithContextBuffer() {}
+
+      /**
        * User passes in shared pointer to a WordWithContext instance.
        * Its data will be de-referenced and copied into the buffer, or ignored if the buffer
        * is full.

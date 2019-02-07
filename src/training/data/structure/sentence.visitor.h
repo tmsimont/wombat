@@ -6,6 +6,8 @@
 namespace wombat {
   class SentenceVisitor {
     public:
+      virtual ~SentenceVisitor() {}
+
       /**
        * Will be called in order for each word in the sentence.
        */

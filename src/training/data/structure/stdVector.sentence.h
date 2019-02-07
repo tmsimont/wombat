@@ -13,6 +13,7 @@ namespace wombat {
    */
   class StdVectorSentence : public Sentence {
     public:
+      ~StdVectorSentence() {}
       int32_t getNumberOfTrainingWords();
       int32_t getNumberOfWordsInput();
       void acceptWordVisitor(SentenceVisitor& visitor) const;

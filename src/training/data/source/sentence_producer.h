@@ -13,6 +13,8 @@ namespace wombat {
    */
   class SentenceProducer {
     public:
+      ~SentenceProducer() {}
+
       /**
        * Get a Sentence instance to use for training.
        */

@@ -39,6 +39,11 @@ namespace wombat {
       }
 
       /**
+       * Implement virtual destructor.
+       */
+      ~ContiguousBufferBackedWordWithContext() {}
+
+      /**
        * Return the target word that has context words around it.
        */
       int32_t getTargetWord() const;

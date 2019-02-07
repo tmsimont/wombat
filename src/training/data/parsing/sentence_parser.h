@@ -34,6 +34,11 @@ namespace wombat {
       }
 
       /**
+       * Implement virtual destructor.
+       */
+      ~SentenceParser() {}
+
+      /**
        * Implement SentenceVisitor.
        */
       void visitWord(const int32_t& wordIndex); 

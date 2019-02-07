@@ -6,6 +6,8 @@
 namespace wombat {
   class WordWithContextVisitor {
     public:
+      virtual ~WordWithContextVisitor() {}
+
       /**
        * Will be called in order for each word in the set of context words.
        */

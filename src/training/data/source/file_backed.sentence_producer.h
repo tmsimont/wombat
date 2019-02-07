@@ -28,6 +28,11 @@ namespace wombat {
       }
 
       /**
+       * Implement virtual destructor.
+       */
+      ~FileBackedSentenceProducer() {}
+
+      /**
        * Pull the next sentence from the file. hasNext() should be checked first.
        */
       std::unique_ptr<Sentence> nextSentence();

@@ -20,6 +20,8 @@ namespace wombat {
    */
   class Sentence {
     public:
+      virtual ~Sentence() {}
+
       /**
        * Get the number of words that can be used for training.
        * This is equal to the number of words iterated in #acceptWordVisitor().
