@@ -95,8 +95,7 @@ TEST(FileBackedSentenceProducer, OverPollingInput) {
   // Produce a sentence.
   auto sentence = producer.nextSentence();
 
-  // TODO: hasNext() should return false here
-  // ASSERT_THAT(producer.hasNext(), false);
+  ASSERT_THAT(producer.hasNext(), false);
   sentence = producer.nextSentence();
 
   // Make sure we're at the end of the input
@@ -122,10 +121,7 @@ TEST(FileBackedSentenceProducer, MultipleLinesInInput) {
   int32_t numSentences = 0;
   while (producer.hasNext()) {
     auto sentence = producer.nextSentence();
-    // TODO: hasNext() should be false before we actually get nullptr back?
-    if (sentence != nullptr) {
-      numSentences++;
-    }
+    numSentences++;
   }
   EXPECT_EQ(numSentences, 3);
 }

@@ -48,7 +48,12 @@ namespace wombat {
   }
 
   bool FileBackedSentenceProducer::hasNext() {
-    return !_fileStream.eof();
+    _fileStream.get(ch);
+    if (_fileStream.eof()) {
+      return false;
+    };
+    _fileStream.putback(ch);
+    return true;
   }
 
   /**
@@ -57,13 +62,12 @@ namespace wombat {
    */
   void FileBackedSentenceProducer::ReadWord(char *word) {
     int32_t a = 0;
-    char ch;
     while (_fileStream.get(ch)) {
       if (ch == 13)
         continue;
       if ((ch == ' ') || (ch == '\t') || (ch == '\n')) {
         if (a > 0) {
-          if (ch == '\n' && !_fileStream.eof())
+          if (ch == '\n')
             _fileStream.putback(ch);
           break;
         }

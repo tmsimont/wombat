@@ -52,6 +52,7 @@ namespace wombat {
       const std::shared_ptr<WordBag> _wordBag;
       // TODO: use istream? pass in unique_ptr to stream so its more generic
       std::ifstream _fileStream;
+      char ch;
 
       /**
        * Read a single word from the file into a char array.
