@@ -1,5 +1,5 @@
-#ifndef TRAINING_DATA_SOURCE_SENTENCE_PRODUCER_H_
-#define TRAINING_DATA_SOURCE_SENTENCE_PRODUCER_H_
+#ifndef TRAINING_DATA_SOURCE_SENTENCE_SOURCE_H_
+#define TRAINING_DATA_SOURCE_SENTENCE_SOURCE_H_
 
 #include "training/data/structure/sentence.h"
 
@@ -11,9 +11,9 @@ namespace wombat {
    * This generates instances of Sentence, that can be parsed to generate 
    * training data.
    */
-  class SentenceProducer {
+  class SentenceSource {
     public:
-      ~SentenceProducer() {}
+      ~SentenceSource() {}
 
       /**
        * Get a Sentence instance to use for training.

@@ -1,7 +1,7 @@
-#ifndef TRAINING_DATA_SOURCE_FILE_BACKED_SENTENCE_PRODUCER_H_
-#define TRAINING_DATA_SOURCE_FILE_BACKED_SENTENCE_PRODUCER_H_
+#ifndef TRAINING_DATA_SOURCE_FILE_BACKED_SENTENCE_SOURCE_H_
+#define TRAINING_DATA_SOURCE_FILE_BACKED_SENTENCE_SOURCE_H_
 
-#include "training/data/source/sentence_producer.h"
+#include "training/data/source/sentence_source.h"
 #include "vocabulary/wordbag.h"
 
 #include <iostream>
@@ -12,15 +12,15 @@
 
 namespace wombat {
 
-  class FileBackedSentenceProducer : public SentenceProducer {
+  class FileBackedSentenceSource : public SentenceSource {
     public:
       /**
-       * Construct a sentence producer that can create sentences made from the words
+       * Construct a sentence source that can create sentences made from the words
        * in the given word bag.
        *
        * @param WordBag that built from the vocabulary of test data.
        */
-      FileBackedSentenceProducer(const std::shared_ptr<WordBag> wordBag)
+      FileBackedSentenceSource(const std::shared_ptr<WordBag> wordBag)
         : _wordBag(wordBag) {
             if (_wordBag->getSize() == 1) {
               throw std::invalid_argument("Cannot use an empty bag");
@@ -30,7 +30,7 @@ namespace wombat {
       /**
        * Implement virtual destructor.
        */
-      ~FileBackedSentenceProducer() {}
+      ~FileBackedSentenceSource() {}
 
       /**
        * Pull the next sentence from the file. hasNext() should be checked first.

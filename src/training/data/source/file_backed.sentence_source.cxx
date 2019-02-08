@@ -1,4 +1,4 @@
-#include "training/data/source/file_backed.sentence_producer.h"
+#include "training/data/source/file_backed.sentence_source.h"
 #include "training/data/structure/stdVector.sentence.h"
 
 #include <iostream>
@@ -7,7 +7,7 @@
 
 namespace wombat {
 
-  std::unique_ptr<Sentence> FileBackedSentenceProducer::nextSentence() {
+  std::unique_ptr<Sentence> FileBackedSentenceSource::nextSentence() {
     std::unique_ptr<Sentence> sentence = std::make_unique<StdVectorSentence>();
     int32_t success, wordIndex;
     char word[MAX_STRING];
@@ -30,13 +30,13 @@ namespace wombat {
     return sentence;
   }
 
-  bool FileBackedSentenceProducer::rewind() {
+  bool FileBackedSentenceSource::rewind() {
     // seek back to the start of the stream
     _fileStream.seekg(0);
     return false;
   }
 
-  int32_t FileBackedSentenceProducer::setFile(const std::string& fileName) {
+  int32_t FileBackedSentenceSource::setFile(const std::string& fileName) {
     if (_fileStream.is_open()) {
       _fileStream.close();
     }
@@ -47,7 +47,7 @@ namespace wombat {
     return 0;
   }
 
-  bool FileBackedSentenceProducer::hasNext() {
+  bool FileBackedSentenceSource::hasNext() {
     _fileStream.get(ch);
     if (_fileStream.eof()) {
       return false;
@@ -60,7 +60,7 @@ namespace wombat {
    * Original word2vec read word implementation (modified to work with ifstream).
    * TODO: clean this up for a more modern stream-y std lib approach
    */
-  void FileBackedSentenceProducer::ReadWord(char *word) {
+  void FileBackedSentenceSource::ReadWord(char *word) {
     int32_t a = 0;
     while (_fileStream.get(ch)) {
       if (ch == 13)
