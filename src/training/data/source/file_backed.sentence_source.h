@@ -49,8 +49,9 @@ namespace wombat {
 
       /**
        * Set the file by name to parse for Sentences.
+       * TODO: put filename into constructor
        */
-      int32_t setFile(const std::string& fileName);
+      void setFile(const std::string& fileName);
 
     private:
       static const int MAX_STRING = 64;

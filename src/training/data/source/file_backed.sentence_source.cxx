@@ -1,9 +1,8 @@
 #include "training/data/source/file_backed.sentence_source.h"
 #include "training/data/structure/stdVector.sentence.h"
 
+#include <exception>
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
 
 namespace wombat {
 
@@ -36,15 +35,14 @@ namespace wombat {
     return false;
   }
 
-  int32_t FileBackedSentenceSource::setFile(const std::string& fileName) {
+  void FileBackedSentenceSource::setFile(const std::string& fileName) {
     if (_fileStream.is_open()) {
       _fileStream.close();
     }
     _fileStream.open(fileName, std::ios::out);
-    if (_fileStream.is_open()) {
-      return 1;
+    if (!_fileStream.is_open()) {
+      throw std::invalid_argument("Unable to open file: " + fileName);
     }
-    return 0;
   }
 
   bool FileBackedSentenceSource::hasNext() {

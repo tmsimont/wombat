@@ -30,14 +30,14 @@ TEST(FileBackedSentenceSource, FileNotFound) {
   Word2VecWordBagBuilder bagBuilder;
   bagBuilder.add("word");
   FileBackedSentenceSource source(bagBuilder.build());
-  EXPECT_EQ(source.setFile("nonFile.txt"), 0);
+  EXPECT_THROW(source.setFile("nonFile.txt"), std::invalid_argument);
 }
 
 TEST(FileBackedSentenceSource, FileFound) {
   Word2VecWordBagBuilder bagBuilder;
   bagBuilder.add("word");
   FileBackedSentenceSource source(bagBuilder.build());
-  EXPECT_EQ(source.setFile(TEST_FILE_NAME), 1);
+  EXPECT_NO_THROW(source.setFile(TEST_FILE_NAME));
 }
 
 TEST(FileBackedSentenceSource, SentenceProductionFromFile) {
@@ -53,7 +53,7 @@ TEST(FileBackedSentenceSource, SentenceProductionFromFile) {
   FileBackedSentenceSource source(bag);
 
   // Make sure we can read the test file.
-  ASSERT_THAT(source.setFile(TEST_FILE_NAME), 1);
+  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME));
 
   // Produce a sentence.
   auto sentence = source.nextSentence();
@@ -90,7 +90,7 @@ TEST(FileBackedSentenceSource, OverPollingInput) {
   FileBackedSentenceSource source(bag);
 
   // Make sure we can read the test file.
-  ASSERT_THAT(source.setFile(TEST_FILE_NAME), 1);
+  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME));
 
   // Produce a sentence.
   auto sentence = source.nextSentence();
@@ -115,7 +115,7 @@ TEST(FileBackedSentenceSource, MultipleLinesInInput) {
   FileBackedSentenceSource source(bag);
 
   // Make sure we can read the test file.
-  ASSERT_THAT(source.setFile(TEST_FILE_NAME_MULTILINE), 1);
+  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME_MULTILINE));
 
   // Iterate over sentences
   int32_t numSentences = 0;
