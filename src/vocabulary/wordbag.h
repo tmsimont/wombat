@@ -28,6 +28,11 @@ namespace wombat {
       virtual int32_t getWordFrequency(const std::string& word) = 0;
 
       /**
+       * How often does the given word appear in the bag? (What is its multiplicity?)
+       */
+      virtual int32_t getWordFrequency(const int32_t& wordIndex) = 0;
+
+      /**
        * Give the number of unique words in the bag.
        */
       virtual int32_t getSize() = 0;

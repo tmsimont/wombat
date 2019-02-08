@@ -97,6 +97,15 @@ namespace wombat {
   }
 
   /**
+   * Get the frequency of a word in the wordbag.
+   *
+   * @return the number of times the given word appears in the wordbag.
+   */
+  int32_t Word2VecWordBag::getWordFrequency(const int32_t& wordIndex) {
+    return vocab[wordIndex].cn;
+  }
+
+  /**
    * Sorts the vocabulary by frequency using word counts and calculates sum of 
    * all word frequencies. This also optimizes memory footprint of vocab.
    *

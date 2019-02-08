@@ -35,6 +35,7 @@ namespace wombat {
       ~Word2VecWordBag();
       int32_t getWordIndex(const std::string& word);
       int32_t getWordFrequency(const std::string& word);
+      int32_t getWordFrequency(const int32_t& wordIndex);
       int32_t getSize();
       uint64_t getCardinality();
     private:

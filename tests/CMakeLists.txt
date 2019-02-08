@@ -14,6 +14,7 @@ set(TESTS
   training/data/parsing/sentence_parser.cxx
   training/data/source/file_backed.sentence_source.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
+  util.cxx
   )
 
 add_executable(test ${TESTS})

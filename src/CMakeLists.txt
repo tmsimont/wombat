@@ -11,6 +11,7 @@ set(HEADERS
   training/data/structure/stdVector.sentence.h
   training/data/structure/contiguous_buffer_backed.word_with_context.h
   training/data/structure/contiguous_word_with_context_buffer.h
+  util.h
   )
 
 set(SOURCES
@@ -24,6 +25,7 @@ set(SOURCES
   training/data/structure/stdVector.sentence.cxx
   training/data/structure/contiguous_buffer_backed.word_with_context.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
+  util.cxx
   main.cxx
   )
 

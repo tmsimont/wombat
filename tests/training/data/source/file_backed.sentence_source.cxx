@@ -6,6 +6,8 @@
 #include "vocabulary/word2vec.wordbag.builder.h"
 #include "vocabulary/wordbag.h"
 
+#include <iostream>
+
 using wombat::Sentence;
 using wombat::SentenceVisitor;
 using wombat::FileBackedSentenceSource;
@@ -124,4 +126,43 @@ TEST(FileBackedSentenceSource, MultipleLinesInInput) {
     numSentences++;
   }
   EXPECT_EQ(numSentences, 3);
+}
+
+TEST(FileBackedSentenceSource, DownSampling) {
+  // Put expected words into a word bag.
+  Word2VecWordBagBuilder bagBuilder;
+  bagBuilder.add("this");
+  bagBuilder.add("is");
+  bagBuilder.add("sentence");
+  std::shared_ptr<WordBag> bag = bagBuilder.build();
+
+  // Create a file-backed sentence source with downsampling
+  FileBackedSentenceSource source(bag,1e-4);
+
+  // Make sure we can read the test file.
+  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME_MULTILINE));
+
+  // Iterate over the same input 1000 times, and count how many
+  // words are discarded and sampled.
+  int32_t numWordsDiscarded = 0;
+  int32_t numWordsSampled = 0;
+  int32_t numWordsInput = 0;
+  for (int32_t i = 0; i < 1000; ++i) {
+    while (source.hasNext()) {
+      auto sentence = source.nextSentence();
+      numWordsInput += sentence->getNumberOfWordsInput();
+      numWordsSampled += sentence->getNumberOfTrainingWords();
+      numWordsDiscarded += sentence->getNumberOfWordsInput() 
+        - sentence->getNumberOfTrainingWords();
+    }
+    source.rewind();
+  }
+
+  // At least some words should be discarded.
+  EXPECT_GT(numWordsDiscarded, 0);
+  // At least some words should be input.
+  EXPECT_GT(numWordsInput, 0);
+  // At least some words should be sampled. Not too many, since
+  // there's only 3 words repeating over and over...
+  EXPECT_GT(numWordsSampled, 100);
 }
