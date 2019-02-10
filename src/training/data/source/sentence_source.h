@@ -13,7 +13,7 @@ namespace wombat {
    */
   class SentenceSource {
     public:
-      ~SentenceSource() {}
+      virtual ~SentenceSource() {}
 
       /**
        * Get a Sentence instance to use for training.

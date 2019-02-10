@@ -12,7 +12,8 @@ set(TESTS
   word2vec.wordbag.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/parsing/sentence_parser.cxx
-  training/data/source/file_backed.sentence_source.cxx
+  training/data/source/word_sampling.sentence_source.cxx
+  training/data/source/stream_backed.word_source.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
   util.cxx
   )

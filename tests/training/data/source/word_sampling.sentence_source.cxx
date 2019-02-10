@@ -1,7 +1,9 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "training/data/source/file_backed.sentence_source.h"
+#include "training/data/source/word_sampling.sentence_source.h"
+#include "training/data/source/word_source.h"
+#include "training/data/source/stream_backed.word_source.h"
 #include "training/data/structure/sentence.visitor.h"
 #include "vocabulary/word2vec.wordbag.builder.h"
 #include "vocabulary/wordbag.h"
@@ -10,12 +12,14 @@
 
 using wombat::Sentence;
 using wombat::SentenceVisitor;
-using wombat::FileBackedSentenceSource;
+using wombat::StreamBackedWordSource;
+using wombat::WordSamplingSentenceSource;
 using wombat::Word2VecWordBagBuilder;
 using wombat::WordBag;
+using wombat::WordSource;
 
-const std::string TEST_FILE_NAME("tests/resources/sentence_source_input.txt");
-const std::string TEST_FILE_NAME_MULTILINE("tests/resources/sentence_source_multiline_input.txt");
+const std::string TEST_FILE_NAME("tests/resources/simple_sentence.txt");
+const std::string TEST_FILE_NAME_MULTILINE("tests/resources/multiline_sentences.txt");
 
 /**
  * Helper Sentence visitor that builds an std::vector out of word indices in Sentence.
@@ -28,21 +32,19 @@ class SentenceTestVisitor : public SentenceVisitor {
     }
 };
 
-TEST(FileBackedSentenceSource, FileNotFound) {
-  Word2VecWordBagBuilder bagBuilder;
-  bagBuilder.add("word");
-  FileBackedSentenceSource source(bagBuilder.build());
-  EXPECT_THROW(source.setFile("nonFile.txt"), std::invalid_argument);
+/**
+ * Helper to build a file-stream-based word source.
+ */
+std::unique_ptr<WordSource> makeWordSource(const std::string& fileName) {
+  auto inputStream = std::make_unique<std::ifstream>();
+  inputStream->open(fileName, std::ios::out);
+  if (!inputStream->is_open()) {
+    throw std::invalid_argument("Unable to open test file.");
+  }
+  return std::make_unique<StreamBackedWordSource>(std::move(inputStream));
 }
 
-TEST(FileBackedSentenceSource, FileFound) {
-  Word2VecWordBagBuilder bagBuilder;
-  bagBuilder.add("word");
-  FileBackedSentenceSource source(bagBuilder.build());
-  EXPECT_NO_THROW(source.setFile(TEST_FILE_NAME));
-}
-
-TEST(FileBackedSentenceSource, SentenceProductionFromFile) {
+TEST(WordSamplingSentenceSource, SentenceProductionFromFile) {
   // Put expected words into a word bag.
   Word2VecWordBagBuilder bagBuilder;
   // some words will not be recognized in the bag
@@ -52,10 +54,7 @@ TEST(FileBackedSentenceSource, SentenceProductionFromFile) {
   std::shared_ptr<WordBag> bag = bagBuilder.build();
 
   // Create a file-backed sentence source.
-  FileBackedSentenceSource source(bag);
-
-  // Make sure we can read the test file.
-  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME));
+  WordSamplingSentenceSource source(bag, makeWordSource(TEST_FILE_NAME));
 
   // Produce a sentence.
   auto sentence = source.nextSentence();
@@ -69,18 +68,18 @@ TEST(FileBackedSentenceSource, SentenceProductionFromFile) {
   EXPECT_EQ(visitor.v[2], bag->getWordIndex("sentence"));
 }
 
-TEST(FileBackedSentenceSource, EmptyBag) {
+TEST(WordSamplingSentenceSource, EmptyBag) {
   // Create an empty bag.
   Word2VecWordBagBuilder bagBuilder;
   std::shared_ptr<WordBag> bag = bagBuilder.build();
 
   // Shouldn't be able to pass empty bag to source.
   EXPECT_THROW({
-    FileBackedSentenceSource source(bag);
+    WordSamplingSentenceSource source(bag, makeWordSource(TEST_FILE_NAME));
   }, std::exception);
 }
 
-TEST(FileBackedSentenceSource, OverPollingInput) {
+TEST(WordSamplingSentenceSource, OverPollingInput) {
   // Put expected words into a word bag.
   Word2VecWordBagBuilder bagBuilder;
   bagBuilder.add("this");
@@ -89,10 +88,7 @@ TEST(FileBackedSentenceSource, OverPollingInput) {
   std::shared_ptr<WordBag> bag = bagBuilder.build();
 
   // Create a file-backed sentence source.
-  FileBackedSentenceSource source(bag);
-
-  // Make sure we can read the test file.
-  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME));
+  WordSamplingSentenceSource source(bag, makeWordSource(TEST_FILE_NAME));
 
   // Produce a sentence.
   auto sentence = source.nextSentence();
@@ -105,7 +101,7 @@ TEST(FileBackedSentenceSource, OverPollingInput) {
   EXPECT_EQ(sentence, nullptr);
 }
 
-TEST(FileBackedSentenceSource, MultipleLinesInInput) {
+TEST(WordSamplingSentenceSource, MultipleLinesInInput) {
   // Put expected words into a word bag.
   Word2VecWordBagBuilder bagBuilder;
   bagBuilder.add("this");
@@ -114,10 +110,7 @@ TEST(FileBackedSentenceSource, MultipleLinesInInput) {
   std::shared_ptr<WordBag> bag = bagBuilder.build();
 
   // Create a file-backed sentence source.
-  FileBackedSentenceSource source(bag);
-
-  // Make sure we can read the test file.
-  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME_MULTILINE));
+  WordSamplingSentenceSource source(bag, makeWordSource(TEST_FILE_NAME_MULTILINE));
 
   // Iterate over sentences
   int32_t numSentences = 0;
@@ -128,7 +121,7 @@ TEST(FileBackedSentenceSource, MultipleLinesInInput) {
   EXPECT_EQ(numSentences, 3);
 }
 
-TEST(FileBackedSentenceSource, DownSampling) {
+TEST(WordSamplingSentenceSource, DownSampling) {
   // Put expected words into a word bag.
   Word2VecWordBagBuilder bagBuilder;
   bagBuilder.add("this");
@@ -136,11 +129,11 @@ TEST(FileBackedSentenceSource, DownSampling) {
   bagBuilder.add("sentence");
   std::shared_ptr<WordBag> bag = bagBuilder.build();
 
-  // Create a file-backed sentence source with downsampling
-  FileBackedSentenceSource source(bag,1e-4);
-
-  // Make sure we can read the test file.
-  ASSERT_NO_THROW(source.setFile(TEST_FILE_NAME_MULTILINE));
+  // Create a file-backed sentence source.
+  WordSamplingSentenceSource source(
+      bag,
+      makeWordSource(TEST_FILE_NAME_MULTILINE),
+      1e-4);
 
   // Iterate over the same input 1000 times, and count how many
   // words are discarded and sampled.
