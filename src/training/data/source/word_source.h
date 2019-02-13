@@ -6,20 +6,20 @@
 namespace wombat {
 
   /**
-   * This generates instances of Word, that can be parsed to generate 
-   * training data.
+   * A word source provides words found in natural language training data.
+   * Successive calls for "next word" provide word use in natural order.
    */
   class WordSource {
     public:
       virtual ~WordSource() {}
 
       /**
-       * Get a Word instance to use for training.
+       * Get a word instance as string to use for training.
        */
       virtual std::string nextWord() = 0;
 
       /**
-       * Get a Word instance to use for training.
+       * Returns true if this source has another word to use for training.
        */
       virtual bool hasNext() = 0;
 

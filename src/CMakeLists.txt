@@ -3,8 +3,6 @@ set(HEADERS
   arguments.h
   neuralnet/network.h
   neuralnet/weights.h
-  vocabulary/wordbag.h
-  vocabulary/word2vec.wordbag.h
   training/data/parsing/sentence_parser.h
   training/data/source/sentence_source.h
   training/data/source/word_sampling.sentence_source.h
@@ -12,6 +10,9 @@ set(HEADERS
   training/data/structure/stdVector.sentence.h
   training/data/structure/contiguous_buffer_backed.word_with_context.h
   training/data/structure/contiguous_word_with_context_buffer.h
+  vocabulary/wordbag.h
+  vocabulary/wordbag.factory.h
+  vocabulary/word2vec.wordbag.h
   util.h
   )
 
@@ -19,14 +20,15 @@ set(SOURCES
   arguments.cxx
   neuralnet/network.cxx
   neuralnet/weights.cxx
-  vocabulary/word2vec.wordbag.builder.cxx
-  vocabulary/word2vec.wordbag.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/source/stream_backed.word_source.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/structure/contiguous_buffer_backed.word_with_context.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
+  vocabulary/wordbag.factory.cxx
+  vocabulary/word2vec.wordbag.builder.cxx
+  vocabulary/word2vec.wordbag.cxx
   util.cxx
   main.cxx
   )

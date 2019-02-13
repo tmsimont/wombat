@@ -19,7 +19,7 @@ namespace wombat {
        * Construct a sentence source that can create sentences made from the words
        * in the given word bag.
        *
-       * @param WordBag that built from the vocabulary of test data.
+       * @param WordBag that was built from the vocabulary of test data.
        * @param WordSource a source of in-order training words.
        */
       WordSamplingSentenceSource(
@@ -52,7 +52,11 @@ namespace wombat {
       ~WordSamplingSentenceSource() {}
 
       /**
-       * Pull the next sentence from the file. hasNext() should be checked first.
+       * Pull the next sentence from the word source. hasNext() should be checked first.
+       * @return a unique_ptr to a Sentence instance that contains word indices of
+       *   the training words in the order they were pulled from training data.
+       *   nullptr is returned if there's no more training data. Call hasNext() first to
+       *   avoid getting nullptr.
        */
       std::unique_ptr<Sentence> nextSentence();
 
@@ -62,7 +66,7 @@ namespace wombat {
       bool hasNext();
 
       /**
-       * Resets the internal file pointer to the start of the training data.
+       * Resets the internal word source to the start of the training data.
        */
       bool rewind();
 
@@ -71,7 +75,6 @@ namespace wombat {
        * The subsampling randomly discards frequent words while keeping the ranking same.
        * This uses the old word2vec method for randomly sampling based on word frequency
        * and the cardinality of the vocab.
-       * TODO: make the sampling a little easier to read.
        */
       bool shouldDiscardWord(const int32_t& wordIndex);
 

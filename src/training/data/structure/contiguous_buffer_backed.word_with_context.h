@@ -48,7 +48,6 @@ namespace wombat {
        */
       int32_t getTargetWord() const;
 
-
       /**
        * Return the number of context words have we sampled for this training target word.
        */
@@ -114,6 +113,9 @@ namespace wombat {
 
       ContiguousBufferBackedWordWithContextBuilder& withContextWord(int32_t wordIndex);
 
+      ContiguousBufferBackedWordWithContextBuilder& fromWordWithContext(
+          std::shared_ptr<WordWithContext> wordWithContext);
+
       /**
        * Return a unique pointer to a new instance of the word with context.
        */
@@ -125,6 +127,26 @@ namespace wombat {
       int32_t _target;
       int32_t _numberOfContextWords = 0;
   };
+
+  class ContextWordCopier : public WordWithContextVisitor {
+    public:
+      ContextWordCopier(ContiguousBufferBackedWordWithContextBuilder& builder) 
+      : _builder(builder) {
+      }
+
+      ~ContextWordCopier() {}
+
+      /**
+       * Will be called in order for each word in the set of context words.
+       */
+      void visitContextWord(const int32_t& wordIndex) {
+        _builder.withContextWord(wordIndex);
+      }
+
+    private:
+      ContiguousBufferBackedWordWithContextBuilder& _builder;
+  };
+
 }
 
 #endif

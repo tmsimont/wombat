@@ -38,6 +38,15 @@ namespace wombat {
       return *this;
     }
 
+  ContiguousBufferBackedWordWithContextBuilder& 
+    ContiguousBufferBackedWordWithContextBuilder::fromWordWithContext(
+      std::shared_ptr<WordWithContext> wordWithContext) {
+      withTargetWord(wordWithContext->getTargetWord());
+      ContextWordCopier copier = ContextWordCopier(*this);
+      wordWithContext->acceptContextWordVisitor(copier);
+      return *this;
+  }
+
   std::unique_ptr<ContiguousBufferBackedWordWithContext> 
     ContiguousBufferBackedWordWithContextBuilder::build() {
     // Assign values to the vector.

@@ -5,6 +5,8 @@ namespace wombat {
     if (_currentPosition >= _wordIndices.size()) {
       return nullptr;
     }
+
+    // TODO: pass in a factory for WordWithContext building
     auto builder = ContiguousBufferBackedWordWithContext::builder(_maxNumberOfContextWords);
     builder.withTargetWord(_wordIndices[_currentPosition]);
 

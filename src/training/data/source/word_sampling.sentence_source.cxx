@@ -45,6 +45,7 @@ namespace wombat {
   }
 
   bool WordSamplingSentenceSource::shouldDiscardWord(const int32_t& wordIndex) {
+    // TODO: make the sampling a little easier to read.
     if (_sample > 0) {
       float p = (std::sqrt(_wordBag->getWordFrequency(wordIndex) 
             / (_sample * _wordBag->getCardinality())) + 1)

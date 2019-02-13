@@ -8,20 +8,19 @@
 namespace wombat {
 
   /**
-   * This generates instances of Sentence, that can be parsed to generate 
-   * training data.
+   * This generates instances of Sentence that are found in training data.
    */
   class SentenceSource {
     public:
       virtual ~SentenceSource() {}
 
       /**
-       * Get a Sentence instance to use for training.
+       * Get a Sentence instance to parse for training.
        */
       virtual std::unique_ptr<Sentence> nextSentence() = 0;
 
       /**
-       * Get a Sentence instance to use for training.
+       * Returns true if the file has more sentences to parse.
        */
       virtual bool hasNext() = 0;
 
@@ -29,13 +28,6 @@ namespace wombat {
        * Restart from the beginning of the data source.
        */
       virtual bool rewind() = 0;
-
-    protected:
-      /**
-       * Determine if the word sample should be ignored.
-       * TODO: decouple this from sentence source?
-       */
-      bool shouldDiscardWord(const int32_t& word);
   };
 
 }

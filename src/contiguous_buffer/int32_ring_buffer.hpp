@@ -2,7 +2,9 @@
 #define CONTIGUOUS_BUFFER_INT32_RING_BUFFER_H_
 
 #include <stdlib.h>
+
 #include <memory>
+#include <sstream>
 #include <vector>
 
 namespace wombat {
@@ -54,7 +56,12 @@ namespace wombat {
        */
       int32_t push(std::shared_ptr<std::vector<int>> data) {
         if (isFull()) return 0;
-        if (data->size() != _entry_size) return -1;
+        if (data->size() != _entry_size) {
+          std::stringstream ss;
+          ss << "Data vector passed to ring buffer is incorrect size.";
+          ss << " given " << data->size() << ", expected " << _entry_size;
+          throw std::invalid_argument(ss.str());
+        }
         std::copy(data->begin(), data->end(), _data + _entry_size * i_empty);
         i_empty++;
         if (i_empty == _num_items) {

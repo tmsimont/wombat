@@ -9,12 +9,13 @@ include_directories(${GMOCK_INCLUDE_DIRS})
 
 set(TESTS
   contiguous_buffer/int32_ring_buffer.cxx
-  word2vec.wordbag.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/source/stream_backed.word_source.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
+  vocabulary/word2vec.wordbag.cxx
+  vocabulary/wordbag.factory.cxx
   util.cxx
   )
 

@@ -46,7 +46,7 @@ namespace wombat {
        * is full.
        * @return 0 on full buffer or 1 on successful insertion.
        */
-      int32_t push(std::shared_ptr<ContiguousBufferBackedWordWithContext> item);
+      int32_t push(std::shared_ptr<WordWithContext> item);
 
       /**
        * Pop an item out of the buffer.
@@ -54,7 +54,7 @@ namespace wombat {
        * was in the contiguous buffer.
        * nullptr is returned if the buffer is empty.
        */
-      std::unique_ptr<ContiguousBufferBackedWordWithContext> pop();
+      std::unique_ptr<WordWithContext> pop();
 
     private:
       Int32RingBuffer _buffer;
