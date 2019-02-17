@@ -1,7 +1,7 @@
-#ifndef TRAINING_DATA_SOURCE_STREAM_BACKED_WORD_SOURCE_H_
-#define TRAINING_DATA_SOURCE_STREAM_BACKED_WORD_SOURCE_H_
+#ifndef VOCABULARY_STREAM_BACKED_WORD_SOURCE_H_
+#define VOCABULARY_STREAM_BACKED_WORD_SOURCE_H_
 
-#include "training/data/source/word_source.h"
+#include "vocabulary/word_source.h"
 
 #include <istream>
 #include <memory>
@@ -15,7 +15,7 @@ namespace wombat {
        * Construct a word source that will own a given stream pointer and
        * use this for getting in-order training words.
        */
-      StreamBackedWordSource(std::unique_ptr<std::istream> inputStream) 
+      StreamBackedWordSource(std::unique_ptr<std::istream> inputStream)
       : _stream(std::move(inputStream)) {}
 
       /**

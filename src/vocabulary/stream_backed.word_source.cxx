@@ -1,4 +1,4 @@
-#include "training/data/source/stream_backed.word_source.h"
+#include "vocabulary/stream_backed.word_source.h"
 
 namespace wombat {
 

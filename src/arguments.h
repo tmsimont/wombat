@@ -11,6 +11,9 @@ namespace wombat {
   class Arguments {
     public:
       Arguments(const std::vector<std::string>& args);
+      const std::string getVocabSourceFile() const {
+        return "test.txt";
+      }
     private:
       void parse(const std::vector<std::string>& args);
       void printHelp();

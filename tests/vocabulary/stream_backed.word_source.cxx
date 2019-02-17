@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "training/data/source/stream_backed.word_source.h" 
+#include "vocabulary/stream_backed.word_source.h" 
 #include <iostream>
 #include <exception>
 #include <fstream>

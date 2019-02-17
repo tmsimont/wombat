@@ -2,7 +2,7 @@
 #define TRAINING_DATA_SOURCE_WORD_SAMPLING_SENTENCE_SOURCE_H_
 
 #include "training/data/source/sentence_source.h"
-#include "training/data/source/word_source.h"
+#include "vocabulary/word_source.h"
 #include "vocabulary/wordbag/wordbag.h"
 
 #include <iostream>
