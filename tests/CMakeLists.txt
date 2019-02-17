@@ -9,6 +9,8 @@ include_directories(${GMOCK_INCLUDE_DIRS})
 
 set(TESTS
   contiguous_buffer/int32_ring_buffer.cxx
+  neuralnet/layer.cxx
+  neuralnet/network.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
@@ -17,6 +19,8 @@ set(TESTS
   vocabulary/wordbag/word2vec.wordbag.cxx
   vocabulary/wordbag_producer.cxx
   util.cxx
+  test_utils.h
+  test_utils.cxx
   )
 
 add_executable(test ${TESTS})

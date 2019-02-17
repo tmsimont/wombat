@@ -2,7 +2,7 @@ set(HEADERS
   contiguous_buffer/int32_ring_buffer.hpp
   arguments.h
   neuralnet/network.h
-  neuralnet/weights.h
+  neuralnet/layer.h
   training/data/parsing/sentence_parser.h
   training/data/source/sentence_source.h
   training/data/source/word_sampling.sentence_source.h
@@ -19,7 +19,7 @@ set(HEADERS
 set(SOURCES
   arguments.cxx
   neuralnet/network.cxx
-  neuralnet/weights.cxx
+  neuralnet/layer.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/structure/stdVector.sentence.cxx
