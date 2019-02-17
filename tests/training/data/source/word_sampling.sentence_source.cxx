@@ -5,8 +5,8 @@
 #include "training/data/source/word_source.h"
 #include "training/data/source/stream_backed.word_source.h"
 #include "training/data/structure/sentence.visitor.h"
-#include "vocabulary/word2vec.wordbag.builder.h"
-#include "vocabulary/wordbag.h"
+#include "vocabulary/wordbag/word2vec.wordbag.builder.h"
+#include "vocabulary/wordbag/wordbag.h"
 
 #include <iostream>
 

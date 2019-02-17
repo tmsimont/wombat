@@ -1,5 +1,5 @@
-#ifndef VOCABULARY_WORDBAG_H_
-#define VOCABULARY_WORDBAG_H_
+#ifndef VOCABULARY_WORDBAG_WORDBAG_H_
+#define VOCABULARY_WORDBAG_WORDBAG_H_
 
 #include <stdint.h>
 #include <string>

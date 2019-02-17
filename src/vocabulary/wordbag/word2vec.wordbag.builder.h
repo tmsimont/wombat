@@ -1,8 +1,8 @@
-#ifndef VOCABULARY_WORD2VEC_WORDBAG_BUILDER_H_
-#define VOCABULARY_WORD2VEC_WORDBAG_BUILDER_H_
+#ifndef VOCABULARY_WORDBAG_WORD2VEC_WORDBAG_BUILDER_H_
+#define VOCABULARY_WORDBAG_WORD2VEC_WORDBAG_BUILDER_H_
 
-#include "vocabulary/wordbag.builder.h"
-#include "vocabulary/word2vec.wordbag.h"
+#include "vocabulary/wordbag/wordbag.builder.h"
+#include "vocabulary/wordbag/word2vec.wordbag.h"
 
 #include <memory>
 

@@ -17,6 +17,14 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
   Arguments arguments = Arguments(args);
+
+  // Load pre-trained vocab or learn from source.
+  // Initialize vectors or load vectors.
+  // Get the word source for training.
+  // Update vectors with word source for configurable epochs.
+  // Get the trained word vectors (possibly from GPU)
+  // Save the trained word vectors.
+
   return 0;
 }
 

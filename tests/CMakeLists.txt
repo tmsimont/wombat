@@ -14,8 +14,8 @@ set(TESTS
   training/data/source/word_sampling.sentence_source.cxx
   training/data/source/stream_backed.word_source.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
-  vocabulary/word2vec.wordbag.cxx
-  vocabulary/wordbag.factory.cxx
+  vocabulary/wordbag/word2vec.wordbag.cxx
+  vocabulary/wordbag/wordbag.factory.cxx
   util.cxx
   )
 

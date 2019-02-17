@@ -1,7 +1,7 @@
-#ifndef VOCABULARY_WORD2VEC_WORDBAG_H_
-#define VOCABULARY_WORD2VEC_WORDBAG_H_
+#ifndef VOCABULARY_WORDBAG_WORD2VEC_WORDBAG_H_
+#define VOCABULARY_WORDBAG_WORD2VEC_WORDBAG_H_
 
-#include "vocabulary/wordbag.h"
+#include "vocabulary/wordbag/wordbag.h"
 
 namespace wombat {
 

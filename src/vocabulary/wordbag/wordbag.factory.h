@@ -1,8 +1,8 @@
-#ifndef VOCABULARY_WORDBAG_FACTORY_H_
-#define VOCABULARY_WORDBAG_FACTORY_H_
+#ifndef VOCABULARY_WORDBAG_WORDBAG_FACTORY_H_
+#define VOCABULARY_WORDBAG_WORDBAG_FACTORY_H_
 
 #include "training/data/source/word_source.h"
-#include "vocabulary/wordbag.h"
+#include "vocabulary/wordbag/wordbag.h"
 
 #include <memory>
 

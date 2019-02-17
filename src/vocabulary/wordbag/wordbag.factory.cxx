@@ -1,5 +1,5 @@
-#include "vocabulary/word2vec.wordbag.builder.h"
-#include "vocabulary/wordbag.factory.h"
+#include "vocabulary/wordbag/word2vec.wordbag.builder.h"
+#include "vocabulary/wordbag/wordbag.factory.h"
 
 namespace wombat {
   std::unique_ptr<WordBag> WordBagFactory::makeWordBag() {

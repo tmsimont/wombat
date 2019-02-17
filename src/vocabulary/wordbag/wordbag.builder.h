@@ -1,7 +1,7 @@
-#ifndef VOCABULARY_WORDBAG_BUILDER_H_
-#define VOCABULARY_WORDBAG_BUILDER_H_
+#ifndef VOCABULARY_WORDBAG_WORDBAG_BUILDER_H_
+#define VOCABULARY_WORDBAG_WORDBAG_BUILDER_H_
 
-#include "vocabulary/wordbag.h"
+#include "vocabulary/wordbag/wordbag.h"
 
 #include <memory>
 

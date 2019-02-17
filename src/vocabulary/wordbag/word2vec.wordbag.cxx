@@ -1,5 +1,5 @@
-#include "vocabulary/wordbag.h"
-#include "vocabulary/word2vec.wordbag.h"
+#include "vocabulary/wordbag/wordbag.h"
+#include "vocabulary/wordbag/word2vec.wordbag.h"
 
 namespace wombat {
 
