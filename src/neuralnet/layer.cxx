@@ -24,8 +24,8 @@ namespace neuralnet {
     free((void *) _data);
   }
 
-  const float * Layer::vectorAt(int64_t index) {
-    return _data + index * _vectorLength;
+  const Vector Layer::vectorAt(int64_t index) {
+    return Vector(index, _data + index * _vectorLength, _vectorLength);
   }
 
   void Layer::randomize() {

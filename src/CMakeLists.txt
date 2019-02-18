@@ -3,6 +3,7 @@ set(HEADERS
   arguments.h
   neuralnet/network.h
   neuralnet/layer.h
+  neuralnet/vector.h
   training/data/parsing/sentence_parser.h
   training/data/source/sentence_source.h
   training/data/source/word_sampling.sentence_source.h
@@ -20,6 +21,7 @@ set(SOURCES
   arguments.cxx
   neuralnet/network.cxx
   neuralnet/layer.cxx
+  neuralnet/vector.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/structure/stdVector.sentence.cxx
