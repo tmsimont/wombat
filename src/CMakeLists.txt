@@ -10,6 +10,9 @@ set(HEADERS
   training/data/structure/stdVector.sentence.h
   training/data/structure/contiguous_buffer_backed.word_with_context.h
   training/data/structure/contiguous_word_with_context_buffer.h
+  training/sgd/mini_batch.h
+  training/sgd/sgd_mini_batch_trainer.h
+  training/sgd/vector_selection_strategy.h
   vocabulary/stream_backed.word_source.h
   vocabulary/wordbag/wordbag.h
   vocabulary/wordbag/word2vec.wordbag.h
@@ -27,6 +30,8 @@ set(SOURCES
   training/data/structure/stdVector.sentence.cxx
   training/data/structure/contiguous_buffer_backed.word_with_context.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
+  training/sgd/mini_batch.cxx
+  training/sgd/sgd_mini_batch_trainer.cxx
   vocabulary/stream_backed.word_source.cxx
   vocabulary/wordbag/word2vec.wordbag.builder.cxx
   vocabulary/wordbag/word2vec.wordbag.cxx

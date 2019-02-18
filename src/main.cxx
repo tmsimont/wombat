@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
   // Load pre-trained vocab or learn from source.
   auto vocabSource = getWordSourceFromFile(arguments.getVocabSourceFile());
-  auto worBag = WordBagProducer::fromWordSource(vocabSource);
+  auto wordBag = WordBagProducer::fromWordSource(vocabSource);
 
   // Initialize vectors or load vectors.
 
