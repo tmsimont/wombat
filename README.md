@@ -1,4 +1,11 @@
 
+
+**Note that in its current state the code is in a bit of a mess. A lot of remnants of some related expiriments are left in the code... Substantial refactoring is needed.**
+
+I've started refactoring heavily in the v2 branch, but it's currently not actually working/building in v2. 
+Please post issues on github and I'll try to take a look, but my time on this is very limited :(
+
+
 <img align=left width=150 src="https://raw.githubusercontent.com/tmsimont/wombat/master/wombat.png" />
 
 ---
@@ -16,10 +23,6 @@ A paper is available that describes the methods in this package on IEEE:
 
 The work builds upon ideas presented in [BIDMach](https://github.com/BIDData/BIDMach/)
 and further refined in [Intel's pWord2Vec](https://github.com/IntelLabs/pWord2Vec).
-
-
-*Note that in its current state the code is in a bit of a mess. A lot of remnants of some related expiriments are left in the code... Substantial refactoring is needed.*
-
 
 This code supports:
 

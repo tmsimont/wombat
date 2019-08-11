@@ -37,6 +37,7 @@ SGDCUDATrainer::SGDCUDATrainer(int num_batches, int batch_size) {
   cudaMalloc(reinterpret_cast<void **>(&d_twords), twords_bytes);
   cudaMalloc(reinterpret_cast<void **>(&d_labels), labels_bytes);
 
+  // I think this idea is dead and we always use stream[0]...
   num_streams = num_batches;
 
   streams = reinterpret_cast<cudaStream_t *>(
@@ -107,7 +108,7 @@ void SGDCUDATrainer::train() {
 
   memtoCUDA();
 
-  CallKernels(hs, wombat.size(), wovbat.size(), streams + 0,
+  CallKernels(hs, wombat.size(), wovbat.size(), streams + 0, // here's the always use 0 part..
     d_Wih,
     d_Woh,
     d_cwords,
@@ -131,6 +132,12 @@ void SGDCUDATrainer::clear() {
   used.clear();
 }
 
+/**
+ * I started calling things "sets" because the batch of batch shit is confusing AF.
+ * I never got around to cleaning this up until now... The "set" is a bunch of "minibatches".
+ * Check out the commit history on this note. I'm adding a bunch of notes in one big commit and
+ * otherwise I'm not working on the master branch anymore. I'm starting to refactor things in the v2 branch.
+ */
 void SGDCUDATrainer::loadSet(TCBufferReader *tc_reader) {
   if (loaded_sets == batch_size * num_batches) return;
   if (loaded_sets == 0)
@@ -165,6 +172,18 @@ void SGDCUDATrainer::loadSet(TCBufferReader *tc_reader) {
     }
   }
 
+  /**
+   * This craziness maps all of the "minibatches" in our big batch of batches to a bunch of sub-operations.
+   * We look for "minibatches" that have 4 input rows (e.g. target words / h-softmax nodes) and 8 context words
+   * aka "output layers" in the minibatch.
+   * We batch up all the 4x8 minibatches into MOP structures, which can then be crunched with a highly optimized
+   * kernel.
+   * The rest of our training minibatches get split up into VOP structures, where we use an optimized dot-product-based
+   * kernel to take care of the non-4x8-minibatches.
+   * We could take even more shapes here if we wanted to (e.g. 32x1, 8x4, 2x16) and write optimized kernels for them,
+   * too, but i ran out of time while working on the thesis :P
+   * The numbers are centered around 32 because of the way warp shuffling works in cuda...
+   */
   int twi = 0;
   while (targets_to_load-twi > 0) {
     int numcw = tc_reader->numCWords();

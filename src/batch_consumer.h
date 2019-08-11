@@ -12,6 +12,12 @@
 #include "src/buffers/tc_buffer.h"
 #include "src/consumer.h"
 
+/**
+ * This consumes a "batch" of minibatches...
+ * This is part of the "batch_model" code, which reads from file input, and builds
+ * batches of minibatches. The only implementation of this that I have is the CUDA-based one.
+ * It's full of mess from several old ideas I was playing with while working on this the first time around.
+ */
 class BatchConsumer {
  public:
   explicit BatchConsumer(SGDBatchTrainer *trainer);

@@ -30,9 +30,22 @@ void BatchModel::train() {
 }
 
 SGDBatchTrainer* BatchModel::getTrainer() {
+  // "batch_size" here is references to the number of minibatches we'll have in a batch of operations
+  //  that the GPU can crunch all at once. "Minibatch" is not a concept in this version 1 code, but what 
+  //  i mean by this is a set of target words (and either negative samples or hierarchical softmax node
+  //  vectors) along with "context words" (i.e. vectors from the "output layer")
+  //  "batches_per_thread" I THINK is something I gave up on... should probably be 1 always??
   return new SGDBatchTrainer(batches_per_thread, batch_size);
 }
 
+/**
+ * The idea here is basically that we have multiple CPU threads reading from multiple different
+ * points in a file, and then each one goes to put down a chunk of training data into a big "batch"
+ * of word vector indices and training labels that get shipped over to GPU.
+ * The GPU stuff is hidden in the "trainer"
+ * I wrote this thinking I'd use it for both CPU and GPU but only ever implemented a CUDA based trainer.
+ * Most of this junk is remnants of old and abandoned experimentation.
+ */
 int BatchWorker::work() {
   c = new BatchConsumer(reinterpret_cast<BatchModel *>(model)->getTrainer());
   for (int i = 0; i < batch_size; ++i) {
@@ -69,6 +82,10 @@ int BatchWorker::work() {
     while (empty_tcbs == 0) {
       c->setTCBuffer(local_tcbs[i]);
       c->getTCBuffer()->setLock();
+      // here we're filling up that batch of minibatches, but not actually doing anything with it 
+      // other than putting down a bunch of word vector indices, and generating negative samples or 
+      // hierarchical softmax nodes and labels. So we're parsing the "target/context" word buffers
+      // and building pointers to training data and labels for training steps.
       s = c->acquire();
       c->getTCBuffer()->unsetLock();
       switch (s) {
@@ -77,7 +94,9 @@ int BatchWorker::work() {
           i++;
           break;
         case -1:
-          // consumer is full
+          // consumer is full, meaning we have batch_size minibatches ready to crunch.
+          // consume will send to GPU and i beleive once memory is on the way we're unblocked to 
+          // keep on parsing more training data.
           c->consume();
           break;
         case 0:
