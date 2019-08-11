@@ -26,10 +26,7 @@ namespace neuralnet {
        */
       int32_t getIndex();
 
-      /**
-       * Get the actual array that backs the Vector.
-       */
-      const float * getData() const;
+      float get(const int32_t atIndex);
 
     private:
       const int32_t _index;

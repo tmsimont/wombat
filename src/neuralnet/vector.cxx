@@ -6,8 +6,9 @@ namespace neuralnet {
     return _index;
   }
 
-  const float * Vector::getData() const {
-    return _data;
+  float Vector::get(int32_t atIndex) const {
+    // TODO: validate the range
+    return _data[atIndex];
   }
 }
 }

@@ -5,7 +5,6 @@
 
 #include "arguments.h"
 
-
 #include "vocabulary/word_source.h"
 #include "vocabulary/stream_backed.word_source.h"
 #include "vocabulary/wordbag_producer.h"
@@ -34,6 +33,7 @@ int main(int argc, char *argv[]) {
   Arguments arguments = Arguments(args);
 
   // Load pre-trained vocab or learn from source.
+  // TODO: Implement switching between pre-trained and learn. For now using learn from file.
   auto vocabSource = getWordSourceFromFile(arguments.getVocabSourceFile());
   auto wordBag = WordBagProducer::fromWordSource(vocabSource);
 
