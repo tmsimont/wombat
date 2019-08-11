@@ -17,6 +17,10 @@ namespace neuralnet {
     public:
       Network(std::shared_ptr<WordBag> wordbag, int32_t vectorLength);
 
+      Vector getInputVector(int64_t index) const;
+
+      Vector getOutputVector(int64_t index) const;
+
     private:
       Layer _inputLayer;
       Layer _outputLayer;

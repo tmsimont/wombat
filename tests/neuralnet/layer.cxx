@@ -19,3 +19,9 @@ TEST(NeuralNetLayer, Randomize) {
   }
   EXPECT_NE(sum, 0);
 }
+
+TEST(NeuralNetLayer, Modify) {
+  Layer sixtyFourWords(64, 300);
+  sixtyFourWords.vectorAt(0).update(0, 1.0f);
+  EXPECT_EQ(sixtyFourWords.vectorAt(0).get(0), 1.0f);
+}

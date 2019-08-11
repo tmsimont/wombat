@@ -24,7 +24,7 @@ namespace neuralnet {
     free((void *) _data);
   }
 
-  const Vector Layer::vectorAt(int64_t index) {
+  Vector Layer::vectorAt(int64_t index) const {
     return Vector(index, _data + index * _vectorLength, _vectorLength);
   }
 

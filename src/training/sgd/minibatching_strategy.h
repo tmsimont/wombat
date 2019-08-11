@@ -2,6 +2,7 @@
 #define TRAINING_SGD_MINIBATCHING_STRATEGY_H_
 
 #include "training/data/structure/word_with_context.h"
+#include "training/sgd/mini_batch.h"
 #include "neuralnet/network.h"
 #include "neuralnet/vector.h"
 
@@ -17,17 +18,33 @@ namespace sgd {
    */
   class MinibatchingStrategy {
     public:
-      MinibatchingStrategy(const neuralnet::Network& network) {}
+      MinibatchingStrategy(const neuralnet::Network& network)
+        : _network(network) {}
 
       virtual ~MinibatchingStrategy() {}
 
-      virtual int32_t maximumInputVectorsPerWordWithContext() = 0;
+      virtual int32_t maximumInputVectorsPerBatch() = 0;
 
-      virtual int32_t maximumOutputVectorsPerWordWithContext() = 0;
+      virtual int32_t maximumOutputVectorsPerBatch() = 0;
 
       virtual int32_t getVectorSize() = 0;
 
       virtual std::unique_ptr<MiniBatch> getMiniBatch() = 0;
+
+      virtual neuralnet::Vector getParentInputVector(const neuralnet::Vector& minibatchVector) {
+        // The strategy should maintain the index when copying into the minibatch.
+        int32_t parentIndex = minibatchVector.getIndex();
+        return _network.getInputVector(parentIndex);
+      }
+
+      virtual neuralnet::Vector getParentOutputVector(const neuralnet::Vector& minibatchVector) {
+        // The strategy should maintain the index when copying into the minibatch.
+        int32_t parentIndex = minibatchVector.getIndex();
+        return _network.getOutputVector(parentIndex);
+      }
+
+    protected:
+      const neuralnet::Network& _network;
   };
 }
 }

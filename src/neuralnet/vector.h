@@ -17,20 +17,22 @@ namespace neuralnet {
    */
   class Vector {
     public:
-      Vector(const int32_t index, const float * data, int32_t length) : 
+      Vector(const int32_t index, float * data, int32_t length) : 
         _index(index), _data(data), _length(length) {}
 
       /**
        * Get the index in the neural net this vector relates to. This index 
        * is also the word index in the word bag used to create the network.
        */
-      int32_t getIndex();
+      const int32_t getIndex() const;
 
-      float get(const int32_t atIndex);
+      float get(const int32_t& atIndex) const;
+
+      void update(const int32_t& atIndex, const float& value);
 
     private:
       const int32_t _index;
-      const float * const _data;
+      float * _data;
       const int32_t _length;
   };
 }

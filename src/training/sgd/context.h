@@ -1,8 +1,9 @@
-#ifndef TRAINING_CONTEXT_H
-#define TRAINING_CONTEXT_H
+#ifndef TRAINING_SGD_CONTEXT_H_
+#define TRAINING_SGD_CONTEXT_H_
 
 #include <cmath>
 #include <cstdint>
+#include "stdlib.h"
 
 // TODO: move exp stuff somewhere else??
 #define EXP_TABLE_SIZE 1000
@@ -10,7 +11,7 @@
 
 
 namespace wombat {
-namespace training {
+namespace sgd {
   /**
    * Training context encapsulates the current state of the training, such as
    * remaining epochs, alpha, etc.
@@ -39,15 +40,15 @@ namespace training {
       float loss(const float& f, int32_t label) {
         float alpha = getAlpha();
         if (f > MAX_EXP) {
-          g = (label - 1) * alpha;
+          return (label - 1) * alpha;
         } else if (f < -MAX_EXP) {
-          g = label * alpha;
+          return label * alpha;
         } else {
-          g = (label - expTable[static_cast<int32_t>(
+          return (label - expTable[static_cast<int32_t>(
                 (f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))]) * alpha;
         }
       }
-  }
+  };
 }
 }
 

@@ -7,5 +7,13 @@ namespace neuralnet {
   _outputLayer(wordbag->getSize(), vectorLength) {
     _inputLayer.randomize();
   }
+
+  Vector Network::getInputVector(int64_t index) const {
+    return _inputLayer.vectorAt(index);
+  }
+
+  Vector Network::getOutputVector(int64_t index) const {
+    return _outputLayer.vectorAt(index);
+  }
 }
 }

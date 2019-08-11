@@ -17,7 +17,7 @@ namespace neuralnet {
       Layer(int64_t numVectors, int32_t vectorLength);
       ~Layer();
       void randomize();
-      const Vector vectorAt(int64_t index);
+      Vector vectorAt(int64_t index) const;
 
     private:
       float * const _data;
