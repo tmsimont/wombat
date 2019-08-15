@@ -28,6 +28,7 @@ namespace sgd {
         return _inputLayerVectors;
       }
 
+      // TODO: shouldn't this be 2-dimensional?
       const std::vector<int32_t>& getLabels() {
         return _labels;
       }

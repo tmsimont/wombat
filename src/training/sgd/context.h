@@ -29,7 +29,7 @@ namespace sgd {
         }
       }
 
-      float getAlpha() {
+      virtual float getAlpha() {
         return 0.25f;
       }
 
@@ -37,7 +37,7 @@ namespace sgd {
        * Calculate the loss for a labeled inference? 
        * TODO: update what all this means, probably move it out from context into something else?
        */
-      float loss(const float& f, int32_t label) {
+      virtual float loss(const float& f, int32_t label) {
         float alpha = getAlpha();
         if (f > MAX_EXP) {
           return (label - 1) * alpha;

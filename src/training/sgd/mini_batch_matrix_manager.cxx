@@ -10,8 +10,9 @@ namespace sgd {
           const std::unique_ptr<MiniBatch>& _miniBatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix) {
-    int32_t rowIndex = 0, colIndex = 0;
+    int32_t rowIndex = 0;
     for (auto const& row: _miniBatch->getInputLayerVectors()) {
+      int32_t colIndex = 0;
       for (auto const& col: _miniBatch->getOutputLayerVectors()) {
         float f = 0.f;
         // TODO: validate row/col length either here or before here.
@@ -20,7 +21,6 @@ namespace sgd {
           f += row.get(k) * col.get(k);
         }
         int32_t correctionMatrixIndex = rowIndex * _miniBatch->numOutputCols() + colIndex;
-        // TODO: think about using something other than "training context?" also is "loss" correct?
         _correctionMatrix[correctionMatrixIndex] = f;
         colIndex++;
       }
@@ -41,8 +41,9 @@ namespace sgd {
       for (int32_t colIndex = 0; colIndex < _miniBatch->numOutputCols(); colIndex++) {
         int32_t correctionMatrixIndex = rowIndex * _miniBatch->numOutputCols() + colIndex;
         // TODO: think about using something other than "training context?" also is "loss" correct?
-        _correctionMatrix[correctionMatrixIndex] = _trainingContext
-          ->loss(_correctionMatrix[correctionMatrixIndex], _miniBatch->getLabels().at(rowIndex));
+        _correctionMatrix[correctionMatrixIndex] = _trainingContext->loss(
+            _correctionMatrix[correctionMatrixIndex],
+            _miniBatch->getLabels().at(correctionMatrixIndex));
       }
     }
   }

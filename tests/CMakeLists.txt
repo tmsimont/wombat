@@ -15,6 +15,7 @@ set(TESTS
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
+  training/sgd/mini_batch_matrix_manager.cxx
   vocabulary/stream_backed.word_source.cxx
   vocabulary/wordbag/word2vec.wordbag.cxx
   vocabulary/wordbag_producer.cxx
