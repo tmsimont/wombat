@@ -1,8 +1,8 @@
-#ifndef TRAINING_SGD_MINIBATCHING_STRATEGY_H_
-#define TRAINING_SGD_MINIBATCHING_STRATEGY_H_
+#ifndef TRAINING_BATCHING_MINIBATCHING_STRATEGY_H_
+#define TRAINING_BATCHING_MINIBATCHING_STRATEGY_H_
 
 #include "training/data/structure/word_with_context.h"
-#include "training/sgd/mini_batch.h"
+#include "training/batching/minibatch.h"
 #include "neuralnet/network.h"
 #include "neuralnet/vector.h"
 
@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace wombat {
-namespace sgd {
+namespace batching {
 
   /**
    * Strategy used for pulling Vectors out of the neural net for a given word with context, and then
@@ -29,7 +29,7 @@ namespace sgd {
 
       virtual int32_t getVectorSize() = 0;
 
-      virtual std::unique_ptr<MiniBatch> getMiniBatch() = 0;
+      virtual std::unique_ptr<Minibatch> getMinibatch() = 0;
 
       virtual neuralnet::Vector getParentInputVector(const neuralnet::Vector& minibatchVector) {
         // The strategy should maintain the index when copying into the minibatch.

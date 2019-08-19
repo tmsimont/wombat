@@ -1,23 +1,23 @@
-#ifndef TRAINING_SGD_MINIBATCH_H_
-#define TRAINING_SGD_MINIBATCH_H_
+#ifndef TRAINING_BATCHING_MINIBATCH_H_
+#define TRAINING_BATCHING_MINIBATCH_H_
 
 #include "neuralnet/vector.h"
 
 #include <vector>
 
 namespace wombat {
-namespace sgd {
+namespace batching {
 
   /**
    * Minibatch is a copy of vectors from a larger neural net into separate structures
    * that can be modified by a single thread without risking false sharing.
    */
-  class MiniBatch {
+  class Minibatch {
     public:
       /**
        * Input vectors are copies from the main network.
        */
-      MiniBatch(std::vector<neuralnet::Vector> inputLayerVectors,
+      Minibatch(std::vector<neuralnet::Vector> inputLayerVectors,
                 std::vector<int32_t> labels,
                 std::vector<neuralnet::Vector> outputLayerVectors)
         : _inputLayerVectors(inputLayerVectors),

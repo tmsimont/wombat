@@ -11,11 +11,12 @@ set(TESTS
   contiguous_buffer/int32_ring_buffer.cxx
   neuralnet/layer.cxx
   neuralnet/network.cxx
+  training/batching/negative_sampling.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
-  training/sgd/mini_batch_matrix_manager.cxx
+  training/sgd/minibatch_matrix_manager.cxx
   vocabulary/stream_backed.word_source.cxx
   vocabulary/wordbag/word2vec.wordbag.cxx
   vocabulary/wordbag_producer.cxx

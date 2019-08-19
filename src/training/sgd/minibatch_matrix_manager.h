@@ -1,11 +1,14 @@
-#ifndef TRAINING_SGS_MINI_BATCH_MATRIX_MANAGER_H_
-#define TRAINING_SGS_MINI_BATCH_MATRIX_MANAGER_H_
+#ifndef TRAINING_BATCHING_MINIBATCH_MATRIX_MANAGER_H_
+#define TRAINING_BATCHING_MINIBATCH_MATRIX_MANAGER_H_
 
 #include "training/sgd/context.h"
-#include "training/sgd/minibatching_strategy.h"
-#include "training/sgd/mini_batch.h"
+#include "training/batching/minibatching_strategy.h"
+#include "training/batching/minibatch.h"
 
 #include <memory>
+
+using wombat::batching::Minibatch;
+using wombat::batching::MinibatchingStrategy;
 
 namespace wombat{
 namespace sgd {
@@ -14,9 +17,9 @@ namespace sgd {
    * This class encapsulates the matrix operations required for feed forward and back
    * propagation in the minibatch network operations.
    */
-  class MiniBatchMatrixManager {
+  class MinibatchMatrixManager {
     public:
-      MiniBatchMatrixManager(int32_t hiddenSize)
+      MinibatchMatrixManager(int32_t hiddenSize)
         : _hiddenSize(hiddenSize) { }
 
       /**
@@ -26,7 +29,7 @@ namespace sgd {
        * input/output interaction in a minibatch. (Forward propagation)
        */
       virtual void activate(
-          const std::unique_ptr<MiniBatch>& _miniBatch,
+          const std::unique_ptr<Minibatch>& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix);
 
@@ -39,7 +42,7 @@ namespace sgd {
        * with the MKL version... maybe worth investigation into if readability has a big impact on performance.
        */
       virtual void calculateError(
-          const std::unique_ptr<MiniBatch>& _miniBatch,
+          const std::unique_ptr<Minibatch>& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix);
 
@@ -49,7 +52,7 @@ namespace sgd {
        * to update "output" values in the neural network.
        */
       virtual void calculateOutputLayerUpdate(
-          const std::unique_ptr<MiniBatch>& _miniBatch,
+          const std::unique_ptr<Minibatch>& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix,
           float * _localOutputLayerUpdateMatrix);
@@ -60,7 +63,7 @@ namespace sgd {
        * to update "input" values in the neural network.
        */
       virtual void calculateInputLayerUpdate(
-          const std::unique_ptr<MiniBatch>& _miniBatch,
+          const std::unique_ptr<Minibatch>& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix,
           float * _localInputLayerUpdateMatrix);

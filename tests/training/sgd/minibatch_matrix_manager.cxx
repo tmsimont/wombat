@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+#include "training/batching/minibatch.h"
 #include "training/sgd/context.h"
-#include "training/sgd/mini_batch.h"
-#include "training/sgd/mini_batch_matrix_manager.h"
+#include "training/sgd/minibatch_matrix_manager.h"
 
 #include <memory>
 #include <vector>
 
-using wombat::sgd::MiniBatch;
+using wombat::batching::Minibatch;
 using wombat::neuralnet::Vector;
-using wombat::sgd::MiniBatchMatrixManager;
+using wombat::sgd::MinibatchMatrixManager;
 
 class ContextForTest : public wombat::sgd::Context {
   public:
@@ -46,7 +46,7 @@ static float o2[4] = { 1, 1, 1, 1 };
 static float o3[4] = { 2, 2, 2, 2 };
 static float l1[3] = { 0, 3, 6 };
 static float l2[3] = { 0, 2, 4 };
-std::unique_ptr<MiniBatch> getMinibatch() {
+std::unique_ptr<Minibatch> getMinibatch() {
   Vector iv1(0, i1, 4);
   Vector iv2(1, i2, 4);
   Vector ov1(0, o1, 4);
@@ -71,16 +71,16 @@ std::unique_ptr<MiniBatch> getMinibatch() {
   outputLayerVectors.push_back(ov2);
   outputLayerVectors.push_back(ov3);
 
-  return std::move(std::make_unique<MiniBatch>(inputLayerVectors, labels, outputLayerVectors));
+  return std::move(std::make_unique<Minibatch>(inputLayerVectors, labels, outputLayerVectors));
 }
 
-TEST(MiniBatchMatrixManagerTest, Activate) {
+TEST(MinibatchMatrixManagerTest, Activate) {
   ContextForTest testContext;
   auto batch = getMinibatch();
   auto context = std::make_shared<ContextForTest>();
-  //MiniBatchMatrixManager manager(4);
-  //float correctionMatrix[6] = {};
-  //manager.activate(batch, context, correctionMatrix);
+  MinibatchMatrixManager manager(4);
+  float correctionMatrix[6] = {};
+  manager.activate(batch, context, correctionMatrix);
 
   /*
    *             0 1 2
@@ -91,19 +91,19 @@ TEST(MiniBatchMatrixManagerTest, Activate) {
    *
    *             0 1 2
    */
-  //EXPECT_FLOAT_EQ(correctionMatrix[0], 0);
-  //EXPECT_FLOAT_EQ(correctionMatrix[1], 3);
-  //EXPECT_FLOAT_EQ(correctionMatrix[2], 6);
-  //EXPECT_FLOAT_EQ(correctionMatrix[3], 0);
-  //EXPECT_FLOAT_EQ(correctionMatrix[4], 2);
-  //EXPECT_FLOAT_EQ(correctionMatrix[5], 4);
+  EXPECT_FLOAT_EQ(correctionMatrix[0], 0);
+  EXPECT_FLOAT_EQ(correctionMatrix[1], 3);
+  EXPECT_FLOAT_EQ(correctionMatrix[2], 6);
+  EXPECT_FLOAT_EQ(correctionMatrix[3], 0);
+  EXPECT_FLOAT_EQ(correctionMatrix[4], 2);
+  EXPECT_FLOAT_EQ(correctionMatrix[5], 4);
 }
 
-TEST(MiniBatchMatrixManagerTest, Correction) {
+TEST(MinibatchMatrixManagerTest, Correction) {
   ContextForTest testContext;
   auto batch = getMinibatch();
   auto context = std::make_shared<ContextForTest>();
-  MiniBatchMatrixManager manager(4);
+  MinibatchMatrixManager manager(4);
   float correctionMatrix[6] = {};
   manager.activate(batch, context, correctionMatrix);
   manager.calculateError(batch, context, correctionMatrix);
@@ -117,11 +117,11 @@ TEST(MiniBatchMatrixManagerTest, Correction) {
   EXPECT_FLOAT_EQ(correctionMatrix[5],  8);
 }
 
-TEST(MiniBatchMatrixManagerTest, InputUpdate) {
+TEST(MinibatchMatrixManagerTest, InputUpdate) {
   ContextForTest testContext;
   auto batch = getMinibatch();
   auto context = std::make_shared<ContextForTest>();
-  MiniBatchMatrixManager manager(4);
+  MinibatchMatrixManager manager(4);
   float correctionMatrix[6] = {};
   float inputUpdate[8] = {};
   manager.activate(batch, context, correctionMatrix);
@@ -145,11 +145,11 @@ TEST(MiniBatchMatrixManagerTest, InputUpdate) {
   EXPECT_FLOAT_EQ(inputUpdate[7], 20);
 }
 
-TEST(MiniBatchMatrixManagerTest, OutputUpdate) {
+TEST(MinibatchMatrixManagerTest, OutputUpdate) {
   ContextForTest testContext;
   auto batch = getMinibatch();
   auto context = std::make_shared<ContextForTest>();
-  MiniBatchMatrixManager manager(4);
+  MinibatchMatrixManager manager(4);
   float correctionMatrix[6] = {};
   float outputUpdate[12] = {};
   manager.activate(batch, context, correctionMatrix);

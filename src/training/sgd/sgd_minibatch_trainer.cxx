@@ -1,4 +1,4 @@
-#include "training/sgd/sgd_mini_batch_trainer.h"
+#include "training/sgd/sgd_minibatch_trainer.h"
 
 namespace wombat {
 namespace sgd {
@@ -8,14 +8,14 @@ namespace sgd {
    * local minibatch network activation, loss and update matrices that can then be
    * applied back to the parent network from which the Minibatch was formed.
    */
-  SGDMiniBatchTrainer::SGDMiniBatchTrainer(std::unique_ptr<MinibatchingStrategy> miniBatcher)
-    : _miniBatcher(std::move(miniBatcher)),
-    _hiddenSize(miniBatcher->getVectorSize()),
+  SGDMinibatchTrainer::SGDMinibatchTrainer(std::unique_ptr<MinibatchingStrategy> minibatcher)
+    : _minibatcher(std::move(minibatcher)),
+    _hiddenSize(minibatcher->getVectorSize()),
     _matrixManager(_hiddenSize) {
     // Each batch might be a slightly different size, but we need to allocate a fixed chunk
     // of memory, so ask the minibatcher what the maximum sizes of each batch will be.
-    int32_t maximumNumberOfInputVectors = miniBatcher->maximumInputVectorsPerBatch();
-    int32_t maximumNumberOfOutputVectors = miniBatcher->maximumOutputVectorsPerBatch();
+    int32_t maximumNumberOfInputVectors = minibatcher->maximumInputVectorsPerBatch();
+    int32_t maximumNumberOfOutputVectors = minibatcher->maximumOutputVectorsPerBatch();
 
     // Space for thread-local input layer update vector
     posix_memalign(
@@ -36,30 +36,30 @@ namespace sgd {
         maximumNumberOfInputVectors * maximumNumberOfOutputVectors * sizeof(float));
   }
 
-  SGDMiniBatchTrainer::~SGDMiniBatchTrainer() {
+  SGDMinibatchTrainer::~SGDMinibatchTrainer() {
     free(_localInputLayerUpdateMatrix);
     free(_localOutputLayerUpdateMatrix);
     free(_correctionMatrix);
   }
 
-  void SGDMiniBatchTrainer::train(std::shared_ptr<Context> trainingContext) {
-    // TODO: validate miniBatch size?
-    _miniBatch = _miniBatcher->getMiniBatch();
+  void SGDMinibatchTrainer::train(std::shared_ptr<Context> trainingContext) {
+    // TODO: validate minibatch size?
+    _minibatch = _minibatcher->getMinibatch();
     _matrixManager.activate(
-        _miniBatch,
+        _minibatch,
         _trainingContext,
         _correctionMatrix);
     _matrixManager.calculateError(
-        _miniBatch,
+        _minibatch,
         _trainingContext,
         _correctionMatrix);
     _matrixManager.calculateOutputLayerUpdate(
-        _miniBatch,
+        _minibatch,
         _trainingContext,
         _correctionMatrix,
         _localOutputLayerUpdateMatrix);
     _matrixManager.calculateInputLayerUpdate(
-        _miniBatch,
+        _minibatch,
         _trainingContext,
         _correctionMatrix,
         _localInputLayerUpdateMatrix);
@@ -71,10 +71,10 @@ namespace sgd {
    * This is where the false-sharing starts. We're going to take our minibatch results
    * and write back to the neural network shared with other threads.
    */
-  void SGDMiniBatchTrainer::applyOutputLayersUpdate() {
+  void SGDMinibatchTrainer::applyOutputLayersUpdate() {
     int32_t colIndex = 0;
-    for (auto const& col: _miniBatch->getOutputLayerVectors()) {
-      neuralnet::Vector parentVector = _miniBatcher->getParentOutputVector(col);
+    for (auto const& col: _minibatch->getOutputLayerVectors()) {
+      neuralnet::Vector parentVector = _minibatcher->getParentOutputVector(col);
       for (int k = 0; k < _hiddenSize; k++) {
         float currentValue = parentVector.get(k);
         parentVector.update(
@@ -89,10 +89,10 @@ namespace sgd {
    * This is where the false-sharing starts. We're going to take our minibatch results
    * and write back to the neural network shared with other threads.
    */
-  void SGDMiniBatchTrainer::applyInputLayersUpdate() {
+  void SGDMinibatchTrainer::applyInputLayersUpdate() {
     int32_t rowIndex = 0;
-    for (auto const& row: _miniBatch->getInputLayerVectors()) {
-      neuralnet::Vector parentVector = _miniBatcher->getParentInputVector(row);
+    for (auto const& row: _minibatch->getInputLayerVectors()) {
+      neuralnet::Vector parentVector = _minibatcher->getParentInputVector(row);
       for (int k = 0; k < _hiddenSize; k++) {
         float currentValue = parentVector.get(k);
         parentVector.update(

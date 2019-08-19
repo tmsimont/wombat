@@ -4,6 +4,9 @@ set(HEADERS
   neuralnet/network.h
   neuralnet/layer.h
   neuralnet/vector.h
+  training/batching/minibatch.h
+  training/batching/minibatching_strategy.h
+  training/batching/negative_sampling.h
   training/data/parsing/sentence_parser.h
   training/data/source/sentence_source.h
   training/data/source/word_sampling.sentence_source.h
@@ -11,10 +14,8 @@ set(HEADERS
   training/data/structure/contiguous_buffer_backed.word_with_context.h
   training/data/structure/contiguous_word_with_context_buffer.h
   training/sgd/context.h
-  training/sgd/mini_batch.h
-  training/sgd/minibatching_strategy.h
-  training/sgd/mini_batch_matrix_manager.h
-  training/sgd/sgd_mini_batch_trainer.h
+  training/sgd/minibatch_matrix_manager.h
+  training/sgd/sgd_minibatch_trainer.h
   vocabulary/stream_backed.word_source.h
   vocabulary/wordbag/wordbag.h
   vocabulary/wordbag/word2vec.wordbag.h
@@ -27,14 +28,15 @@ set(SOURCES
   neuralnet/network.cxx
   neuralnet/layer.cxx
   neuralnet/vector.cxx
+  training/batching/minibatch.cxx
+  training/batching/negative_sampling.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx
   training/data/structure/stdVector.sentence.cxx
   training/data/structure/contiguous_buffer_backed.word_with_context.cxx
   training/data/structure/contiguous_word_with_context_buffer.cxx
-  training/sgd/mini_batch.cxx
-  training/sgd/mini_batch_matrix_manager.cxx
-  training/sgd/sgd_mini_batch_trainer.cxx
+  training/sgd/minibatch_matrix_manager.cxx
+  training/sgd/sgd_minibatch_trainer.cxx
   vocabulary/stream_backed.word_source.cxx
   vocabulary/wordbag/word2vec.wordbag.builder.cxx
   vocabulary/wordbag/word2vec.wordbag.cxx
