@@ -29,6 +29,10 @@ namespace sgd {
         }
       }
 
+      ~Context() {
+        free(expTable);
+      }
+
       virtual float getAlpha() {
         return 0.25f;
       }
