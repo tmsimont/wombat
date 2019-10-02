@@ -4,24 +4,48 @@ namespace wombat {
 namespace batching {
 
     int32_t NegativeSamplingStrategy::maximumInputVectorsPerBatch() {
+      // TODO: get this from configuration?
       return 1;
     }
 
     int32_t NegativeSamplingStrategy::maximumOutputVectorsPerBatch() {
+      // TODO: get this from configuration?
       return 1;
     }
 
     int32_t NegativeSamplingStrategy::getVectorSize() {
+      // TODO: get this from configuration?
       return 4;
     }
 
-    std::unique_ptr<Minibatch> NegativeSamplingStrategy::getMinibatch() {
+    /**
+     * For Skip-gram, we'll grab a set of vectors from the output layer to train.
+     * TODO: what about CBOW?
+     *
+     *   SentenceSource gives us sentences:
+     *     * Source is high level buil off network word bag and training source
+     *   SentenceParser(Sentence) gives us WordWithContexts
+     *     * Parser would have to be created per sentence
+     *     * Parser produces limited count of WordWithContext (same as Sentence size)
+     *  ------
+     *   Minibatch is 1 WordWithContext plus negative samples...
+     *   So **something** needs to pass in a WordWithContext that is safe to use?
+     * TODO: where do we get the WordWithContext :(
+     *
+     */
+    std::unique_ptr<Minibatch> NegativeSamplingStrategy::getMinibatch(
+        const WordWithContext& wordWithContext) {
       std::vector<neuralnet::Vector> inputs;
       std::vector<neuralnet::Vector> outputs;
       std::vector<int32_t> labels;
 
+      // Start by adding the current target word to the ouput sample set.
+      auto targetWordIndex = wordWithContext.getTargetWord();
+      // TODO: some kind of validation between word index and the network wordbag?
+      outputs.push_back(_network.getInputVector(targetWordIndex));
+
       // For the number of negative samples desired, randomly grab random vectors
-      // from the input vector set in the network. To do this, we can use a 
+      // from the output vector set in the network. To do this, we can use a 
       // random sampling strategy.
 
       // for (int k = 0; k < negative; k++) {
@@ -42,6 +66,11 @@ namespace batching {
         // outputs.push_back (vector at sample)
         // labels.push_back(0);
       // }
+      
+      
+      // Next select input vectors based on context words.
+      // for ( each context index in WordWithContext )
+      //   inputs.push_back( index of word with context from _networkInputVectors )
 
 
       inputs.push_back(_network.getInputVector(0));
@@ -49,7 +78,7 @@ namespace batching {
       for (int i = 0; i < getVectorSize(); ++i) {
         labels.push_back(i);
       }
-      return std::make_unique<Minibatch>(inputs, labels, outputs);;
+      return std::make_unique<Minibatch>(inputs, labels, outputs);
     }
 
 }

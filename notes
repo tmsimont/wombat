@@ -1,0 +1,117 @@
+diff --git a/src/main.cxx b/src/main.cxx
+index f31f749..8dfd8de 100644
+--- a/src/main.cxx
++++ b/src/main.cxx
+@@ -32,16 +32,32 @@ int main(int argc, char *argv[]) {
+   }
+   Arguments arguments = Arguments(args);
+ 
+-  // Load pre-trained vocab or learn from source.
++  // Load pre-trained vocab or learn from source. (learning from source now)
+   // TODO: Implement switching between pre-trained and learn. For now using learn from file.
+   auto vocabSource = getWordSourceFromFile(arguments.getVocabSourceFile());
+   auto wordBag = WordBagProducer::fromWordSource(vocabSource);
+ 
+   // Initialize vectors or load vectors.
++  // Network(wordbag, vectorlength);
++
++  // Get the word source for training (re-use vocabSource?)
++  //  WordSamplingSentenceSource(
++  //      const std::shared_ptr<WordBag> wordBag,
++  //      const std::shared_ptr<WordSource> wordSource,
++  //      const float& sample) 
++ 
++  // With sentence source, split up sentences into multiple threads somehow.
++  // Each sentence will be parsed with a SentenceParser into WordWithContext instances.
++  // WordWithContexts are stashed in contiguous buffer? 
++  // The contiguous buffer is consumed by minibatch trainer or gpu trainer
+ 
+-  // Get the word source for training.
+   // Update vectors with word source for configurable epochs.
++  // SgdMinibatchTrainer? Strategy builder? (negative sampling, etc)
++
+   // Get the trained word vectors (possibly from GPU)
++
++  // Collect stats?
++
+   // Save the trained word vectors.
+ 
+   return 0;
+diff --git a/src/training/batching/minibatching_strategy.h b/src/training/batching/minibatching_strategy.h
+index 58c69dd..b503a4a 100644
+--- a/src/training/batching/minibatching_strategy.h
++++ b/src/training/batching/minibatching_strategy.h
+@@ -15,6 +15,10 @@ namespace batching {
+   /**
+    * Strategy used for pulling Vectors out of the neural net for a given word with context, and then
+    * labeling the vectors. The subset of vectors and their labels are called a "mini batch"
++   *
++   * TODO: feed in a SentenceSource and SentenceParser to read and parse sentences into WordWithContext.
++   * TODO: use ContiguousWordWithContextBuffer? maybe feed that in instead of source/parser
++   * TODO: how do u split sources and parsers across multiple threads :(
+    */
+   class MinibatchingStrategy {
+     public:
+diff --git a/src/training/batching/negative_sampling.cxx b/src/training/batching/negative_sampling.cxx
+index 2b414c9..eb2ff9d 100644
+--- a/src/training/batching/negative_sampling.cxx
++++ b/src/training/batching/negative_sampling.cxx
+@@ -15,13 +15,21 @@ namespace batching {
+       return 4;
+     }
+ 
++    /**
++     * For Skip-gram, we'll grab a set of vectors from the output layer to train.
++     * TODO: what about CBOW?
++     * TODO: where do we get the WordWithContext :(
++     */
+     std::unique_ptr<Minibatch> NegativeSamplingStrategy::getMinibatch() {
+       std::vector<neuralnet::Vector> inputs;
+       std::vector<neuralnet::Vector> outputs;
+       std::vector<int32_t> labels;
+ 
++      // Start by adding the current target word to the ouput sample set.
++      // outputs.push_back( current WordWithContext target index )
++
+       // For the number of negative samples desired, randomly grab random vectors
+-      // from the input vector set in the network. To do this, we can use a 
++      // from the output vector set in the network. To do this, we can use a 
+       // random sampling strategy.
+ 
+       // for (int k = 0; k < negative; k++) {
+@@ -42,6 +50,11 @@ namespace batching {
+         // outputs.push_back (vector at sample)
+         // labels.push_back(0);
+       // }
++      
++      
++      // Next select input vectors based on context words.
++      // for ( each context index in WordWithContext )
++      //   inputs.push_back( index of word with context from _networkInputVectors )
+ 
+ 
+       inputs.push_back(_network.getInputVector(0));
+diff --git a/src/training/data/parsing/sentence_parser.h b/src/training/data/parsing/sentence_parser.h
+index 72dd925..c494656 100644
+--- a/src/training/data/parsing/sentence_parser.h
++++ b/src/training/data/parsing/sentence_parser.h
+@@ -19,6 +19,7 @@ namespace wombat {
+       /**
+        * Parser will start by visiting the sentence and copying out all of the
+        * sentence's word indices in order to a local vector.
++       * TODO: maybe don't init with specific sentence, but take that as an arg to parse() function?
+        */
+       SentenceParser(
+           const Sentence& sentence,
+diff --git a/src/vocabulary/wordbag_producer.cxx b/src/vocabulary/wordbag_producer.cxx
+index 16e72e3..5a5ce47 100644
+--- a/src/vocabulary/wordbag_producer.cxx
++++ b/src/vocabulary/wordbag_producer.cxx
+@@ -7,6 +7,7 @@ namespace wombat {
+       const std::shared_ptr<WordSource> wordSource) {
+     // original word2vec approach is all I have so far :p
+     Word2VecWordBagBuilder builder;
++    // TODO: what about giant word sources that don't fit into memory all at once?
+     while (wordSource->hasNext()) {
+       builder.add(wordSource->nextWord());
+     }

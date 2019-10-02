@@ -4,6 +4,9 @@
 #include "neuralnet/network.h"
 #include "neuralnet/vector.h"
 #include "training/batching/minibatching_strategy.h"
+#include "training/data/source/word_with_context.h"
+
+using wombat::data::WordWithContext;
 
 namespace wombat {
 namespace batching {
@@ -22,7 +25,7 @@ namespace batching {
 
       virtual int32_t getVectorSize();
 
-      virtual std::unique_ptr<Minibatch> getMinibatch();
+      virtual std::unique_ptr<Minibatch> getMinibatch(const WordWithContext& wordWithContext);
   };
 
 }

@@ -32,16 +32,32 @@ int main(int argc, char *argv[]) {
   }
   Arguments arguments = Arguments(args);
 
-  // Load pre-trained vocab or learn from source.
+  // Load pre-trained vocab or learn from source. (learning from source now)
   // TODO: Implement switching between pre-trained and learn. For now using learn from file.
   auto vocabSource = getWordSourceFromFile(arguments.getVocabSourceFile());
   auto wordBag = WordBagProducer::fromWordSource(vocabSource);
 
   // Initialize vectors or load vectors.
+  // Network(wordbag, vectorlength);
 
-  // Get the word source for training.
+  // Get the word source for training (re-use vocabSource?)
+  //  WordSamplingSentenceSource(
+  //      const std::shared_ptr<WordBag> wordBag,
+  //      const std::shared_ptr<WordSource> wordSource,
+  //      const float& sample) 
+ 
+  // With sentence source, split up sentences into multiple threads somehow.
+  // Each sentence will be parsed with a SentenceParser into WordWithContext instances.
+  // WordWithContexts are stashed in contiguous buffer? 
+  // The contiguous buffer is consumed by minibatch trainer or gpu trainer
+
   // Update vectors with word source for configurable epochs.
+  // SgdMinibatchTrainer? Strategy builder? (negative sampling, etc)
+
   // Get the trained word vectors (possibly from GPU)
+
+  // Collect stats?
+
   // Save the trained word vectors.
 
   return 0;

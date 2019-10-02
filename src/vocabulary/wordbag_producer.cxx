@@ -7,6 +7,7 @@ namespace wombat {
       const std::shared_ptr<WordSource> wordSource) {
     // original word2vec approach is all I have so far :p
     Word2VecWordBagBuilder builder;
+    // TODO: what about giant word sources that don't fit into memory all at once?
     while (wordSource->hasNext()) {
       builder.add(wordSource->nextWord());
     }

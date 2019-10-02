@@ -15,6 +15,10 @@ namespace batching {
   /**
    * Strategy used for pulling Vectors out of the neural net for a given word with context, and then
    * labeling the vectors. The subset of vectors and their labels are called a "mini batch"
+   *
+   * TODO: feed in a SentenceSource and SentenceParser to read and parse sentences into WordWithContext.
+   * TODO: use ContiguousWordWithContextBuffer? maybe feed that in instead of source/parser
+   * TODO: how do u split sources and parsers across multiple threads :(
    */
   class MinibatchingStrategy {
     public:
@@ -29,7 +33,7 @@ namespace batching {
 
       virtual int32_t getVectorSize() = 0;
 
-      virtual std::unique_ptr<Minibatch> getMinibatch() = 0;
+      virtual std::unique_ptr<Minibatch> getMinibatch(const WordWithContext& wordWithContext) = 0;
 
       virtual neuralnet::Vector getParentInputVector(const neuralnet::Vector& minibatchVector) {
         // The strategy should maintain the index when copying into the minibatch.
