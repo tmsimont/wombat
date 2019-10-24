@@ -14,11 +14,12 @@ namespace wombat {
   /**
    * Sentence parser takes a single sentence and generates instances of WordWithContext.
    */
-  class SentenceParser : public SentenceVisitor { 
+  class SentenceParser : public SentenceVisitor {
     public:
       /**
        * Parser will start by visiting the sentence and copying out all of the
        * sentence's word indices in order to a local vector.
+       * TODO: maybe don't init with specific sentence, but take that as an arg to parse() function?
        */
       SentenceParser(
           const Sentence& sentence,
@@ -27,7 +28,7 @@ namespace wombat {
         _windowSize(windowSize) {
         _currentPosition = 0;
 
-        // TODO: this is stupid :( if the sentence were an iterator we could use 
+        // TODO: this is stupid :( if the sentence were an iterator we could use
         // it directly... this is only here to maintain some abstraction of Sentence.
         // N steps to copy a vector to a vector :|
         sentence.acceptWordVisitor(*this);
@@ -41,7 +42,7 @@ namespace wombat {
       /**
        * Implement SentenceVisitor.
        */
-      void visitWord(const int32_t& wordIndex); 
+      void visitWord(const int32_t& wordIndex);
 
       /**
        * Get the next WordWithContext instance from the sentence.

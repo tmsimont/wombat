@@ -5,6 +5,8 @@ set(HEADERS
   neuralnet/layer.h
   neuralnet/vector.h
   training/batching/minibatch.h
+  training/batching/minibatch_indices.h
+  training/batching/minibatch_provider.h
   training/batching/minibatching_strategy.h
   training/batching/negative_sampling.h
   training/data/parsing/sentence_parser.h
@@ -29,6 +31,7 @@ set(SOURCES
   neuralnet/layer.cxx
   neuralnet/vector.cxx
   training/batching/minibatch.cxx
+  training/batching/minibatch_provider.cxx
   training/batching/negative_sampling.cxx
   training/data/parsing/sentence_parser.cxx
   training/data/source/word_sampling.sentence_source.cxx

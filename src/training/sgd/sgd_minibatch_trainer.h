@@ -15,24 +15,28 @@ namespace wombat {
 namespace sgd {
   class SGDMinibatchTrainer {
     public:
-      SGDMinibatchTrainer(std::unique_ptr<MinibatchingStrategy> minibatcher);
+      SGDMinibatchTrainer(int32_t hiddenSize,
+                          int32_t maximumNumberOfInputVectors,
+                          int32_t maximumNumberOfOutputVectors);
 
       ~SGDMinibatchTrainer();
 
-      void train(std::shared_ptr<Context> trainingContext);
+      void train(std::unique_ptr<Minibatch> minibatch, std::shared_ptr<Context> trainingContext);
 
       /**
        * Update the "global" output layer (i.e. not the minibatch but the actual neural net).
        */
-      virtual void applyOutputLayersUpdate();
+      virtual void applyOutputLayersUpdate(const std::unique_ptr<Minibatch>& minibatch);
 
       /**
        * Update the "global" input layer (i.e. not the minibatch but the actual neural net).
        */
-      virtual void applyInputLayersUpdate();
+      virtual void applyInputLayersUpdate(const std::unique_ptr<Minibatch>& minibatch);
 
     private:
       const int32_t _hiddenSize;
+      const int32_t _maximumNumberOfInputVectors;
+      const int32_t _maximumNumberOfOutputVectors;
       std::unique_ptr<MinibatchingStrategy> _minibatcher;
       std::unique_ptr<Minibatch> _minibatch;
       std::shared_ptr<Context> _trainingContext;

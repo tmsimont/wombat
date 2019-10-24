@@ -31,5 +31,4 @@ namespace wombat {
   void SentenceParser::visitWord(const int32_t& wordIndex) {
     _wordIndices.push_back(wordIndex);
   }
-
 }

@@ -47,3 +47,137 @@ wordbatching:
 training:
   * batch_sgd for training subset of nn weights
   * word matrix strategy for cuda vs. mkl, etc?
+
+
+
+
+---------------------
+
+
+# System flow
+
+
+Main:
+ 1. init network and coupled wordbag (coupled by word index)
+
+ 2. get wordSource (coupled to wordbag)
+    TODO: WordSource is stateful, there needs to be a way to use multiple sources,
+          or it need not have state and should be shareable across threads.
+
+--------- GOAL 1: MINIBATCHES --------------
+
+ 3. get sentence source for training (with ref to wordbag, from wordSource)
+
+ 4. parse sentences from source
+
+ 5. parse each sentence into WordWithContext instances
+      TODO: SkipGram vs. CBOW? 
+      TODO: Drop the contiguous buffer thing? Seems like this was an idea that went nowhere.
+            * Goal was to try to reduce memory updates across threads, but these WWC instances are
+              seemingly read-only memory (or why not just use multiple per-thread buffers?)
+
+ 6. build minibatches from WWC's
+    1. Minibatcher : 
+        TODO: SkipGram vs. CBOW? 
+        Given a single WWC, generate a minibatch of input and output vectors.
+              Negative Sampler: Word + Negative from input, Context as output
+              Hierarchical Sampler: Huffman nodes from input, Context as output
+
+---------------------------------------------------
+> 
+> Note that we probably don't have enough memory on the
+> host to build all of the minibatches that will be required
+> to adequately train the system. We want a minibatch producer
+> that can give us as many minibatches to train with as needed.
+> In v1 this was a multi-threaded system that would read a file 
+> in parallel. Each thread would source from independent file parts.
+> The goal was to get a diverse set of minibatches that wouldn't 
+> result in a lot of parallel updates to the same vectors when updating
+> the primary network with minibatch updates. 
+> 
+> 
+--------- GOAL 2: MINIBATCH TRAINING --------------
+> 
+>   TODO: where to put this:
+>       For GPU... need batches of input/output matrices.
+>         Wombat/Wovbat thingy to get M*N correction matrices:
+>         Re-batch minibatches into sets of 4*8 size ops (with vector ops to pick up pieces)
+>
+>   our SGD on CPU would just take over and train on each minibatch.
+>   the SGD on GPU actually uses multiple minibatches for super/mega batching.
+>   It would be good to abstract the overall pattern of parse/minibatch/sgd such that the last
+>   step could actually have a superbatcher in front of it...
+> 
+ 
+
+  7. train network with minibatches
+ 
+     2. Execute SGD on minibatch
+
+        For CPU... SGD on the minibatch matrices
+
+        For GPU... SGD kernels on shaped batches of input/output matrices.
+          Wombat/Wovbat thingy to get M*N correction matrices:
+          Re-batch minibatches into sets of 4*8 size ops (with vector ops to pick up pieces)
+          Dispatch batch of rebatched minibatches...
+
+
+
+--------
+
+# Pseudocode
+
+
+main() {
+  init();
+  foreach (thread) {
+    // each thread should have its own wordSource, but share the same network and wordBag
+    while(training) {
+      sentence = wordSource.nextSentence();
+      if (sentence is empty) {
+        checkEpochs, maybe rewind or else training = false;
+      }
+      minibatchIndices[] = provideMiniBatchIndices(sentence, network);
+      train(minibatchIndices[]);
+    }
+  }
+}
+
+provideMiniBatchIndices(network, sentence) {
+  batches[];
+  wordWithContext[] = parseSentence(sentence);
+  
+  forEach(wwc : wordWithContext[]) {
+    // either HS or NS
+    batches.add(sampleStrategy.apply(wwc));
+  }
+
+  return batches;
+}
+
+GPU:train(minibatchIndices[]) {
+  // superbatch should be shared by all threads
+  superbatch.addAll(minibatchIndices);
+
+  // this should be locked and only unlocked when superbatch is reset
+  if (superbatch.size() > threshold) {
+    // only 1 thread should do this
+    arrangeDataShapes();
+    dispatchCudaKernels();
+    // all memory updates are in GPU
+  }
+}
+
+CPU:train(minibatchIndices[]) {
+  forEach (mbi : minibatchIndices) {
+    // false-share on read. no locking (hogwild)
+    loadThreadLocal();
+
+    // thread-local memory
+    executeSGD();
+
+    // false-share on write. no locking (hogwild)
+    applyBackToMain();
+  }
+}
+

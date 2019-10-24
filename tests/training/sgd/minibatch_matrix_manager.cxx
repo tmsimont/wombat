@@ -4,12 +4,14 @@
 #include "training/batching/minibatch.h"
 #include "training/sgd/context.h"
 #include "training/sgd/minibatch_matrix_manager.h"
+#include "../tests/test_utils.h"
 
 #include <memory>
 #include <vector>
 
 using wombat::batching::Minibatch;
 using wombat::neuralnet::Vector;
+using wombat::neuralnet::Network;
 using wombat::sgd::MinibatchMatrixManager;
 
 class ContextForTest : public wombat::sgd::Context {
@@ -71,7 +73,11 @@ std::unique_ptr<Minibatch> getMinibatch() {
   outputLayerVectors.push_back(ov2);
   outputLayerVectors.push_back(ov3);
 
-  return std::move(std::make_unique<Minibatch>(inputLayerVectors, labels, outputLayerVectors));
+  return std::move(std::make_unique<Minibatch>(
+        Network(testutils::getWordBag(), 100),
+        inputLayerVectors,
+        labels,
+        outputLayerVectors));
 }
 
 TEST(MinibatchMatrixManagerTest, Activate) {

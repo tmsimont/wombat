@@ -1,28 +1,23 @@
 #ifndef TRAINING_BATCHING_NEGATIVE_SAMPLING_H_
 #define TRAINING_BATCHING_NEGATIVE_SAMPLING_H_
 
-#include "neuralnet/network.h"
 #include "neuralnet/vector.h"
 #include "training/batching/minibatching_strategy.h"
+#include "training/data/structure/word_with_context.h"
 
 namespace wombat {
 namespace batching {
 
   class NegativeSamplingStrategy : public MinibatchingStrategy {
     public:
-      NegativeSamplingStrategy(const neuralnet::Network& network) :
-        MinibatchingStrategy(network) {
-      }
+      NegativeSamplingStrategy() {}
 
       virtual ~NegativeSamplingStrategy() {}
 
-      virtual int32_t maximumInputVectorsPerBatch();
+      virtual std::unique_ptr<MinibatchIndices> getMinibatch(const WordWithContext& wordWithContext);
 
-      virtual int32_t maximumOutputVectorsPerBatch();
-
-      virtual int32_t getVectorSize();
-
-      virtual std::unique_ptr<Minibatch> getMinibatch();
+    private:
+      const int32_t _negativeSamples = 5; // TODO: pass this in
   };
 
 }
