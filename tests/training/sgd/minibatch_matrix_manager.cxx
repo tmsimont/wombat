@@ -48,7 +48,7 @@ static float o2[4] = { 1, 1, 1, 1 };
 static float o3[4] = { 2, 2, 2, 2 };
 static float l1[3] = { 0, 3, 6 };
 static float l2[3] = { 0, 2, 4 };
-std::unique_ptr<Minibatch> getMinibatch() {
+Minibatch getMinibatch() {
   Vector iv1(0, i1, 4);
   Vector iv2(1, i2, 4);
   Vector ov1(0, o1, 4);
@@ -73,11 +73,11 @@ std::unique_ptr<Minibatch> getMinibatch() {
   outputLayerVectors.push_back(ov2);
   outputLayerVectors.push_back(ov3);
 
-  return std::move(std::make_unique<Minibatch>(
-        Network(testutils::getWordBag(), 100),
-        inputLayerVectors,
-        labels,
-        outputLayerVectors));
+  return Minibatch(
+      Network(testutils::getWordBag(), 100),
+      inputLayerVectors,
+      labels,
+      outputLayerVectors);
 }
 
 TEST(MinibatchMatrixManagerTest, Activate) {

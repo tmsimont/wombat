@@ -10,6 +10,7 @@ namespace wombat {
   /**
    * This generates instances of Sentence that are found in training data.
    */
+  // not Threadsafe
   class SentenceSource {
     public:
       virtual ~SentenceSource() {}

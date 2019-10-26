@@ -17,6 +17,7 @@ namespace batching {
    * Minibatching Provider maps a Sentence to a collection of MinibatchIndices instances using a 
    * specific minibatching strategy.
    */
+  // Threadsafe
   class MinibatchProvider {
     public:
       MinibatchProvider(std::unique_ptr<MinibatchingStrategy> minibatchingStrategy) 

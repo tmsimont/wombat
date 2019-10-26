@@ -25,24 +25,24 @@ namespace batching {
           _labels(labels),
           _outputLayerVectors(outputLayerVectorIndices) {}
 
-      const std::vector<int32_t>& getInputLayerVectors() {
+      const std::vector<int32_t>& getInputLayerVectors() const {
         return _inputLayerVectors;
       }
 
       // TODO: shouldn't this be 2-dimensional?
-      const std::vector<int32_t>& getLabels() {
+      const std::vector<int32_t>& getLabels() const {
         return _labels;
       }
 
-      const std::vector<int32_t>& getOutputLayerVectors() {
+      const std::vector<int32_t>& getOutputLayerVectors() const {
         return _outputLayerVectors;
       }
 
-      const int32_t numInputRows() {
+      const int32_t numInputRows() const {
         return _inputLayerVectors.size();
       }
 
-      const int32_t numOutputCols() {
+      const int32_t numOutputCols() const {
         return _outputLayerVectors.size();
       }
 

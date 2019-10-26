@@ -10,7 +10,7 @@
 using wombat::batching::Minibatch;
 using wombat::batching::MinibatchingStrategy;
 
-namespace wombat{
+namespace wombat {
 namespace sgd {
 
   /**
@@ -29,7 +29,7 @@ namespace sgd {
        * input/output interaction in a minibatch. (Forward propagation)
        */
       virtual void activate(
-          const std::unique_ptr<Minibatch>& _minibatch,
+          const Minibatch& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix);
 
@@ -42,7 +42,7 @@ namespace sgd {
        * with the MKL version... maybe worth investigation into if readability has a big impact on performance.
        */
       virtual void calculateError(
-          const std::unique_ptr<Minibatch>& _minibatch,
+          const Minibatch& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix);
 
@@ -52,7 +52,7 @@ namespace sgd {
        * to update "output" values in the neural network.
        */
       virtual void calculateOutputLayerUpdate(
-          const std::unique_ptr<Minibatch>& _minibatch,
+          const Minibatch& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix,
           float * _localOutputLayerUpdateMatrix);
@@ -63,7 +63,7 @@ namespace sgd {
        * to update "input" values in the neural network.
        */
       virtual void calculateInputLayerUpdate(
-          const std::unique_ptr<Minibatch>& _minibatch,
+          const Minibatch& _minibatch,
           const std::shared_ptr<Context>& _trainingContext,
           float * _correctionMatrix,
           float * _localInputLayerUpdateMatrix);

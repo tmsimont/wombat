@@ -19,6 +19,7 @@ namespace batching {
    * TODO: use ContiguousWordWithContextBuffer? maybe feed that in instead of source/parser
    * TODO: how do u split sources and parsers across multiple threads :(
    */
+  // Threadsafe
   class MinibatchingStrategy {
     public:
       MinibatchingStrategy() {}

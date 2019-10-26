@@ -15,5 +15,10 @@ namespace neuralnet {
     // TODO: validate the range
     _data[atIndex] = value;
   }
+
+  Vector Vector::cloneTo(float * dataTarget) {
+    memcpy((void *)dataTarget, _data, _length * sizeof(float));
+    return Vector(_index, dataTarget, _length);
+  }
 }
 }

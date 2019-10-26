@@ -2,6 +2,7 @@
 #define NEURALNET_VECTOR_H_
 
 #include <cstdint>
+#include <memory>
 
 namespace wombat {
 namespace neuralnet {
@@ -29,6 +30,13 @@ namespace neuralnet {
       float get(const int32_t& atIndex) const;
 
       void update(const int32_t& atIndex, const float& value);
+
+      /**
+       * The default copy constructor will copy references to the original Vector's
+       * data. This method allows a clone of the original Vector's data to a new
+       * location in memory.
+       */
+      Vector cloneTo(float * dataTarget);
 
     private:
       const int32_t _index;

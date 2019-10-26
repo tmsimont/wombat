@@ -3,6 +3,7 @@
 
 #include "neuralnet/network.h"
 #include "neuralnet/vector.h"
+#include "training/batching/minibatch_indices.h"
 
 #include <vector>
 
@@ -17,6 +18,8 @@ namespace batching {
     public:
       /**
        * Input vectors are copies from the main network.
+       * TODO: enforce copy? make this private?
+       * @VisibleForTesting?
        */
       Minibatch(const neuralnet::Network& network,
                 std::vector<neuralnet::Vector> inputLayerVectors,
@@ -27,34 +30,70 @@ namespace batching {
           _labels(labels),
           _outputLayerVectors(outputLayerVectors) {}
 
-      const std::vector<neuralnet::Vector>& getInputLayerVectors() {
+      /**
+       * This will load a copy of the given network Vector indices to the given space 
+       * in memory. The return is a Minibatch instance that references the copied
+       * Vectors.
+       */
+      static Minibatch fromNetworkIndices(
+          const neuralnet::Network& network,
+          const std::unique_ptr<MinibatchIndices>& indices,
+          float * inputBatchMemory,
+          float * outputBatchMemory) {
+        // Load indices into minibatch.
+        // TODO: load function in some util or something
+        std::vector<neuralnet::Vector> inputs;
+        std::vector<neuralnet::Vector> outputs;
+
+        int batchMemoryIndex = 0;
+        for (const auto& index : indices->getInputLayerVectors()) {
+          inputs.push_back(
+              network.getInputVector(index)
+                     .cloneTo(inputBatchMemory + batchMemoryIndex++ * sizeof(float)));
+        }
+
+        batchMemoryIndex = 0;
+        for (const auto& index : indices->getOutputLayerVectors()) {
+          outputs.push_back(
+              network.getOutputVector(index)
+                     .cloneTo(outputBatchMemory + batchMemoryIndex++ * sizeof(float)));
+        }
+
+        return Minibatch(
+            network,
+            inputs,
+            indices->getLabels(),
+            outputs);
+      }
+
+      const std::vector<neuralnet::Vector>& getInputLayerVectors() const {
         return _inputLayerVectors;
       }
 
       // TODO: shouldn't this be 2-dimensional?
-      const std::vector<int32_t>& getLabels() {
+      const std::vector<int32_t>& getLabels() const {
         return _labels;
       }
 
-      const std::vector<neuralnet::Vector>& getOutputLayerVectors() {
+      const std::vector<neuralnet::Vector>& getOutputLayerVectors() const {
         return _outputLayerVectors;
       }
 
-      const int32_t numInputRows() {
+      const int32_t numInputRows() const {
         return _inputLayerVectors.size();
       }
 
-      const int32_t numOutputCols() {
+      const int32_t numOutputCols() const {
         return _outputLayerVectors.size();
       }
 
-      virtual neuralnet::Vector getParentInputVector(const neuralnet::Vector& minibatchVector) {
+      virtual neuralnet::Vector getParentInputVector(const neuralnet::Vector& minibatchVector) const {
         // The strategy should maintain the index when copying into the minibatch.
         int32_t parentIndex = minibatchVector.getIndex();
         return _network.getInputVector(parentIndex);
       }
 
-      virtual neuralnet::Vector getParentOutputVector(const neuralnet::Vector& minibatchVector) {
+      virtual neuralnet::Vector getParentOutputVector(const neuralnet::Vector& minibatchVector) const {
         // The strategy should maintain the index when copying into the minibatch.
         int32_t parentIndex = minibatchVector.getIndex();
         return _network.getOutputVector(parentIndex);
